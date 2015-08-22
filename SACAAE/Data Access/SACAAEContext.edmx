@@ -1,0 +1,2412 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Edmx Version="3.0" xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <Runtime>
+    <ConceptualModels>
+      <Schema Namespace="SACAAE.Data_Access" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Aula" customannotation:ClrType="SACAAE.Models.Aula, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SedeID" Type="Int32" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Capacity" Type="Int32" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GruposAula" Relationship="Self.GrupoAula_Aula" FromRole="GrupoAula_Aula_Target" ToRole="GrupoAula_Aula_Source" />
+          <NavigationProperty Name="Sede" Relationship="Self.Aula_Sede" FromRole="Aula_Sede_Source" ToRole="Aula_Sede_Target" />
+        </EntityType>
+        <EntityType Name="GrupoAula" customannotation:ClrType="SACAAE.Models.GrupoAula, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Group" Type="Int32" Nullable="false" />
+          <Property Name="Classroom" Type="Int32" />
+          <Property Name="Schedule" Type="Int32" />
+          <NavigationProperty Name="Aula" Relationship="Self.GrupoAula_Aula" FromRole="GrupoAula_Aula_Source" ToRole="GrupoAula_Aula_Target" />
+          <NavigationProperty Name="Grupo" Relationship="Self.GrupoAula_Grupo" FromRole="GrupoAula_Grupo_Source" ToRole="GrupoAula_Grupo_Target" />
+          <NavigationProperty Name="Horario" Relationship="Self.GrupoAula_Horario" FromRole="GrupoAula_Horario_Source" ToRole="GrupoAula_Horario_Target" />
+        </EntityType>
+        <EntityType Name="Grupo" customannotation:ClrType="SACAAE.Models.Grupo, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Number" Type="Int32" Nullable="false" />
+          <Property Name="Period" Type="Int32" Nullable="false" />
+          <Property Name="BlockXPlanXCourse" Type="Int32" Nullable="false" />
+          <Property Name="Professor" Type="Int32" />
+          <Property Name="Capacity" Type="Int32" />
+          <NavigationProperty Name="BloqueXPlanXCurso" Relationship="Self.Grupo_BloqueXPlanXCurso" FromRole="Grupo_BloqueXPlanXCurso_Source" ToRole="Grupo_BloqueXPlanXCurso_Target" />
+          <NavigationProperty Name="GrupoAulas" Relationship="Self.GrupoAula_Grupo" FromRole="GrupoAula_Grupo_Target" ToRole="GrupoAula_Grupo_Source" />
+          <NavigationProperty Name="Periodo" Relationship="Self.Grupo_Periodo" FromRole="Grupo_Periodo_Source" ToRole="Grupo_Periodo_Target" />
+          <NavigationProperty Name="ProfesorXCurso" Relationship="Self.Grupo_ProfesorXCurso" FromRole="Grupo_ProfesorXCurso_Source" ToRole="Grupo_ProfesorXCurso_Target" />
+        </EntityType>
+        <EntityType Name="BloqueXPlanXCurso" customannotation:ClrType="SACAAE.Models.BloqueXPlanXCurso, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BlockXPlanID" Type="Int32" Nullable="false" />
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BloqueAcademicoXPlanDeEstudio" Relationship="Self.BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio" FromRole="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio_Source" ToRole="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio_Target" />
+          <NavigationProperty Name="Curso" Relationship="Self.BloqueXPlanXCurso_Curso" FromRole="BloqueXPlanXCurso_Curso_Source" ToRole="BloqueXPlanXCurso_Curso_Target" />
+          <NavigationProperty Name="Grupos" Relationship="Self.Grupo_BloqueXPlanXCurso" FromRole="Grupo_BloqueXPlanXCurso_Target" ToRole="Grupo_BloqueXPlanXCurso_Source" />
+        </EntityType>
+        <EntityType Name="BloqueAcademicoXPlanDeEstudio" customannotation:ClrType="SACAAE.Models.BloqueAcademicoXPlanDeEstudio, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PlanID" Type="Int32" Nullable="false" />
+          <Property Name="BlockID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BloqueAcademico" Relationship="Self.BloqueAcademicoXPlanDeEstudio_BloqueAcademico" FromRole="BloqueAcademicoXPlanDeEstudio_BloqueAcademico_Source" ToRole="BloqueAcademicoXPlanDeEstudio_BloqueAcademico_Target" />
+          <NavigationProperty Name="BloquesXPlanesXCursos" Relationship="Self.BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio" FromRole="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio_Target" ToRole="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio_Source" />
+          <NavigationProperty Name="PlanDeEstudio" Relationship="Self.BloqueAcademicoXPlanDeEstudio_PlanDeEstudio" FromRole="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio_Source" ToRole="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio_Target" />
+        </EntityType>
+        <EntityType Name="BloqueAcademico" customannotation:ClrType="SACAAE.Models.BloqueAcademico, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Level" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BloquesAcademicosXPlanesDeEstudio" Relationship="Self.BloqueAcademicoXPlanDeEstudio_BloqueAcademico" FromRole="BloqueAcademicoXPlanDeEstudio_BloqueAcademico_Target" ToRole="BloqueAcademicoXPlanDeEstudio_BloqueAcademico_Source" />
+        </EntityType>
+        <EntityType Name="PlanDeEstudio" customannotation:ClrType="SACAAE.Models.PlanDeEstudio, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Mode" Type="Int32" Nullable="false" />
+          <Property Name="EntityType" Type="Int32" />
+          <NavigationProperty Name="BloquesAcademicosXPlanesDeEstudio" Relationship="Self.BloqueAcademicoXPlanDeEstudio_PlanDeEstudio" FromRole="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio_Target" ToRole="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio_Source" />
+          <NavigationProperty Name="Modalidad" Relationship="Self.PlanDeEstudio_Modalidad" FromRole="PlanDeEstudio_Modalidad_Source" ToRole="PlanDeEstudio_Modalidad_Target" />
+          <NavigationProperty Name="PlanesDeEstudioXSedes" Relationship="Self.PlanDeEstudioXSede_PlanDeEstudio" FromRole="PlanDeEstudioXSede_PlanDeEstudio_Target" ToRole="PlanDeEstudioXSede_PlanDeEstudio_Source" />
+          <NavigationProperty Name="TipoEntidad" Relationship="Self.PlanDeEstudio_TipoEntidad" FromRole="PlanDeEstudio_TipoEntidad_Source" ToRole="PlanDeEstudio_TipoEntidad_Target" />
+        </EntityType>
+        <EntityType Name="Modalidad" customannotation:ClrType="SACAAE.Models.Modalidad, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PlanesDeEstudio" Relationship="Self.PlanDeEstudio_Modalidad" FromRole="PlanDeEstudio_Modalidad_Target" ToRole="PlanDeEstudio_Modalidad_Source" />
+        </EntityType>
+        <EntityType Name="PlanDeEstudioXSede" customannotation:ClrType="SACAAE.Models.PlanDeEstudioXSede, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SedeID" Type="Int32" Nullable="false" />
+          <Property Name="StudyPlan" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PlanDeEstudio" Relationship="Self.PlanDeEstudioXSede_PlanDeEstudio" FromRole="PlanDeEstudioXSede_PlanDeEstudio_Source" ToRole="PlanDeEstudioXSede_PlanDeEstudio_Target" />
+          <NavigationProperty Name="Sede" Relationship="Self.PlanDeEstudioXSede_Sede" FromRole="PlanDeEstudioXSede_Sede_Source" ToRole="PlanDeEstudioXSede_Sede_Target" />
+        </EntityType>
+        <EntityType Name="Sede" customannotation:ClrType="SACAAE.Models.Sede, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Aulas" Relationship="Self.Aula_Sede" FromRole="Aula_Sede_Target" ToRole="Aula_Sede_Source" />
+          <NavigationProperty Name="PlanesDeEstudioXSedes" Relationship="Self.PlanDeEstudioXSede_Sede" FromRole="PlanDeEstudioXSede_Sede_Target" ToRole="PlanDeEstudioXSede_Sede_Source" />
+        </EntityType>
+        <EntityType Name="TipoEntidad" customannotation:ClrType="SACAAE.Models.TipoEntidad, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Comisiones" Relationship="Self.Comision_TipoEntidad" FromRole="Comision_TipoEntidad_Target" ToRole="Comision_TipoEntidad_Source" />
+          <NavigationProperty Name="PlanesDeEstudios" Relationship="Self.PlanDeEstudio_TipoEntidad" FromRole="PlanDeEstudio_TipoEntidad_Target" ToRole="PlanDeEstudio_TipoEntidad_Source" />
+          <NavigationProperty Name="Proyectos" Relationship="Self.Proyecto_TipoEntidad" FromRole="Proyecto_TipoEntidad_Target" ToRole="Proyecto_TipoEntidad_Source" />
+        </EntityType>
+        <EntityType Name="Comision" customannotation:ClrType="SACAAE.Models.Comision, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Start" Type="DateTime" Nullable="false" />
+          <Property Name="End" Type="DateTime" Nullable="false" />
+          <Property Name="State" Type="Int32" />
+          <Property Name="EntityType" Type="Int32" />
+          <NavigationProperty Name="ComisionesXProfesores" Relationship="Self.ComisionXProfesor_Comision" FromRole="ComisionXProfesor_Comision_Target" ToRole="ComisionXProfesor_Comision_Source" />
+          <NavigationProperty Name="Estado" Relationship="Self.Comision_Estado" FromRole="Comision_Estado_Source" ToRole="Comision_Estado_Target" />
+          <NavigationProperty Name="TipoEntidad" Relationship="Self.Comision_TipoEntidad" FromRole="Comision_TipoEntidad_Source" ToRole="Comision_TipoEntidad_Target" />
+        </EntityType>
+        <EntityType Name="ComisionXProfesor" customannotation:ClrType="SACAAE.Models.ComisionXProfesor, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Commission" Type="Int32" Nullable="false" />
+          <Property Name="Professor" Type="Int32" Nullable="false" />
+          <Property Name="Period" Type="Int32" Nullable="false" />
+          <Property Name="Hours" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Comision" Relationship="Self.ComisionXProfesor_Comision" FromRole="ComisionXProfesor_Comision_Source" ToRole="ComisionXProfesor_Comision_Target" />
+          <NavigationProperty Name="Horario" Relationship="Self.Horario_ComisionesXProfesores" FromRole="Horario_ComisionesXProfesores_Target" ToRole="Horario_ComisionesXProfesores_Source" />
+          <NavigationProperty Name="Periodo" Relationship="Self.ComisionXProfesor_Periodo" FromRole="ComisionXProfesor_Periodo_Source" ToRole="ComisionXProfesor_Periodo_Target" />
+          <NavigationProperty Name="Profesor" Relationship="Self.ComisionXProfesor_Profesor" FromRole="ComisionXProfesor_Profesor_Source" ToRole="ComisionXProfesor_Profesor_Target" />
+        </EntityType>
+        <EntityType Name="Horario" customannotation:ClrType="SACAAE.Models.Horario, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Day" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StartHour" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EndHour" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ComisionesXProfesores" Relationship="Self.Horario_ComisionesXProfesores" FromRole="Horario_ComisionesXProfesores_Source" ToRole="Horario_ComisionesXProfesores_Target" />
+          <NavigationProperty Name="GruposAulas" Relationship="Self.GrupoAula_Horario" FromRole="GrupoAula_Horario_Target" ToRole="GrupoAula_Horario_Source" />
+          <NavigationProperty Name="ProyectosXProfesores" Relationship="Self.ProyectoXProfesor_Horario" FromRole="ProyectoXProfesor_Horario_Target" ToRole="ProyectoXProfesor_Horario_Source" />
+        </EntityType>
+        <EntityType Name="ProyectoXProfesor" customannotation:ClrType="SACAAE.Models.ProyectoXProfesor, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Project" Type="Int32" Nullable="false" />
+          <Property Name="Professor" Type="Int32" Nullable="false" />
+          <Property Name="Period" Type="Int32" Nullable="false" />
+          <Property Name="Hours" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Horario" Relationship="Self.ProyectoXProfesor_Horario" FromRole="ProyectoXProfesor_Horario_Source" ToRole="ProyectoXProfesor_Horario_Target" />
+          <NavigationProperty Name="Periodo" Relationship="Self.ProyectoXProfesor_Periodo" FromRole="ProyectoXProfesor_Periodo_Source" ToRole="ProyectoXProfesor_Periodo_Target" />
+          <NavigationProperty Name="Profesor" Relationship="Self.ProyectoXProfesor_Profesor" FromRole="ProyectoXProfesor_Profesor_Source" ToRole="ProyectoXProfesor_Profesor_Target" />
+          <NavigationProperty Name="Proyecto" Relationship="Self.ProyectoXProfesor_Proyecto" FromRole="ProyectoXProfesor_Proyecto_Source" ToRole="ProyectoXProfesor_Proyecto_Target" />
+        </EntityType>
+        <EntityType Name="Periodo" customannotation:ClrType="SACAAE.Models.Periodo, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ComisionesXProfesores" Relationship="Self.ComisionXProfesor_Periodo" FromRole="ComisionXProfesor_Periodo_Target" ToRole="ComisionXProfesor_Periodo_Source" />
+          <NavigationProperty Name="Grupos" Relationship="Self.Grupo_Periodo" FromRole="Grupo_Periodo_Target" ToRole="Grupo_Periodo_Source" />
+          <NavigationProperty Name="ProyectosXProfesores" Relationship="Self.ProyectoXProfesor_Periodo" FromRole="ProyectoXProfesor_Periodo_Target" ToRole="ProyectoXProfesor_Periodo_Source" />
+        </EntityType>
+        <EntityType Name="Profesor" customannotation:ClrType="SACAAE.Models.Profesor, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Link" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="Int32" />
+          <Property Name="Tel1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Tel2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ComisionesXProfesores" Relationship="Self.ComisionXProfesor_Profesor" FromRole="ComisionXProfesor_Profesor_Target" ToRole="ComisionXProfesor_Profesor_Source" />
+          <NavigationProperty Name="Estado" Relationship="Self.Profesor_Estado" FromRole="Profesor_Estado_Source" ToRole="Profesor_Estado_Target" />
+          <NavigationProperty Name="PlazasXProfesores" Relationship="Self.PlazaXProfesor_Profesor" FromRole="PlazaXProfesor_Profesor_Target" ToRole="PlazaXProfesor_Profesor_Source" />
+          <NavigationProperty Name="ProfesoresXCursos" Relationship="Self.ProfesorXGrupo_Profesor" FromRole="ProfesorXGrupo_Profesor_Target" ToRole="ProfesorXGrupo_Profesor_Source" />
+          <NavigationProperty Name="ProyectosXProfesores" Relationship="Self.ProyectoXProfesor_Profesor" FromRole="ProyectoXProfesor_Profesor_Target" ToRole="ProyectoXProfesor_Profesor_Source" />
+        </EntityType>
+        <EntityType Name="Estado" customannotation:ClrType="SACAAE.Models.Estado, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Comisiones" Relationship="Self.Comision_Estado" FromRole="Comision_Estado_Target" ToRole="Comision_Estado_Source" />
+          <NavigationProperty Name="Profesores" Relationship="Self.Profesor_Estado" FromRole="Profesor_Estado_Target" ToRole="Profesor_Estado_Source" />
+          <NavigationProperty Name="Proyectos" Relationship="Self.Proyecto_Estado" FromRole="Proyecto_Estado_Target" ToRole="Proyecto_Estado_Source" />
+        </EntityType>
+        <EntityType Name="Proyecto" customannotation:ClrType="SACAAE.Models.Proyecto, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Start" Type="DateTime" />
+          <Property Name="End" Type="DateTime" />
+          <Property Name="State" Type="Int32" />
+          <Property Name="Link" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EntityType" Type="Int32" />
+          <NavigationProperty Name="Estado" Relationship="Self.Proyecto_Estado" FromRole="Proyecto_Estado_Source" ToRole="Proyecto_Estado_Target" />
+          <NavigationProperty Name="ProyectosXProfesores" Relationship="Self.ProyectoXProfesor_Proyecto" FromRole="ProyectoXProfesor_Proyecto_Target" ToRole="ProyectoXProfesor_Proyecto_Source" />
+          <NavigationProperty Name="TipoEntidad" Relationship="Self.Proyecto_TipoEntidad" FromRole="Proyecto_TipoEntidad_Source" ToRole="Proyecto_TipoEntidad_Target" />
+        </EntityType>
+        <EntityType Name="PlazaXProfesor" customannotation:ClrType="SACAAE.Models.PlazaXProfesor, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PlazaID" Type="Int32" Nullable="false" />
+          <Property Name="Professor" Type="Int32" Nullable="false" />
+          <Property Name="PercentHours" Type="Int32" Nullable="false" />
+          <Property Name="PropertyHours" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Plaza" Relationship="Self.PlazaXProfesor_Plaza" FromRole="PlazaXProfesor_Plaza_Source" ToRole="PlazaXProfesor_Plaza_Target" />
+          <NavigationProperty Name="Profesor" Relationship="Self.PlazaXProfesor_Profesor" FromRole="PlazaXProfesor_Profesor_Source" ToRole="PlazaXProfesor_Profesor_Target" />
+        </EntityType>
+        <EntityType Name="Plaza" customannotation:ClrType="SACAAE.Models.Plaza, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PlazaType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TimeType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TotalHours" Type="Int32" />
+          <Property Name="EffectiveTime" Type="Int32" />
+          <NavigationProperty Name="PlazasXProfesores" Relationship="Self.PlazaXProfesor_Plaza" FromRole="PlazaXProfesor_Plaza_Target" ToRole="PlazaXProfesor_Plaza_Source" />
+        </EntityType>
+        <EntityType Name="ProfesorXGrupo" customannotation:ClrType="SACAAE.Models.ProfesorXGrupo, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Professor" Type="Int32" Nullable="false" />
+          <Property Name="Hours" Type="Int32" />
+          <NavigationProperty Name="Grupos" Relationship="Self.Grupo_ProfesorXCurso" FromRole="Grupo_ProfesorXCurso_Target" ToRole="Grupo_ProfesorXCurso_Source" />
+          <NavigationProperty Name="Profesor" Relationship="Self.ProfesorXGrupo_Profesor" FromRole="ProfesorXGrupo_Profesor_Source" ToRole="ProfesorXGrupo_Profesor_Target" />
+        </EntityType>
+        <EntityType Name="Curso" customannotation:ClrType="SACAAE.Models.Curso, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TheoreticalHours" Type="Int32" Nullable="false" />
+          <Property Name="Block" Type="Int32" Nullable="false" />
+          <Property Name="External" Type="Boolean" Nullable="false" />
+          <Property Name="PracticeHours" Type="Int32" />
+          <Property Name="Credits" Type="Int32" />
+          <Property Name="Temporal" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="BloquesXPlanesXCursos" Relationship="Self.BloqueXPlanXCurso_Curso" FromRole="BloqueXPlanXCurso_Curso_Target" ToRole="BloqueXPlanXCurso_Curso_Source" />
+        </EntityType>
+        <EntityType Name="IdentityRole" customannotation:ClrType="Microsoft.AspNet.Identity.EntityFramework.IdentityRole, Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.IdentityRole_Users" FromRole="IdentityRole_Users_Source" ToRole="IdentityRole_Users_Target" />
+        </EntityType>
+        <EntityType Name="IdentityUserRole" customannotation:ClrType="Microsoft.AspNet.Identity.EntityFramework.IdentityUserRole, Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RoleId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ApplicationUserRole" customannotation:ClrType="SACAAE.Models.ApplicationUserRole, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" BaseType="Self.IdentityUserRole">
+          <NavigationProperty Name="Role" Relationship="Self.ApplicationUserRole_Role" FromRole="ApplicationUserRole_Role_Source" ToRole="ApplicationUserRole_Role_Target" />
+        </EntityType>
+        <EntityType Name="ApplicationRole" customannotation:ClrType="SACAAE.Models.ApplicationRole, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" BaseType="Self.IdentityRole">
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="User" customannotation:ClrType="SACAAE.Models.User, SACAAE, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Claims" Relationship="Self.User_Claims" FromRole="User_Claims_Source" ToRole="User_Claims_Target" />
+          <NavigationProperty Name="Logins" Relationship="Self.User_Logins" FromRole="User_Logins_Source" ToRole="User_Logins_Target" />
+          <NavigationProperty Name="Roles" Relationship="Self.User_Roles" FromRole="User_Roles_Source" ToRole="User_Roles_Target" />
+        </EntityType>
+        <EntityType Name="IdentityUserClaim" customannotation:ClrType="Microsoft.AspNet.Identity.EntityFramework.IdentityUserClaim, Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="IdentityUserLogin" customannotation:ClrType="Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin, Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <Association Name="GrupoAula_Aula">
+          <End Role="GrupoAula_Aula_Source" Type="Self.GrupoAula" Multiplicity="*" />
+          <End Role="GrupoAula_Aula_Target" Type="Self.Aula" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="GrupoAula_Aula_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrupoAula_Aula_Source">
+              <PropertyRef Name="Classroom" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BloqueAcademicoXPlanDeEstudio_BloqueAcademico">
+          <End Role="BloqueAcademicoXPlanDeEstudio_BloqueAcademico_Source" Type="Self.BloqueAcademicoXPlanDeEstudio" Multiplicity="*" />
+          <End Role="BloqueAcademicoXPlanDeEstudio_BloqueAcademico_Target" Type="Self.BloqueAcademico" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="BloqueAcademicoXPlanDeEstudio_BloqueAcademico_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BloqueAcademicoXPlanDeEstudio_BloqueAcademico_Source">
+              <PropertyRef Name="BlockID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlanDeEstudio_Modalidad">
+          <End Role="PlanDeEstudio_Modalidad_Source" Type="Self.PlanDeEstudio" Multiplicity="*" />
+          <End Role="PlanDeEstudio_Modalidad_Target" Type="Self.Modalidad" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="PlanDeEstudio_Modalidad_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlanDeEstudio_Modalidad_Source">
+              <PropertyRef Name="Mode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlanDeEstudioXSede_PlanDeEstudio">
+          <End Role="PlanDeEstudioXSede_PlanDeEstudio_Source" Type="Self.PlanDeEstudioXSede" Multiplicity="*" />
+          <End Role="PlanDeEstudioXSede_PlanDeEstudio_Target" Type="Self.PlanDeEstudio" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="PlanDeEstudioXSede_PlanDeEstudio_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlanDeEstudioXSede_PlanDeEstudio_Source">
+              <PropertyRef Name="StudyPlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlanDeEstudioXSede_Sede">
+          <End Role="PlanDeEstudioXSede_Sede_Source" Type="Self.PlanDeEstudioXSede" Multiplicity="*" />
+          <End Role="PlanDeEstudioXSede_Sede_Target" Type="Self.Sede" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="PlanDeEstudioXSede_Sede_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlanDeEstudioXSede_Sede_Source">
+              <PropertyRef Name="SedeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ComisionXProfesor_Comision">
+          <End Role="ComisionXProfesor_Comision_Source" Type="Self.ComisionXProfesor" Multiplicity="*" />
+          <End Role="ComisionXProfesor_Comision_Target" Type="Self.Comision" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="ComisionXProfesor_Comision_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ComisionXProfesor_Comision_Source">
+              <PropertyRef Name="Commission" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Horario_ComisionesXProfesores">
+          <End Role="Horario_ComisionesXProfesores_Source" Type="Self.Horario" Multiplicity="*" />
+          <End Role="Horario_ComisionesXProfesores_Target" Type="Self.ComisionXProfesor" Multiplicity="*" />
+        </Association>
+        <Association Name="ProyectoXProfesor_Horario">
+          <End Role="ProyectoXProfesor_Horario_Source" Type="Self.ProyectoXProfesor" Multiplicity="*" />
+          <End Role="ProyectoXProfesor_Horario_Target" Type="Self.Horario" Multiplicity="*" />
+        </Association>
+        <Association Name="ProyectoXProfesor_Periodo">
+          <End Role="ProyectoXProfesor_Periodo_Source" Type="Self.ProyectoXProfesor" Multiplicity="*" />
+          <End Role="ProyectoXProfesor_Periodo_Target" Type="Self.Periodo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="ProyectoXProfesor_Periodo_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProyectoXProfesor_Periodo_Source">
+              <PropertyRef Name="Period" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Proyecto_Estado">
+          <End Role="Proyecto_Estado_Source" Type="Self.Proyecto" Multiplicity="*" />
+          <End Role="Proyecto_Estado_Target" Type="Self.Estado" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Proyecto_Estado_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Proyecto_Estado_Source">
+              <PropertyRef Name="State" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Proyecto_TipoEntidad">
+          <End Role="Proyecto_TipoEntidad_Source" Type="Self.Proyecto" Multiplicity="*" />
+          <End Role="Proyecto_TipoEntidad_Target" Type="Self.TipoEntidad" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Proyecto_TipoEntidad_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Proyecto_TipoEntidad_Source">
+              <PropertyRef Name="EntityType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Profesor_Estado">
+          <End Role="Profesor_Estado_Source" Type="Self.Profesor" Multiplicity="*" />
+          <End Role="Profesor_Estado_Target" Type="Self.Estado" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Profesor_Estado_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Profesor_Estado_Source">
+              <PropertyRef Name="State" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlazaXProfesor_Plaza">
+          <End Role="PlazaXProfesor_Plaza_Source" Type="Self.PlazaXProfesor" Multiplicity="*" />
+          <End Role="PlazaXProfesor_Plaza_Target" Type="Self.Plaza" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="PlazaXProfesor_Plaza_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlazaXProfesor_Plaza_Source">
+              <PropertyRef Name="PlazaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlazaXProfesor_Profesor">
+          <End Role="PlazaXProfesor_Profesor_Source" Type="Self.PlazaXProfesor" Multiplicity="*" />
+          <End Role="PlazaXProfesor_Profesor_Target" Type="Self.Profesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="PlazaXProfesor_Profesor_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlazaXProfesor_Profesor_Source">
+              <PropertyRef Name="Professor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProfesorXGrupo_Profesor">
+          <End Role="ProfesorXGrupo_Profesor_Source" Type="Self.ProfesorXGrupo" Multiplicity="*" />
+          <End Role="ProfesorXGrupo_Profesor_Target" Type="Self.Profesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="ProfesorXGrupo_Profesor_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProfesorXGrupo_Profesor_Source">
+              <PropertyRef Name="Professor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProyectoXProfesor_Profesor">
+          <End Role="ProyectoXProfesor_Profesor_Source" Type="Self.ProyectoXProfesor" Multiplicity="*" />
+          <End Role="ProyectoXProfesor_Profesor_Target" Type="Self.Profesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="ProyectoXProfesor_Profesor_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProyectoXProfesor_Profesor_Source">
+              <PropertyRef Name="Professor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProyectoXProfesor_Proyecto">
+          <End Role="ProyectoXProfesor_Proyecto_Source" Type="Self.ProyectoXProfesor" Multiplicity="*" />
+          <End Role="ProyectoXProfesor_Proyecto_Target" Type="Self.Proyecto" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="ProyectoXProfesor_Proyecto_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProyectoXProfesor_Proyecto_Source">
+              <PropertyRef Name="Project" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ComisionXProfesor_Periodo">
+          <End Role="ComisionXProfesor_Periodo_Source" Type="Self.ComisionXProfesor" Multiplicity="*" />
+          <End Role="ComisionXProfesor_Periodo_Target" Type="Self.Periodo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="ComisionXProfesor_Periodo_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ComisionXProfesor_Periodo_Source">
+              <PropertyRef Name="Period" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ComisionXProfesor_Profesor">
+          <End Role="ComisionXProfesor_Profesor_Source" Type="Self.ComisionXProfesor" Multiplicity="*" />
+          <End Role="ComisionXProfesor_Profesor_Target" Type="Self.Profesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="ComisionXProfesor_Profesor_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ComisionXProfesor_Profesor_Source">
+              <PropertyRef Name="Professor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Comision_Estado">
+          <End Role="Comision_Estado_Source" Type="Self.Comision" Multiplicity="*" />
+          <End Role="Comision_Estado_Target" Type="Self.Estado" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Comision_Estado_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Comision_Estado_Source">
+              <PropertyRef Name="State" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Comision_TipoEntidad">
+          <End Role="Comision_TipoEntidad_Source" Type="Self.Comision" Multiplicity="*" />
+          <End Role="Comision_TipoEntidad_Target" Type="Self.TipoEntidad" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Comision_TipoEntidad_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Comision_TipoEntidad_Source">
+              <PropertyRef Name="EntityType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlanDeEstudio_TipoEntidad">
+          <End Role="PlanDeEstudio_TipoEntidad_Source" Type="Self.PlanDeEstudio" Multiplicity="*" />
+          <End Role="PlanDeEstudio_TipoEntidad_Target" Type="Self.TipoEntidad" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="PlanDeEstudio_TipoEntidad_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlanDeEstudio_TipoEntidad_Source">
+              <PropertyRef Name="EntityType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio">
+          <End Role="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio_Source" Type="Self.BloqueAcademicoXPlanDeEstudio" Multiplicity="*" />
+          <End Role="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio_Target" Type="Self.PlanDeEstudio" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio_Source">
+              <PropertyRef Name="PlanID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio">
+          <End Role="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio_Source" Type="Self.BloqueXPlanXCurso" Multiplicity="*" />
+          <End Role="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio_Target" Type="Self.BloqueAcademicoXPlanDeEstudio" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio_Source">
+              <PropertyRef Name="BlockXPlanID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BloqueXPlanXCurso_Curso">
+          <End Role="BloqueXPlanXCurso_Curso_Source" Type="Self.BloqueXPlanXCurso" Multiplicity="*" />
+          <End Role="BloqueXPlanXCurso_Curso_Target" Type="Self.Curso" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="BloqueXPlanXCurso_Curso_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BloqueXPlanXCurso_Curso_Source">
+              <PropertyRef Name="CourseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Grupo_BloqueXPlanXCurso">
+          <End Role="Grupo_BloqueXPlanXCurso_Source" Type="Self.Grupo" Multiplicity="*" />
+          <End Role="Grupo_BloqueXPlanXCurso_Target" Type="Self.BloqueXPlanXCurso" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="Grupo_BloqueXPlanXCurso_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Grupo_BloqueXPlanXCurso_Source">
+              <PropertyRef Name="BlockXPlanXCourse" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Grupo_Periodo">
+          <End Role="Grupo_Periodo_Source" Type="Self.Grupo" Multiplicity="*" />
+          <End Role="Grupo_Periodo_Target" Type="Self.Periodo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="Grupo_Periodo_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Grupo_Periodo_Source">
+              <PropertyRef Name="Period" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Grupo_ProfesorXCurso">
+          <End Role="Grupo_ProfesorXCurso_Source" Type="Self.Grupo" Multiplicity="*" />
+          <End Role="Grupo_ProfesorXCurso_Target" Type="Self.ProfesorXGrupo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Grupo_ProfesorXCurso_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Grupo_ProfesorXCurso_Source">
+              <PropertyRef Name="Professor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GrupoAula_Grupo">
+          <End Role="GrupoAula_Grupo_Source" Type="Self.GrupoAula" Multiplicity="*" />
+          <End Role="GrupoAula_Grupo_Target" Type="Self.Grupo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="GrupoAula_Grupo_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrupoAula_Grupo_Source">
+              <PropertyRef Name="Group" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GrupoAula_Horario">
+          <End Role="GrupoAula_Horario_Source" Type="Self.GrupoAula" Multiplicity="*" />
+          <End Role="GrupoAula_Horario_Target" Type="Self.Horario" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="GrupoAula_Horario_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrupoAula_Horario_Source">
+              <PropertyRef Name="Schedule" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Aula_Sede">
+          <End Role="Aula_Sede_Source" Type="Self.Aula" Multiplicity="*" />
+          <End Role="Aula_Sede_Target" Type="Self.Sede" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="Aula_Sede_Target">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Aula_Sede_Source">
+              <PropertyRef Name="SedeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ApplicationUserRole_Role">
+          <End Role="ApplicationUserRole_Role_Source" Type="Self.ApplicationUserRole" Multiplicity="*" />
+          <End Role="ApplicationUserRole_Role_Target" Type="Self.ApplicationRole" Multiplicity="0..1" />
+        </Association>
+        <Association Name="IdentityRole_Users">
+          <End Role="IdentityRole_Users_Source" Type="Self.IdentityRole" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityRole_Users_Target" Type="Self.IdentityUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityRole_Users_Source">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityRole_Users_Target">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="User_Claims">
+          <End Role="User_Claims_Source" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="User_Claims_Target" Type="Self.IdentityUserClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User_Claims_Source">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User_Claims_Target">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="User_Logins">
+          <End Role="User_Logins_Source" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="User_Logins_Target" Type="Self.IdentityUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User_Logins_Source">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User_Logins_Target">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="User_Roles">
+          <End Role="User_Roles_Source" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="User_Roles_Target" Type="Self.IdentityUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User_Roles_Source">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User_Roles_Target">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SACAAEContext" customannotation:UseClrTypes="true">
+          <EntitySet Name="Aulas" EntityType="Self.Aula" />
+          <EntitySet Name="GrupoAulas" EntityType="Self.GrupoAula" />
+          <EntitySet Name="Grupos" EntityType="Self.Grupo" />
+          <EntitySet Name="BloquesXPlanesXCursos" EntityType="Self.BloqueXPlanXCurso" />
+          <EntitySet Name="BloquesAcademicosXPlanesDeEstudio" EntityType="Self.BloqueAcademicoXPlanDeEstudio" />
+          <EntitySet Name="BloquesAcademicos" EntityType="Self.BloqueAcademico" />
+          <EntitySet Name="PlanesDeEstudio" EntityType="Self.PlanDeEstudio" />
+          <EntitySet Name="Modalidades" EntityType="Self.Modalidad" />
+          <EntitySet Name="PlanesDeEstudioXSedes" EntityType="Self.PlanDeEstudioXSede" />
+          <EntitySet Name="Sedes" EntityType="Self.Sede" />
+          <EntitySet Name="TipoEntidades" EntityType="Self.TipoEntidad" />
+          <EntitySet Name="Comisiones" EntityType="Self.Comision" />
+          <EntitySet Name="ComisionesXProfesores" EntityType="Self.ComisionXProfesor" />
+          <EntitySet Name="Horarios" EntityType="Self.Horario" />
+          <EntitySet Name="ProyectosXProfesores" EntityType="Self.ProyectoXProfesor" />
+          <EntitySet Name="Periodos" EntityType="Self.Periodo" />
+          <EntitySet Name="Profesores" EntityType="Self.Profesor" />
+          <EntitySet Name="Estados" EntityType="Self.Estado" />
+          <EntitySet Name="Proyectos" EntityType="Self.Proyecto" />
+          <EntitySet Name="PlazasXProfesores" EntityType="Self.PlazaXProfesor" />
+          <EntitySet Name="Plazas" EntityType="Self.Plaza" />
+          <EntitySet Name="ProfesoresXCursos" EntityType="Self.ProfesorXGrupo" />
+          <EntitySet Name="Cursos" EntityType="Self.Curso" />
+          <EntitySet Name="Roles" EntityType="Self.IdentityRole" />
+          <EntitySet Name="IdentityUserRoles" EntityType="Self.IdentityUserRole" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="IdentityUserClaims" EntityType="Self.IdentityUserClaim" />
+          <EntitySet Name="IdentityUserLogins" EntityType="Self.IdentityUserLogin" />
+          <AssociationSet Name="GrupoAula_Aula" Association="Self.GrupoAula_Aula">
+            <End Role="GrupoAula_Aula_Source" EntitySet="GrupoAulas" />
+            <End Role="GrupoAula_Aula_Target" EntitySet="Aulas" />
+          </AssociationSet>
+          <AssociationSet Name="BloqueAcademicoXPlanDeEstudio_BloqueAcademico" Association="Self.BloqueAcademicoXPlanDeEstudio_BloqueAcademico">
+            <End Role="BloqueAcademicoXPlanDeEstudio_BloqueAcademico_Source" EntitySet="BloquesAcademicosXPlanesDeEstudio" />
+            <End Role="BloqueAcademicoXPlanDeEstudio_BloqueAcademico_Target" EntitySet="BloquesAcademicos" />
+          </AssociationSet>
+          <AssociationSet Name="PlanDeEstudio_Modalidad" Association="Self.PlanDeEstudio_Modalidad">
+            <End Role="PlanDeEstudio_Modalidad_Source" EntitySet="PlanesDeEstudio" />
+            <End Role="PlanDeEstudio_Modalidad_Target" EntitySet="Modalidades" />
+          </AssociationSet>
+          <AssociationSet Name="PlanDeEstudioXSede_PlanDeEstudio" Association="Self.PlanDeEstudioXSede_PlanDeEstudio">
+            <End Role="PlanDeEstudioXSede_PlanDeEstudio_Source" EntitySet="PlanesDeEstudioXSedes" />
+            <End Role="PlanDeEstudioXSede_PlanDeEstudio_Target" EntitySet="PlanesDeEstudio" />
+          </AssociationSet>
+          <AssociationSet Name="PlanDeEstudioXSede_Sede" Association="Self.PlanDeEstudioXSede_Sede">
+            <End Role="PlanDeEstudioXSede_Sede_Source" EntitySet="PlanesDeEstudioXSedes" />
+            <End Role="PlanDeEstudioXSede_Sede_Target" EntitySet="Sedes" />
+          </AssociationSet>
+          <AssociationSet Name="ComisionXProfesor_Comision" Association="Self.ComisionXProfesor_Comision">
+            <End Role="ComisionXProfesor_Comision_Source" EntitySet="ComisionesXProfesores" />
+            <End Role="ComisionXProfesor_Comision_Target" EntitySet="Comisiones" />
+          </AssociationSet>
+          <AssociationSet Name="Horario_ComisionesXProfesores" Association="Self.Horario_ComisionesXProfesores">
+            <End Role="Horario_ComisionesXProfesores_Source" EntitySet="Horarios" />
+            <End Role="Horario_ComisionesXProfesores_Target" EntitySet="ComisionesXProfesores" />
+          </AssociationSet>
+          <AssociationSet Name="ProyectoXProfesor_Horario" Association="Self.ProyectoXProfesor_Horario">
+            <End Role="ProyectoXProfesor_Horario_Source" EntitySet="ProyectosXProfesores" />
+            <End Role="ProyectoXProfesor_Horario_Target" EntitySet="Horarios" />
+          </AssociationSet>
+          <AssociationSet Name="ProyectoXProfesor_Periodo" Association="Self.ProyectoXProfesor_Periodo">
+            <End Role="ProyectoXProfesor_Periodo_Source" EntitySet="ProyectosXProfesores" />
+            <End Role="ProyectoXProfesor_Periodo_Target" EntitySet="Periodos" />
+          </AssociationSet>
+          <AssociationSet Name="Proyecto_Estado" Association="Self.Proyecto_Estado">
+            <End Role="Proyecto_Estado_Source" EntitySet="Proyectos" />
+            <End Role="Proyecto_Estado_Target" EntitySet="Estados" />
+          </AssociationSet>
+          <AssociationSet Name="Proyecto_TipoEntidad" Association="Self.Proyecto_TipoEntidad">
+            <End Role="Proyecto_TipoEntidad_Source" EntitySet="Proyectos" />
+            <End Role="Proyecto_TipoEntidad_Target" EntitySet="TipoEntidades" />
+          </AssociationSet>
+          <AssociationSet Name="Profesor_Estado" Association="Self.Profesor_Estado">
+            <End Role="Profesor_Estado_Source" EntitySet="Profesores" />
+            <End Role="Profesor_Estado_Target" EntitySet="Estados" />
+          </AssociationSet>
+          <AssociationSet Name="PlazaXProfesor_Plaza" Association="Self.PlazaXProfesor_Plaza">
+            <End Role="PlazaXProfesor_Plaza_Source" EntitySet="PlazasXProfesores" />
+            <End Role="PlazaXProfesor_Plaza_Target" EntitySet="Plazas" />
+          </AssociationSet>
+          <AssociationSet Name="PlazaXProfesor_Profesor" Association="Self.PlazaXProfesor_Profesor">
+            <End Role="PlazaXProfesor_Profesor_Source" EntitySet="PlazasXProfesores" />
+            <End Role="PlazaXProfesor_Profesor_Target" EntitySet="Profesores" />
+          </AssociationSet>
+          <AssociationSet Name="ProfesorXGrupo_Profesor" Association="Self.ProfesorXGrupo_Profesor">
+            <End Role="ProfesorXGrupo_Profesor_Source" EntitySet="ProfesoresXCursos" />
+            <End Role="ProfesorXGrupo_Profesor_Target" EntitySet="Profesores" />
+          </AssociationSet>
+          <AssociationSet Name="ProyectoXProfesor_Profesor" Association="Self.ProyectoXProfesor_Profesor">
+            <End Role="ProyectoXProfesor_Profesor_Source" EntitySet="ProyectosXProfesores" />
+            <End Role="ProyectoXProfesor_Profesor_Target" EntitySet="Profesores" />
+          </AssociationSet>
+          <AssociationSet Name="ProyectoXProfesor_Proyecto" Association="Self.ProyectoXProfesor_Proyecto">
+            <End Role="ProyectoXProfesor_Proyecto_Source" EntitySet="ProyectosXProfesores" />
+            <End Role="ProyectoXProfesor_Proyecto_Target" EntitySet="Proyectos" />
+          </AssociationSet>
+          <AssociationSet Name="ComisionXProfesor_Periodo" Association="Self.ComisionXProfesor_Periodo">
+            <End Role="ComisionXProfesor_Periodo_Source" EntitySet="ComisionesXProfesores" />
+            <End Role="ComisionXProfesor_Periodo_Target" EntitySet="Periodos" />
+          </AssociationSet>
+          <AssociationSet Name="ComisionXProfesor_Profesor" Association="Self.ComisionXProfesor_Profesor">
+            <End Role="ComisionXProfesor_Profesor_Source" EntitySet="ComisionesXProfesores" />
+            <End Role="ComisionXProfesor_Profesor_Target" EntitySet="Profesores" />
+          </AssociationSet>
+          <AssociationSet Name="Comision_Estado" Association="Self.Comision_Estado">
+            <End Role="Comision_Estado_Source" EntitySet="Comisiones" />
+            <End Role="Comision_Estado_Target" EntitySet="Estados" />
+          </AssociationSet>
+          <AssociationSet Name="Comision_TipoEntidad" Association="Self.Comision_TipoEntidad">
+            <End Role="Comision_TipoEntidad_Source" EntitySet="Comisiones" />
+            <End Role="Comision_TipoEntidad_Target" EntitySet="TipoEntidades" />
+          </AssociationSet>
+          <AssociationSet Name="PlanDeEstudio_TipoEntidad" Association="Self.PlanDeEstudio_TipoEntidad">
+            <End Role="PlanDeEstudio_TipoEntidad_Source" EntitySet="PlanesDeEstudio" />
+            <End Role="PlanDeEstudio_TipoEntidad_Target" EntitySet="TipoEntidades" />
+          </AssociationSet>
+          <AssociationSet Name="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio" Association="Self.BloqueAcademicoXPlanDeEstudio_PlanDeEstudio">
+            <End Role="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio_Source" EntitySet="BloquesAcademicosXPlanesDeEstudio" />
+            <End Role="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio_Target" EntitySet="PlanesDeEstudio" />
+          </AssociationSet>
+          <AssociationSet Name="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio" Association="Self.BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio">
+            <End Role="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio_Source" EntitySet="BloquesXPlanesXCursos" />
+            <End Role="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio_Target" EntitySet="BloquesAcademicosXPlanesDeEstudio" />
+          </AssociationSet>
+          <AssociationSet Name="BloqueXPlanXCurso_Curso" Association="Self.BloqueXPlanXCurso_Curso">
+            <End Role="BloqueXPlanXCurso_Curso_Source" EntitySet="BloquesXPlanesXCursos" />
+            <End Role="BloqueXPlanXCurso_Curso_Target" EntitySet="Cursos" />
+          </AssociationSet>
+          <AssociationSet Name="Grupo_BloqueXPlanXCurso" Association="Self.Grupo_BloqueXPlanXCurso">
+            <End Role="Grupo_BloqueXPlanXCurso_Source" EntitySet="Grupos" />
+            <End Role="Grupo_BloqueXPlanXCurso_Target" EntitySet="BloquesXPlanesXCursos" />
+          </AssociationSet>
+          <AssociationSet Name="Grupo_Periodo" Association="Self.Grupo_Periodo">
+            <End Role="Grupo_Periodo_Source" EntitySet="Grupos" />
+            <End Role="Grupo_Periodo_Target" EntitySet="Periodos" />
+          </AssociationSet>
+          <AssociationSet Name="Grupo_ProfesorXCurso" Association="Self.Grupo_ProfesorXCurso">
+            <End Role="Grupo_ProfesorXCurso_Source" EntitySet="Grupos" />
+            <End Role="Grupo_ProfesorXCurso_Target" EntitySet="ProfesoresXCursos" />
+          </AssociationSet>
+          <AssociationSet Name="GrupoAula_Grupo" Association="Self.GrupoAula_Grupo">
+            <End Role="GrupoAula_Grupo_Source" EntitySet="GrupoAulas" />
+            <End Role="GrupoAula_Grupo_Target" EntitySet="Grupos" />
+          </AssociationSet>
+          <AssociationSet Name="GrupoAula_Horario" Association="Self.GrupoAula_Horario">
+            <End Role="GrupoAula_Horario_Source" EntitySet="GrupoAulas" />
+            <End Role="GrupoAula_Horario_Target" EntitySet="Horarios" />
+          </AssociationSet>
+          <AssociationSet Name="Aula_Sede" Association="Self.Aula_Sede">
+            <End Role="Aula_Sede_Source" EntitySet="Aulas" />
+            <End Role="Aula_Sede_Target" EntitySet="Sedes" />
+          </AssociationSet>
+          <AssociationSet Name="ApplicationUserRole_Role" Association="Self.ApplicationUserRole_Role">
+            <End Role="ApplicationUserRole_Role_Source" EntitySet="IdentityUserRoles" />
+            <End Role="ApplicationUserRole_Role_Target" EntitySet="Roles" />
+          </AssociationSet>
+          <AssociationSet Name="IdentityRole_Users" Association="Self.IdentityRole_Users">
+            <End Role="IdentityRole_Users_Source" EntitySet="Roles" />
+            <End Role="IdentityRole_Users_Target" EntitySet="IdentityUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="User_Claims" Association="Self.User_Claims">
+            <End Role="User_Claims_Source" EntitySet="Users" />
+            <End Role="User_Claims_Target" EntitySet="IdentityUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="User_Logins" Association="Self.User_Logins">
+            <End Role="User_Logins_Source" EntitySet="Users" />
+            <End Role="User_Logins_Target" EntitySet="IdentityUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="User_Roles" Association="Self.User_Roles">
+            <End Role="User_Roles_Source" EntitySet="Users" />
+            <End Role="User_Roles_Target" EntitySet="IdentityUserRoles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </ConceptualModels>
+    <Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CodeFirstDatabase" CdmEntityContainer="SACAAEContext">
+          <EntitySetMapping Name="Aulas">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Aula">
+              <MappingFragment StoreEntitySet="Aula">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="SedeID" ColumnName="SedeID" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GrupoAulas">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.GrupoAula">
+              <MappingFragment StoreEntitySet="GrupoAula">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="Classroom" ColumnName="Classroom" />
+                <ScalarProperty Name="Schedule" ColumnName="Schedule" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Grupos">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Grupo">
+              <MappingFragment StoreEntitySet="Grupo">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
+                <ScalarProperty Name="BlockXPlanXCourse" ColumnName="BlockXPlanXCourse" />
+                <ScalarProperty Name="Professor" ColumnName="Professor" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BloquesXPlanesXCursos">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.BloqueXPlanXCurso">
+              <MappingFragment StoreEntitySet="BloqueXPlanXCurso">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="BlockXPlanID" ColumnName="BlockXPlanID" />
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BloquesAcademicosXPlanesDeEstudio">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.BloqueAcademicoXPlanDeEstudio">
+              <MappingFragment StoreEntitySet="BloqueAcademicoXPlanDeEstudio">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PlanID" ColumnName="PlanID" />
+                <ScalarProperty Name="BlockID" ColumnName="BlockID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BloquesAcademicos">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.BloqueAcademico">
+              <MappingFragment StoreEntitySet="BloqueAcademico">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlanesDeEstudio">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.PlanDeEstudio">
+              <MappingFragment StoreEntitySet="PlanDeEstudio">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Mode" ColumnName="Mode" />
+                <ScalarProperty Name="EntityType" ColumnName="EntityType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Modalidades">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Modalidad">
+              <MappingFragment StoreEntitySet="Modalidad">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlanesDeEstudioXSedes">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.PlanDeEstudioXSede">
+              <MappingFragment StoreEntitySet="PlanDeEstudioXSede">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="SedeID" ColumnName="SedeID" />
+                <ScalarProperty Name="StudyPlan" ColumnName="StudyPlan" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sedes">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Sede">
+              <MappingFragment StoreEntitySet="Sede">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TipoEntidades">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.TipoEntidad">
+              <MappingFragment StoreEntitySet="TipoEntidad">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comisiones">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Comision">
+              <MappingFragment StoreEntitySet="Comision">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Start" ColumnName="Start" />
+                <ScalarProperty Name="End" ColumnName="End" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="EntityType" ColumnName="EntityType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ComisionesXProfesores">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.ComisionXProfesor">
+              <MappingFragment StoreEntitySet="ComisionXProfesor">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Commission" ColumnName="Commission" />
+                <ScalarProperty Name="Professor" ColumnName="Professor" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
+                <ScalarProperty Name="Hours" ColumnName="Hours" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Horarios">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Horario">
+              <MappingFragment StoreEntitySet="Horario">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Day" ColumnName="Day" />
+                <ScalarProperty Name="StartHour" ColumnName="StartHour" />
+                <ScalarProperty Name="EndHour" ColumnName="EndHour" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProyectosXProfesores">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.ProyectoXProfesor">
+              <MappingFragment StoreEntitySet="ProyectoXProfesor">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Project" ColumnName="Project" />
+                <ScalarProperty Name="Professor" ColumnName="Professor" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
+                <ScalarProperty Name="Hours" ColumnName="Hours" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Periodos">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Periodo">
+              <MappingFragment StoreEntitySet="Periodo">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Profesores">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Profesor">
+              <MappingFragment StoreEntitySet="Profesor">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Link" ColumnName="Link" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Tel1" ColumnName="Tel1" />
+                <ScalarProperty Name="Tel2" ColumnName="Tel2" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Estados">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Estado">
+              <MappingFragment StoreEntitySet="Estado">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Proyectos">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Proyecto">
+              <MappingFragment StoreEntitySet="Proyecto">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Start" ColumnName="Start" />
+                <ScalarProperty Name="End" ColumnName="End" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Link" ColumnName="Link" />
+                <ScalarProperty Name="EntityType" ColumnName="EntityType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlazasXProfesores">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.PlazaXProfesor">
+              <MappingFragment StoreEntitySet="PlazaXProfesor">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PlazaID" ColumnName="PlazaID" />
+                <ScalarProperty Name="Professor" ColumnName="Professor" />
+                <ScalarProperty Name="PercentHours" ColumnName="PercentHours" />
+                <ScalarProperty Name="PropertyHours" ColumnName="PropertyHours" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Plazas">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Plaza">
+              <MappingFragment StoreEntitySet="Plaza">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="PlazaType" ColumnName="PlazaType" />
+                <ScalarProperty Name="TimeType" ColumnName="TimeType" />
+                <ScalarProperty Name="TotalHours" ColumnName="TotalHours" />
+                <ScalarProperty Name="EffectiveTime" ColumnName="EffectiveTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProfesoresXCursos">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.ProfesorXGrupo">
+              <MappingFragment StoreEntitySet="ProfesorXGrupo">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Professor" ColumnName="Professor" />
+                <ScalarProperty Name="Hours" ColumnName="Hours" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cursos">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.Curso">
+              <MappingFragment StoreEntitySet="Curso">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="TheoreticalHours" ColumnName="TheoreticalHours" />
+                <ScalarProperty Name="Block" ColumnName="Block" />
+                <ScalarProperty Name="External" ColumnName="External" />
+                <ScalarProperty Name="PracticeHours" ColumnName="PracticeHours" />
+                <ScalarProperty Name="Credits" ColumnName="Credits" />
+                <ScalarProperty Name="Temporal" ColumnName="Temporal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="IsTypeOf(SACAAE.Data_Access.IdentityRole)">
+              <MappingFragment StoreEntitySet="IdentityRole">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.ApplicationRole">
+              <MappingFragment StoreEntitySet="IdentityRole">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <Condition Value="ApplicationRole" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.IdentityRole">
+              <MappingFragment StoreEntitySet="IdentityRole">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <Condition Value="IdentityRole" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IdentityUserRoles">
+            <EntityTypeMapping TypeName="IsTypeOf(SACAAE.Data_Access.IdentityUserRole)">
+              <MappingFragment StoreEntitySet="IdentityUserRole">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.ApplicationUserRole">
+              <MappingFragment StoreEntitySet="IdentityUserRole">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <Condition Value="ApplicationUserRole" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.IdentityUserRole">
+              <MappingFragment StoreEntitySet="IdentityUserRole">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <Condition Value="IdentityUserRole" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IdentityUserClaims">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.IdentityUserClaim">
+              <MappingFragment StoreEntitySet="IdentityUserClaim">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IdentityUserLogins">
+            <EntityTypeMapping TypeName="SACAAE.Data_Access.IdentityUserLogin">
+              <MappingFragment StoreEntitySet="IdentityUserLogin">
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Horario_ComisionesXProfesores" TypeName="SACAAE.Data_Access.Horario_ComisionesXProfesores" StoreEntitySet="HorarioComisionXProfesor">
+            <EndProperty Name="Horario_ComisionesXProfesores_Source">
+              <ScalarProperty Name="ID" ColumnName="Horario_ID" />
+            </EndProperty>
+            <EndProperty Name="Horario_ComisionesXProfesores_Target">
+              <ScalarProperty Name="ID" ColumnName="ComisionXProfesor_ID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="ProyectoXProfesor_Horario" TypeName="SACAAE.Data_Access.ProyectoXProfesor_Horario" StoreEntitySet="ProyectoXProfesorHorario">
+            <EndProperty Name="ProyectoXProfesor_Horario_Source">
+              <ScalarProperty Name="ID" ColumnName="ProyectoXProfesor_ID" />
+            </EndProperty>
+            <EndProperty Name="ProyectoXProfesor_Horario_Target">
+              <ScalarProperty Name="ID" ColumnName="Horario_ID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="ApplicationUserRole_Role" TypeName="SACAAE.Data_Access.ApplicationUserRole_Role" StoreEntitySet="IdentityUserRole">
+            <EndProperty Name="ApplicationUserRole_Role_Target">
+              <ScalarProperty Name="Id" ColumnName="Role_Id" />
+            </EndProperty>
+            <EndProperty Name="ApplicationUserRole_Role_Source">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+              <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="Role_Id" />
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </Mappings>
+    <StorageModels>
+      <Schema Namespace="CodeFirstDatabaseSchema" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Aula">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SedeID" Type="int" customannotation:Index="{ Name: IX_SedeID, Order: 0 }" Nullable="false" />
+          <Property Name="Code" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Capacity" Type="int" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GrupoAula">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Group" Type="int" customannotation:Index="{ Name: IX_Group, Order: 0 }" Nullable="false" />
+          <Property Name="Classroom" Type="int" customannotation:Index="{ Name: IX_Classroom, Order: 0 }" Nullable="true" />
+          <Property Name="Schedule" Type="int" customannotation:Index="{ Name: IX_Schedule, Order: 0 }" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Grupo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Number" Type="int" Nullable="false" />
+          <Property Name="Period" Type="int" customannotation:Index="{ Name: IX_Period, Order: 0 }" Nullable="false" />
+          <Property Name="BlockXPlanXCourse" Type="int" customannotation:Index="{ Name: IX_BlockXPlanXCourse, Order: 0 }" Nullable="false" />
+          <Property Name="Professor" Type="int" customannotation:Index="{ Name: IX_Professor, Order: 0 }" Nullable="true" />
+          <Property Name="Capacity" Type="int" Nullable="true" />
+        </EntityType>
+        <EntityType Name="BloqueXPlanXCurso">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BlockXPlanID" Type="int" customannotation:Index="{ Name: IX_BlockXPlanID, Order: 0 }" Nullable="false" />
+          <Property Name="CourseID" Type="int" customannotation:Index="{ Name: IX_CourseID, Order: 0 }" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BloqueAcademicoXPlanDeEstudio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PlanID" Type="int" customannotation:Index="{ Name: IX_PlanID, Order: 0 }" Nullable="false" />
+          <Property Name="BlockID" Type="int" customannotation:Index="{ Name: IX_BlockID, Order: 0 }" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BloqueAcademico">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Level" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PlanDeEstudio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Mode" Type="int" customannotation:Index="{ Name: IX_Mode, Order: 0 }" Nullable="false" />
+          <Property Name="EntityType" Type="int" customannotation:Index="{ Name: IX_EntityType, Order: 0 }" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Modalidad">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="PlanDeEstudioXSede">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SedeID" Type="int" customannotation:Index="{ Name: IX_SedeID, Order: 0 }" Nullable="false" />
+          <Property Name="StudyPlan" Type="int" customannotation:Index="{ Name: IX_StudyPlan, Order: 0 }" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sede">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="TipoEntidad">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Comision">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Start" Type="date" Nullable="false" />
+          <Property Name="End" Type="date" Nullable="false" />
+          <Property Name="State" Type="int" customannotation:Index="{ Name: IX_State, Order: 0 }" Nullable="true" />
+          <Property Name="EntityType" Type="int" customannotation:Index="{ Name: IX_EntityType, Order: 0 }" Nullable="true" />
+        </EntityType>
+        <EntityType Name="ComisionXProfesor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Commission" Type="int" customannotation:Index="{ Name: IX_Commission, Order: 0 }" Nullable="false" />
+          <Property Name="Professor" Type="int" customannotation:Index="{ Name: IX_Professor, Order: 0 }" Nullable="false" />
+          <Property Name="Period" Type="int" customannotation:Index="{ Name: IX_Period, Order: 0 }" Nullable="false" />
+          <Property Name="Hours" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Horario">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Day" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="StartHour" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="EndHour" Type="nvarchar(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="ProyectoXProfesor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Project" Type="int" customannotation:Index="{ Name: IX_Project, Order: 0 }" Nullable="false" />
+          <Property Name="Professor" Type="int" customannotation:Index="{ Name: IX_Professor, Order: 0 }" Nullable="false" />
+          <Property Name="Period" Type="int" customannotation:Index="{ Name: IX_Period, Order: 0 }" Nullable="false" />
+          <Property Name="Hours" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Periodo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Profesor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Link" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="State" Type="int" customannotation:Index="{ Name: IX_State, Order: 0 }" Nullable="true" />
+          <Property Name="Tel1" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Tel2" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Email" Type="nvarchar(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Estado">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Proyecto">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Start" Type="datetime" Nullable="true" />
+          <Property Name="End" Type="datetime" Nullable="true" />
+          <Property Name="State" Type="int" customannotation:Index="{ Name: IX_State, Order: 0 }" Nullable="true" />
+          <Property Name="Link" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="EntityType" Type="int" customannotation:Index="{ Name: IX_EntityType, Order: 0 }" Nullable="true" />
+        </EntityType>
+        <EntityType Name="PlazaXProfesor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PlazaID" Type="int" customannotation:Index="{ Name: IX_PlazaID, Order: 0 }" Nullable="false" />
+          <Property Name="Professor" Type="int" customannotation:Index="{ Name: IX_Professor, Order: 0 }" Nullable="false" />
+          <Property Name="PercentHours" Type="int" Nullable="false" />
+          <Property Name="PropertyHours" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Plaza">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Code" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="PlazaType" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="TimeType" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="TotalHours" Type="int" Nullable="true" />
+          <Property Name="EffectiveTime" Type="int" Nullable="true" />
+        </EntityType>
+        <EntityType Name="ProfesorXGrupo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Professor" Type="int" customannotation:Index="{ Name: IX_Professor, Order: 0 }" Nullable="false" />
+          <Property Name="Hours" Type="int" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Curso">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Code" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="TheoreticalHours" Type="int" Nullable="false" />
+          <Property Name="Block" Type="int" Nullable="false" />
+          <Property Name="External" Type="bit" Nullable="false" />
+          <Property Name="PracticeHours" Type="int" Nullable="true" />
+          <Property Name="Credits" Type="int" Nullable="true" />
+          <Property Name="Temporal" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IdentityRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" customannotation:Index="{ Name: RoleNameIndex, IsUnique: True }" MaxLength="256" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Discriminator" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IdentityUserRole">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" customannotation:Index="{ Name: IX_UserId, Order: 0 }" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" customannotation:Index="{ Name: IX_RoleId, Order: 0 }" MaxLength="128" Nullable="false" />
+          <Property Name="Discriminator" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Role_Id" Type="nvarchar" customannotation:Index="{ Name: IX_Role_Id, Order: 0 }" MaxLength="128" Nullable="true" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" Nullable="true" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" Nullable="true" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" customannotation:Index="{ Name: UserNameIndex, IsUnique: True }" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IdentityUserClaim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" customannotation:Index="{ Name: IX_UserId, Order: 0 }" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="IdentityUserLogin">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" customannotation:Index="{ Name: IX_UserId, Order: 0 }" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="HorarioComisionXProfesor">
+          <Key>
+            <PropertyRef Name="Horario_ID" />
+            <PropertyRef Name="ComisionXProfesor_ID" />
+          </Key>
+          <Property Name="Horario_ID" Type="int" customannotation:Index="{ Name: IX_Horario_ID, Order: 0 }" Nullable="false" />
+          <Property Name="ComisionXProfesor_ID" Type="int" customannotation:Index="{ Name: IX_ComisionXProfesor_ID, Order: 0 }" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProyectoXProfesorHorario">
+          <Key>
+            <PropertyRef Name="ProyectoXProfesor_ID" />
+            <PropertyRef Name="Horario_ID" />
+          </Key>
+          <Property Name="ProyectoXProfesor_ID" Type="int" customannotation:Index="{ Name: IX_ProyectoXProfesor_ID, Order: 0 }" Nullable="false" />
+          <Property Name="Horario_ID" Type="int" customannotation:Index="{ Name: IX_Horario_ID, Order: 0 }" Nullable="false" />
+        </EntityType>
+        <Association Name="GrupoAula_Aula">
+          <End Role="Aula" Type="Self.Aula" Multiplicity="0..1" />
+          <End Role="GrupoAula" Type="Self.GrupoAula" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Aula">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrupoAula">
+              <PropertyRef Name="Classroom" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BloqueAcademicoXPlanDeEstudio_BloqueAcademico">
+          <End Role="BloqueAcademico" Type="Self.BloqueAcademico" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BloqueAcademicoXPlanDeEstudio" Type="Self.BloqueAcademicoXPlanDeEstudio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BloqueAcademico">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BloqueAcademicoXPlanDeEstudio">
+              <PropertyRef Name="BlockID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlanDeEstudio_Modalidad">
+          <End Role="Modalidad" Type="Self.Modalidad" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PlanDeEstudio" Type="Self.PlanDeEstudio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modalidad">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlanDeEstudio">
+              <PropertyRef Name="Mode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlanDeEstudioXSede_PlanDeEstudio">
+          <End Role="PlanDeEstudio" Type="Self.PlanDeEstudio" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PlanDeEstudioXSede" Type="Self.PlanDeEstudioXSede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlanDeEstudio">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlanDeEstudioXSede">
+              <PropertyRef Name="StudyPlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlanDeEstudioXSede_Sede">
+          <End Role="Sede" Type="Self.Sede" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PlanDeEstudioXSede" Type="Self.PlanDeEstudioXSede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sede">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlanDeEstudioXSede">
+              <PropertyRef Name="SedeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ComisionXProfesor_Comision">
+          <End Role="Comision" Type="Self.Comision" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ComisionXProfesor" Type="Self.ComisionXProfesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Comision">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ComisionXProfesor">
+              <PropertyRef Name="Commission" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Horario_ComisionesXProfesores_Source">
+          <End Role="Horario" Type="Self.Horario" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="HorarioComisionXProfesor" Type="Self.HorarioComisionXProfesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Horario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="HorarioComisionXProfesor">
+              <PropertyRef Name="Horario_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Horario_ComisionesXProfesores_Target">
+          <End Role="ComisionXProfesor" Type="Self.ComisionXProfesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="HorarioComisionXProfesor" Type="Self.HorarioComisionXProfesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ComisionXProfesor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="HorarioComisionXProfesor">
+              <PropertyRef Name="ComisionXProfesor_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProyectoXProfesor_Horario_Source">
+          <End Role="ProyectoXProfesor" Type="Self.ProyectoXProfesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ProyectoXProfesorHorario" Type="Self.ProyectoXProfesorHorario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProyectoXProfesor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProyectoXProfesorHorario">
+              <PropertyRef Name="ProyectoXProfesor_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProyectoXProfesor_Horario_Target">
+          <End Role="Horario" Type="Self.Horario" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ProyectoXProfesorHorario" Type="Self.ProyectoXProfesorHorario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Horario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProyectoXProfesorHorario">
+              <PropertyRef Name="Horario_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProyectoXProfesor_Periodo">
+          <End Role="Periodo" Type="Self.Periodo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ProyectoXProfesor" Type="Self.ProyectoXProfesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Periodo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProyectoXProfesor">
+              <PropertyRef Name="Period" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Proyecto_Estado">
+          <End Role="Estado" Type="Self.Estado" Multiplicity="0..1" />
+          <End Role="Proyecto" Type="Self.Proyecto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estado">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Proyecto">
+              <PropertyRef Name="State" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Proyecto_TipoEntidad">
+          <End Role="TipoEntidad" Type="Self.TipoEntidad" Multiplicity="0..1" />
+          <End Role="Proyecto" Type="Self.Proyecto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoEntidad">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Proyecto">
+              <PropertyRef Name="EntityType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Profesor_Estado">
+          <End Role="Estado" Type="Self.Estado" Multiplicity="0..1" />
+          <End Role="Profesor" Type="Self.Profesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estado">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Profesor">
+              <PropertyRef Name="State" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlazaXProfesor_Plaza">
+          <End Role="Plaza" Type="Self.Plaza" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PlazaXProfesor" Type="Self.PlazaXProfesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plaza">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlazaXProfesor">
+              <PropertyRef Name="PlazaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlazaXProfesor_Profesor">
+          <End Role="Profesor" Type="Self.Profesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PlazaXProfesor" Type="Self.PlazaXProfesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profesor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlazaXProfesor">
+              <PropertyRef Name="Professor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProfesorXGrupo_Profesor">
+          <End Role="Profesor" Type="Self.Profesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ProfesorXGrupo" Type="Self.ProfesorXGrupo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profesor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProfesorXGrupo">
+              <PropertyRef Name="Professor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProyectoXProfesor_Profesor">
+          <End Role="Profesor" Type="Self.Profesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ProyectoXProfesor" Type="Self.ProyectoXProfesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profesor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProyectoXProfesor">
+              <PropertyRef Name="Professor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProyectoXProfesor_Proyecto">
+          <End Role="Proyecto" Type="Self.Proyecto" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ProyectoXProfesor" Type="Self.ProyectoXProfesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Proyecto">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProyectoXProfesor">
+              <PropertyRef Name="Project" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ComisionXProfesor_Periodo">
+          <End Role="Periodo" Type="Self.Periodo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ComisionXProfesor" Type="Self.ComisionXProfesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Periodo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ComisionXProfesor">
+              <PropertyRef Name="Period" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ComisionXProfesor_Profesor">
+          <End Role="Profesor" Type="Self.Profesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ComisionXProfesor" Type="Self.ComisionXProfesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profesor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ComisionXProfesor">
+              <PropertyRef Name="Professor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Comision_Estado">
+          <End Role="Estado" Type="Self.Estado" Multiplicity="0..1" />
+          <End Role="Comision" Type="Self.Comision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estado">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Comision">
+              <PropertyRef Name="State" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Comision_TipoEntidad">
+          <End Role="TipoEntidad" Type="Self.TipoEntidad" Multiplicity="0..1" />
+          <End Role="Comision" Type="Self.Comision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoEntidad">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Comision">
+              <PropertyRef Name="EntityType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PlanDeEstudio_TipoEntidad">
+          <End Role="TipoEntidad" Type="Self.TipoEntidad" Multiplicity="0..1" />
+          <End Role="PlanDeEstudio" Type="Self.PlanDeEstudio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoEntidad">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlanDeEstudio">
+              <PropertyRef Name="EntityType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio">
+          <End Role="PlanDeEstudio" Type="Self.PlanDeEstudio" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BloqueAcademicoXPlanDeEstudio" Type="Self.BloqueAcademicoXPlanDeEstudio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlanDeEstudio">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BloqueAcademicoXPlanDeEstudio">
+              <PropertyRef Name="PlanID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio">
+          <End Role="BloqueAcademicoXPlanDeEstudio" Type="Self.BloqueAcademicoXPlanDeEstudio" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BloqueXPlanXCurso" Type="Self.BloqueXPlanXCurso" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BloqueAcademicoXPlanDeEstudio">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BloqueXPlanXCurso">
+              <PropertyRef Name="BlockXPlanID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BloqueXPlanXCurso_Curso">
+          <End Role="Curso" Type="Self.Curso" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BloqueXPlanXCurso" Type="Self.BloqueXPlanXCurso" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Curso">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BloqueXPlanXCurso">
+              <PropertyRef Name="CourseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Grupo_BloqueXPlanXCurso">
+          <End Role="BloqueXPlanXCurso" Type="Self.BloqueXPlanXCurso" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Grupo" Type="Self.Grupo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BloqueXPlanXCurso">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Grupo">
+              <PropertyRef Name="BlockXPlanXCourse" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Grupo_Periodo">
+          <End Role="Periodo" Type="Self.Periodo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Grupo" Type="Self.Grupo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Periodo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Grupo">
+              <PropertyRef Name="Period" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Grupo_ProfesorXCurso">
+          <End Role="ProfesorXGrupo" Type="Self.ProfesorXGrupo" Multiplicity="0..1" />
+          <End Role="Grupo" Type="Self.Grupo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProfesorXGrupo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Grupo">
+              <PropertyRef Name="Professor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GrupoAula_Grupo">
+          <End Role="Grupo" Type="Self.Grupo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="GrupoAula" Type="Self.GrupoAula" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grupo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrupoAula">
+              <PropertyRef Name="Group" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GrupoAula_Horario">
+          <End Role="Horario" Type="Self.Horario" Multiplicity="0..1" />
+          <End Role="GrupoAula" Type="Self.GrupoAula" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Horario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrupoAula">
+              <PropertyRef Name="Schedule" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Aula_Sede">
+          <End Role="Sede" Type="Self.Sede" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Aula" Type="Self.Aula" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sede">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Aula">
+              <PropertyRef Name="SedeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ApplicationUserRole_Role">
+          <End Role="IdentityRole" Type="Self.IdentityRole" Multiplicity="0..1" />
+          <End Role="IdentityUserRole" Type="Self.IdentityUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityRole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUserRole">
+              <PropertyRef Name="Role_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="IdentityRole_Users">
+          <End Role="IdentityRole" Type="Self.IdentityRole" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityUserRole" Type="Self.IdentityUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityRole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUserRole">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="User_Claims">
+          <End Role="User" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityUserClaim" Type="Self.IdentityUserClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUserClaim">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="User_Logins">
+          <End Role="User" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityUserLogin" Type="Self.IdentityUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUserLogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="User_Roles">
+          <End Role="User" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityUserRole" Type="Self.IdentityUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUserRole">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CodeFirstDatabase">
+          <EntitySet Name="Aula" EntityType="Self.Aula" Schema="dbo" Table="Aula" />
+          <EntitySet Name="GrupoAula" EntityType="Self.GrupoAula" Schema="dbo" Table="GrupoAula" />
+          <EntitySet Name="Grupo" EntityType="Self.Grupo" Schema="dbo" Table="Grupo" />
+          <EntitySet Name="BloqueXPlanXCurso" EntityType="Self.BloqueXPlanXCurso" Schema="dbo" Table="BloqueXPlanXCurso" />
+          <EntitySet Name="BloqueAcademicoXPlanDeEstudio" EntityType="Self.BloqueAcademicoXPlanDeEstudio" Schema="dbo" Table="BloqueAcademicoXPlanDeEstudio" />
+          <EntitySet Name="BloqueAcademico" EntityType="Self.BloqueAcademico" Schema="dbo" Table="BloqueAcademico" />
+          <EntitySet Name="PlanDeEstudio" EntityType="Self.PlanDeEstudio" Schema="dbo" Table="PlanDeEstudio" />
+          <EntitySet Name="Modalidad" EntityType="Self.Modalidad" Schema="dbo" Table="Modalidad" />
+          <EntitySet Name="PlanDeEstudioXSede" EntityType="Self.PlanDeEstudioXSede" Schema="dbo" Table="PlanDeEstudioXSede" />
+          <EntitySet Name="Sede" EntityType="Self.Sede" Schema="dbo" Table="Sede" />
+          <EntitySet Name="TipoEntidad" EntityType="Self.TipoEntidad" Schema="dbo" Table="TipoEntidad" />
+          <EntitySet Name="Comision" EntityType="Self.Comision" Schema="dbo" Table="Comision" />
+          <EntitySet Name="ComisionXProfesor" EntityType="Self.ComisionXProfesor" Schema="dbo" Table="ComisionXProfesor" />
+          <EntitySet Name="Horario" EntityType="Self.Horario" Schema="dbo" Table="Horario" />
+          <EntitySet Name="ProyectoXProfesor" EntityType="Self.ProyectoXProfesor" Schema="dbo" Table="ProyectoXProfesor" />
+          <EntitySet Name="Periodo" EntityType="Self.Periodo" Schema="dbo" Table="Periodo" />
+          <EntitySet Name="Profesor" EntityType="Self.Profesor" Schema="dbo" Table="Profesor" />
+          <EntitySet Name="Estado" EntityType="Self.Estado" Schema="dbo" Table="Estado" />
+          <EntitySet Name="Proyecto" EntityType="Self.Proyecto" Schema="dbo" Table="Proyecto" />
+          <EntitySet Name="PlazaXProfesor" EntityType="Self.PlazaXProfesor" Schema="dbo" Table="PlazaXProfesor" />
+          <EntitySet Name="Plaza" EntityType="Self.Plaza" Schema="dbo" Table="Plaza" />
+          <EntitySet Name="ProfesorXGrupo" EntityType="Self.ProfesorXGrupo" Schema="dbo" Table="ProfesorXGrupo" />
+          <EntitySet Name="Curso" EntityType="Self.Curso" Schema="dbo" Table="Curso" />
+          <EntitySet Name="IdentityRole" EntityType="Self.IdentityRole" Schema="dbo" Table="AspNetRoles" />
+          <EntitySet Name="IdentityUserRole" EntityType="Self.IdentityUserRole" Schema="dbo" Table="AspNetUserRoles" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" Table="AspNetUsers" />
+          <EntitySet Name="IdentityUserClaim" EntityType="Self.IdentityUserClaim" Schema="dbo" Table="AspNetUserClaims" />
+          <EntitySet Name="IdentityUserLogin" EntityType="Self.IdentityUserLogin" Schema="dbo" Table="AspNetUserLogins" />
+          <EntitySet Name="HorarioComisionXProfesor" EntityType="Self.HorarioComisionXProfesor" Schema="dbo" Table="HorarioComisionXProfesor" />
+          <EntitySet Name="ProyectoXProfesorHorario" EntityType="Self.ProyectoXProfesorHorario" Schema="dbo" Table="ProyectoXProfesorHorario" />
+          <AssociationSet Name="GrupoAula_Aula" Association="Self.GrupoAula_Aula">
+            <End Role="Aula" EntitySet="Aula" />
+            <End Role="GrupoAula" EntitySet="GrupoAula" />
+          </AssociationSet>
+          <AssociationSet Name="BloqueAcademicoXPlanDeEstudio_BloqueAcademico" Association="Self.BloqueAcademicoXPlanDeEstudio_BloqueAcademico">
+            <End Role="BloqueAcademico" EntitySet="BloqueAcademico" />
+            <End Role="BloqueAcademicoXPlanDeEstudio" EntitySet="BloqueAcademicoXPlanDeEstudio" />
+          </AssociationSet>
+          <AssociationSet Name="PlanDeEstudio_Modalidad" Association="Self.PlanDeEstudio_Modalidad">
+            <End Role="Modalidad" EntitySet="Modalidad" />
+            <End Role="PlanDeEstudio" EntitySet="PlanDeEstudio" />
+          </AssociationSet>
+          <AssociationSet Name="PlanDeEstudioXSede_PlanDeEstudio" Association="Self.PlanDeEstudioXSede_PlanDeEstudio">
+            <End Role="PlanDeEstudio" EntitySet="PlanDeEstudio" />
+            <End Role="PlanDeEstudioXSede" EntitySet="PlanDeEstudioXSede" />
+          </AssociationSet>
+          <AssociationSet Name="PlanDeEstudioXSede_Sede" Association="Self.PlanDeEstudioXSede_Sede">
+            <End Role="Sede" EntitySet="Sede" />
+            <End Role="PlanDeEstudioXSede" EntitySet="PlanDeEstudioXSede" />
+          </AssociationSet>
+          <AssociationSet Name="ComisionXProfesor_Comision" Association="Self.ComisionXProfesor_Comision">
+            <End Role="Comision" EntitySet="Comision" />
+            <End Role="ComisionXProfesor" EntitySet="ComisionXProfesor" />
+          </AssociationSet>
+          <AssociationSet Name="Horario_ComisionesXProfesores_Source" Association="Self.Horario_ComisionesXProfesores_Source">
+            <End Role="Horario" EntitySet="Horario" />
+            <End Role="HorarioComisionXProfesor" EntitySet="HorarioComisionXProfesor" />
+          </AssociationSet>
+          <AssociationSet Name="Horario_ComisionesXProfesores_Target" Association="Self.Horario_ComisionesXProfesores_Target">
+            <End Role="ComisionXProfesor" EntitySet="ComisionXProfesor" />
+            <End Role="HorarioComisionXProfesor" EntitySet="HorarioComisionXProfesor" />
+          </AssociationSet>
+          <AssociationSet Name="ProyectoXProfesor_Horario_Source" Association="Self.ProyectoXProfesor_Horario_Source">
+            <End Role="ProyectoXProfesor" EntitySet="ProyectoXProfesor" />
+            <End Role="ProyectoXProfesorHorario" EntitySet="ProyectoXProfesorHorario" />
+          </AssociationSet>
+          <AssociationSet Name="ProyectoXProfesor_Horario_Target" Association="Self.ProyectoXProfesor_Horario_Target">
+            <End Role="Horario" EntitySet="Horario" />
+            <End Role="ProyectoXProfesorHorario" EntitySet="ProyectoXProfesorHorario" />
+          </AssociationSet>
+          <AssociationSet Name="ProyectoXProfesor_Periodo" Association="Self.ProyectoXProfesor_Periodo">
+            <End Role="Periodo" EntitySet="Periodo" />
+            <End Role="ProyectoXProfesor" EntitySet="ProyectoXProfesor" />
+          </AssociationSet>
+          <AssociationSet Name="Proyecto_Estado" Association="Self.Proyecto_Estado">
+            <End Role="Estado" EntitySet="Estado" />
+            <End Role="Proyecto" EntitySet="Proyecto" />
+          </AssociationSet>
+          <AssociationSet Name="Proyecto_TipoEntidad" Association="Self.Proyecto_TipoEntidad">
+            <End Role="TipoEntidad" EntitySet="TipoEntidad" />
+            <End Role="Proyecto" EntitySet="Proyecto" />
+          </AssociationSet>
+          <AssociationSet Name="Profesor_Estado" Association="Self.Profesor_Estado">
+            <End Role="Estado" EntitySet="Estado" />
+            <End Role="Profesor" EntitySet="Profesor" />
+          </AssociationSet>
+          <AssociationSet Name="PlazaXProfesor_Plaza" Association="Self.PlazaXProfesor_Plaza">
+            <End Role="Plaza" EntitySet="Plaza" />
+            <End Role="PlazaXProfesor" EntitySet="PlazaXProfesor" />
+          </AssociationSet>
+          <AssociationSet Name="PlazaXProfesor_Profesor" Association="Self.PlazaXProfesor_Profesor">
+            <End Role="Profesor" EntitySet="Profesor" />
+            <End Role="PlazaXProfesor" EntitySet="PlazaXProfesor" />
+          </AssociationSet>
+          <AssociationSet Name="ProfesorXGrupo_Profesor" Association="Self.ProfesorXGrupo_Profesor">
+            <End Role="Profesor" EntitySet="Profesor" />
+            <End Role="ProfesorXGrupo" EntitySet="ProfesorXGrupo" />
+          </AssociationSet>
+          <AssociationSet Name="ProyectoXProfesor_Profesor" Association="Self.ProyectoXProfesor_Profesor">
+            <End Role="Profesor" EntitySet="Profesor" />
+            <End Role="ProyectoXProfesor" EntitySet="ProyectoXProfesor" />
+          </AssociationSet>
+          <AssociationSet Name="ProyectoXProfesor_Proyecto" Association="Self.ProyectoXProfesor_Proyecto">
+            <End Role="Proyecto" EntitySet="Proyecto" />
+            <End Role="ProyectoXProfesor" EntitySet="ProyectoXProfesor" />
+          </AssociationSet>
+          <AssociationSet Name="ComisionXProfesor_Periodo" Association="Self.ComisionXProfesor_Periodo">
+            <End Role="Periodo" EntitySet="Periodo" />
+            <End Role="ComisionXProfesor" EntitySet="ComisionXProfesor" />
+          </AssociationSet>
+          <AssociationSet Name="ComisionXProfesor_Profesor" Association="Self.ComisionXProfesor_Profesor">
+            <End Role="Profesor" EntitySet="Profesor" />
+            <End Role="ComisionXProfesor" EntitySet="ComisionXProfesor" />
+          </AssociationSet>
+          <AssociationSet Name="Comision_Estado" Association="Self.Comision_Estado">
+            <End Role="Estado" EntitySet="Estado" />
+            <End Role="Comision" EntitySet="Comision" />
+          </AssociationSet>
+          <AssociationSet Name="Comision_TipoEntidad" Association="Self.Comision_TipoEntidad">
+            <End Role="TipoEntidad" EntitySet="TipoEntidad" />
+            <End Role="Comision" EntitySet="Comision" />
+          </AssociationSet>
+          <AssociationSet Name="PlanDeEstudio_TipoEntidad" Association="Self.PlanDeEstudio_TipoEntidad">
+            <End Role="TipoEntidad" EntitySet="TipoEntidad" />
+            <End Role="PlanDeEstudio" EntitySet="PlanDeEstudio" />
+          </AssociationSet>
+          <AssociationSet Name="BloqueAcademicoXPlanDeEstudio_PlanDeEstudio" Association="Self.BloqueAcademicoXPlanDeEstudio_PlanDeEstudio">
+            <End Role="PlanDeEstudio" EntitySet="PlanDeEstudio" />
+            <End Role="BloqueAcademicoXPlanDeEstudio" EntitySet="BloqueAcademicoXPlanDeEstudio" />
+          </AssociationSet>
+          <AssociationSet Name="BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio" Association="Self.BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio">
+            <End Role="BloqueAcademicoXPlanDeEstudio" EntitySet="BloqueAcademicoXPlanDeEstudio" />
+            <End Role="BloqueXPlanXCurso" EntitySet="BloqueXPlanXCurso" />
+          </AssociationSet>
+          <AssociationSet Name="BloqueXPlanXCurso_Curso" Association="Self.BloqueXPlanXCurso_Curso">
+            <End Role="Curso" EntitySet="Curso" />
+            <End Role="BloqueXPlanXCurso" EntitySet="BloqueXPlanXCurso" />
+          </AssociationSet>
+          <AssociationSet Name="Grupo_BloqueXPlanXCurso" Association="Self.Grupo_BloqueXPlanXCurso">
+            <End Role="BloqueXPlanXCurso" EntitySet="BloqueXPlanXCurso" />
+            <End Role="Grupo" EntitySet="Grupo" />
+          </AssociationSet>
+          <AssociationSet Name="Grupo_Periodo" Association="Self.Grupo_Periodo">
+            <End Role="Periodo" EntitySet="Periodo" />
+            <End Role="Grupo" EntitySet="Grupo" />
+          </AssociationSet>
+          <AssociationSet Name="Grupo_ProfesorXCurso" Association="Self.Grupo_ProfesorXCurso">
+            <End Role="ProfesorXGrupo" EntitySet="ProfesorXGrupo" />
+            <End Role="Grupo" EntitySet="Grupo" />
+          </AssociationSet>
+          <AssociationSet Name="GrupoAula_Grupo" Association="Self.GrupoAula_Grupo">
+            <End Role="Grupo" EntitySet="Grupo" />
+            <End Role="GrupoAula" EntitySet="GrupoAula" />
+          </AssociationSet>
+          <AssociationSet Name="GrupoAula_Horario" Association="Self.GrupoAula_Horario">
+            <End Role="Horario" EntitySet="Horario" />
+            <End Role="GrupoAula" EntitySet="GrupoAula" />
+          </AssociationSet>
+          <AssociationSet Name="Aula_Sede" Association="Self.Aula_Sede">
+            <End Role="Sede" EntitySet="Sede" />
+            <End Role="Aula" EntitySet="Aula" />
+          </AssociationSet>
+          <AssociationSet Name="ApplicationUserRole_Role" Association="Self.ApplicationUserRole_Role">
+            <End Role="IdentityRole" EntitySet="IdentityRole" />
+            <End Role="IdentityUserRole" EntitySet="IdentityUserRole" />
+          </AssociationSet>
+          <AssociationSet Name="IdentityRole_Users" Association="Self.IdentityRole_Users">
+            <End Role="IdentityRole" EntitySet="IdentityRole" />
+            <End Role="IdentityUserRole" EntitySet="IdentityUserRole" />
+          </AssociationSet>
+          <AssociationSet Name="User_Claims" Association="Self.User_Claims">
+            <End Role="User" EntitySet="User" />
+            <End Role="IdentityUserClaim" EntitySet="IdentityUserClaim" />
+          </AssociationSet>
+          <AssociationSet Name="User_Logins" Association="Self.User_Logins">
+            <End Role="User" EntitySet="User" />
+            <End Role="IdentityUserLogin" EntitySet="IdentityUserLogin" />
+          </AssociationSet>
+          <AssociationSet Name="User_Roles" Association="Self.User_Roles">
+            <End Role="User" EntitySet="User" />
+            <End Role="IdentityUserRole" EntitySet="IdentityUserRole" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </StorageModels>
+  </Runtime>
+  <Designer>
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="ProcessDependentTemplatesOnSave" Value="False" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <Diagrams >
+      <Diagram DiagramId="f3484b1da1b94a36bc3bf70b0aa1d401" Name="Diagram1" ZoomLevel="65">
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Aula" Width="1.5" PointX="6.25" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.GrupoAula" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Grupo" Width="1.5" PointX="4.5" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.BloqueXPlanXCurso" Width="1.5" PointX="2.875" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.BloqueAcademicoXPlanDeEstudio" Width="1.5" PointX="5.25" PointY="17.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.BloqueAcademico" Width="1.5" PointX="0.75" PointY="18.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.PlanDeEstudio" Width="1.5" PointX="7.5" PointY="19" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Modalidad" Width="1.5" PointX="5.25" PointY="19.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.PlanDeEstudioXSede" Width="1.5" PointX="10.25" PointY="19.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Sede" Width="1.5" PointX="10.5" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.TipoEntidad" Width="1.5" PointX="9.75" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Comision" Width="1.5" PointX="7.5" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.ComisionXProfesor" Width="1.5" PointX="5.25" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Horario" Width="1.5" PointX="3" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.ProyectoXProfesor" Width="1.5" PointX="0.75" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Periodo" Width="1.5" PointX="7.5" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Profesor" Width="1.5" PointX="7.5" PointY="11.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Estado" Width="1.5" PointX="9.75" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Proyecto" Width="1.5" PointX="3" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.PlazaXProfesor" Width="1.5" PointX="5.25" PointY="11.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Plaza" Width="1.5" PointX="7.5" PointY="16" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.ProfesorXGrupo" Width="1.5" PointX="5.25" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.Curso" Width="1.5" PointX="0.75" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.IdentityRole" Width="1.5" PointX="12.25" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.IdentityUserRole" Width="1.5" PointX="15.25" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.ApplicationUserRole" Width="1.5" PointX="15.25" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.ApplicationRole" Width="1.5" PointX="15.25" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.User" Width="1.5" PointX="15.25" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.IdentityUserClaim" Width="1.5" PointX="17.5" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SACAAE.Data_Access.IdentityUserLogin" Width="1.5" PointX="17.5" PointY="4.875" IsExpanded="true" />
+        <InheritanceConnector EntityType="SACAAE.Data_Access.ApplicationUserRole" ManuallyRouted="false" />
+        <InheritanceConnector EntityType="SACAAE.Data_Access.ApplicationRole" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.GrupoAula_Aula" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.BloqueAcademicoXPlanDeEstudio_BloqueAcademico" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.PlanDeEstudio_Modalidad" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.PlanDeEstudioXSede_PlanDeEstudio" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.PlanDeEstudioXSede_Sede" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.ComisionXProfesor_Comision" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.Horario_ComisionesXProfesores" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.ProyectoXProfesor_Horario" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.ProyectoXProfesor_Periodo" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.Proyecto_Estado" ManuallyRouted="true" >
+          <ConnectorPoint PointX="3.7237463073533874" PointY="11.25" />
+          <ConnectorPoint PointX="3.7237463073533874" PointY="10.875" />
+          <ConnectorPoint PointX="4.6041641666666671" PointY="10.875" />
+          <ConnectorPoint PointX="4.7708308333333331" PointY="10.875" />
+          <ConnectorPoint PointX="4.916666666666667" PointY="10.875" />
+          <ConnectorPoint PointX="5.083333333333333" PointY="10.875" />
+          <ConnectorPoint PointX="6.9171744791666674" PointY="10.875" />
+          <ConnectorPoint PointX="7.0838411458333335" PointY="10.875" />
+          <ConnectorPoint PointX="9.324051065522541" PointY="10.875" />
+          <ConnectorPoint PointX="9.324051065522541" PointY="9.75" />
+          <ConnectorPoint PointX="9.4791666666666661" PointY="9.75" />
+          <ConnectorPoint PointX="9.6458333333333339" PointY="9.75" />
+          <ConnectorPoint PointX="10.557452742755139" PointY="9.75" />
+          <ConnectorPoint PointX="10.557452742755139" PointY="8.9802864583333335" />
+        </AssociationConnector>
+        <AssociationConnector Association="SACAAE.Data_Access.Proyecto_TipoEntidad" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.Profesor_Estado" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.PlazaXProfesor_Plaza" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.PlazaXProfesor_Profesor" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.ProfesorXGrupo_Profesor" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.ProyectoXProfesor_Profesor" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.ProyectoXProfesor_Proyecto" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.ComisionXProfesor_Periodo" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.ComisionXProfesor_Profesor" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.Comision_Estado" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.Comision_TipoEntidad" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.PlanDeEstudio_TipoEntidad" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.BloqueAcademicoXPlanDeEstudio_PlanDeEstudio" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.BloqueXPlanXCurso_BloqueAcademicoXPlanDeEstudio" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.BloqueXPlanXCurso_Curso" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.Grupo_BloqueXPlanXCurso" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.Grupo_Periodo" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.Grupo_ProfesorXCurso" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.GrupoAula_Grupo" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.GrupoAula_Horario" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.Aula_Sede" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.ApplicationUserRole_Role" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.IdentityRole_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.User_Claims" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.User_Logins" ManuallyRouted="false" />
+        <AssociationConnector Association="SACAAE.Data_Access.User_Roles" ManuallyRouted="false" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</Edmx>
