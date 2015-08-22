@@ -16,7 +16,7 @@ namespace SACAAE.Models
         [ForeignKey("Horario")]
         public int? Schedule { get; set; }
 
-        public virtual DetalleGrupo Grupo { get; set; }
+        public virtual Grupo Grupo { get; set; }
         public virtual Aula Aula { get; set; }
         public virtual Horario Horario { get; set; }
     }

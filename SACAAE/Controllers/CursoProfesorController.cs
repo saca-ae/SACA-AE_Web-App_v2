@@ -166,7 +166,7 @@ namespace SACAAE.Controllers
                 var periodo = Request.Cookies["Periodo"].Value;
                 var periodoID = db.Periodos.Where(p => p.Name == periodo).FirstOrDefault().ID;
                 var listaGrupos = db.Grupos
-                                    .Where(p => (p.DetalleGrupo.Professor == null || p.DetalleGrupo.ProfesorXCurso.Professor == 3)
+                                    .Where(p => (p.Professor == null || p.ProfesorXCurso.Professor == 3)
                                              && p.Period == periodoID
                                              && p.BloqueXPlanXCurso.CourseID == curso
                                              && p.BloqueXPlanXCurso.BloqueAcademicoXPlanDeEstudio.PlanID == plan
@@ -185,7 +185,7 @@ namespace SACAAE.Controllers
             if (HttpContext.Request.IsAjaxRequest())
             {
                 var grupo = db.Grupos.Find(cursoxgrupo);
-                var info = new { grupo.ID, grupo.DetalleGrupo.Capacity };
+                var info = new { grupo.ID, grupo.Capacity };
 
                 return Json(info, JsonRequestBehavior.AllowGet);
             }
@@ -217,8 +217,7 @@ namespace SACAAE.Controllers
             {
                 var listaCursos = from profesores in db.Profesores
                                   join profesoresxcurso in db.ProfesoresXCursos on profesores.ID equals profesoresxcurso.Professor
-                                  join detallecurso in db.DetallesDelGrupo on profesoresxcurso.ID equals detallecurso.Professor
-                                  join grupo in db.Grupos on detallecurso.ID equals grupo.ID
+                                  join grupo in db.Grupos on profesoresxcurso.ID equals grupo.Professor
                                   join bloqueXPlanXCurso in db.BloquesXPlanesXCursos on grupo.BlockXPlanXCourse equals bloqueXPlanXCurso.ID
                                   where profesores.ID == idProfesor
                                   select new { profesoresxcurso.ID, bloqueXPlanXCurso.Curso.Name, bloqueXPlanXCurso.Curso.Code };

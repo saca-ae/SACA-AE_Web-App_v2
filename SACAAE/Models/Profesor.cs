@@ -16,12 +16,11 @@ namespace SACAAE.Models
         public string Tel1 { get; set; }
         public string Tel2 { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
 
         public virtual Estado Estado { get; set; }
         public virtual ICollection<ComisionXProfesor> ComisionesXProfesores { get; set; }
         public virtual ICollection<PlazaXProfesor> PlazasXProfesores { get; set; }
-        public virtual ICollection<ProfesorXCurso> ProfesoresXCursos { get; set; }
+        public virtual ICollection<ProfesorXGrupo> ProfesoresXCursos { get; set; }
         public virtual ICollection<ProyectoXProfesor> ProyectosXProfesores { get; set; }
     }
 }

@@ -15,6 +15,7 @@ namespace SACAAE.Models
         public bool External { get; set; }
         public int? PracticeHours { get; set; }
         public int? Credits { get; set; }
+        public bool Temporal { get; set; }
 
         public virtual ICollection<BloqueXPlanXCurso> BloquesXPlanesXCursos { get; set; }
     }

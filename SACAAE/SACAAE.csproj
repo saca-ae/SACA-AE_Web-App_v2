@@ -53,6 +53,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -173,6 +175,11 @@
     <Compile Include="Controllers\SedesController.cs" />
     <Compile Include="Data Access\DBInitializer.cs" />
     <Compile Include="Data Access\SACAAEContext.cs" />
+    <Compile Include="Data Access\SACAAEContext.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SACAAEContext.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -184,6 +191,14 @@
     <Compile Include="Migrations\201508180157324_v0.1.Designer.cs">
       <DependentUpon>201508180157324_v0.1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508220319118_delete DetalleGrupo + fixes.cs" />
+    <Compile Include="Migrations\201508220319118_delete DetalleGrupo + fixes.Designer.cs">
+      <DependentUpon>201508220319118_delete DetalleGrupo + fixes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508220321365_fixes.cs" />
+    <Compile Include="Migrations\201508220321365_fixes.Designer.cs">
+      <DependentUpon>201508220321365_fixes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Aula.cs" />
@@ -193,7 +208,6 @@
     <Compile Include="Models\Comision.cs" />
     <Compile Include="Models\ComisionXProfesor.cs" />
     <Compile Include="Models\Curso.cs" />
-    <Compile Include="Models\DetalleGrupo.cs" />
     <Compile Include="Models\Estado.cs" />
     <Compile Include="Models\Grupo.cs" />
     <Compile Include="Models\GrupoAula.cs" />
@@ -246,6 +260,10 @@
     <Content Include="ClassDiagram1.cd" />
     <Content Include="Content\DataTables\dataTables.responsive.scss" />
     <Content Include="Content\DataTables\Spanish.json" />
+    <EntityDeploy Include="Data Access\SACAAEContext.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SACAAEContext.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -342,6 +360,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508180157324_v0.1.resx">
       <DependentUpon>201508180157324_v0.1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508220319118_delete DetalleGrupo + fixes.resx">
+      <DependentUpon>201508220319118_delete DetalleGrupo + fixes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508220321365_fixes.resx">
+      <DependentUpon>201508220321365_fixes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

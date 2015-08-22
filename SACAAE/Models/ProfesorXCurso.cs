@@ -6,7 +6,7 @@ using System.Web;
 
 namespace SACAAE.Models
 {
-    public class ProfesorXCurso
+    public class ProfesorXGrupo
     {
         public int ID { get; set; }
         [ForeignKey("Profesor")]
@@ -14,6 +14,6 @@ namespace SACAAE.Models
         public int? Hours { get; set; }
 
         public virtual Profesor Profesor { get; set; }
-        public virtual ICollection<DetalleGrupo> DetallesDelGrupo { get; set; }
+        public virtual ICollection<Grupo> Grupos { get; set; }
     }
 }

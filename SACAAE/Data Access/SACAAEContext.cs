@@ -38,7 +38,6 @@ namespace SACAAE.Data_Access
         public DbSet<Comision> Comisiones { get; set; }
         public DbSet<ComisionXProfesor> ComisionesXProfesores { get; set; }
         public DbSet<Curso> Cursos { get; set; }
-        public DbSet<DetalleGrupo> DetallesDelGrupo { get; set; }
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Grupo> Grupos { get; set; }
         public DbSet<Horario> Horarios { get; set; }
@@ -46,7 +45,7 @@ namespace SACAAE.Data_Access
         public DbSet<Periodo> Periodos { get; set; }
         public DbSet<PlanDeEstudio> PlanesDeEstudio { get; set; }
         public DbSet<PlanDeEstudioXSede> PlanesDeEstudioXSedes { get; set; }
-        public DbSet<ProfesorXCurso> ProfesoresXCursos { get; set; }
+        public DbSet<ProfesorXGrupo> ProfesoresXCursos { get; set; }
         public DbSet<Proyecto> Proyectos { get; set; }
         public DbSet<ProyectoXProfesor> ProyectosXProfesores { get; set; }
         public DbSet<Sede> Sedes { get; set; }

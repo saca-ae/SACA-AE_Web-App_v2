@@ -15,6 +15,7 @@ namespace SACAAE.Models
         public int Professor { get; set; }
         [ForeignKey("Periodo")]
         public int Period { get; set; }
+        public int? Hours { get; set; }
 
         public virtual Comision Comision { get; set; }
         public virtual Periodo Periodo { get; set; }
