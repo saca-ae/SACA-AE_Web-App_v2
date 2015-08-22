@@ -1,0 +1,75 @@
+﻿@model SACAAE.Models.Curso
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Curso</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TheoreticalHours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TheoreticalHours)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Block)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Block)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.External)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.External)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PracticeHours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PracticeHours)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Credits)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Credits)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

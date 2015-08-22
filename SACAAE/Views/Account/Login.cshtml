@@ -1,0 +1,76 @@
+﻿@using SACAAE.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Iniciar Sesión";
+}
+
+<script>
+    function setCookie(cname, cvalue, exdays) {
+
+        document.cookie = cname + "=" + cvalue;
+    }
+
+    function Guardar() {
+        var Periodo = document.getElementById("ComboPeriodos").value;
+        setCookie("Periodo", Periodo, 1);
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i].trim();
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+</script>
+
+<body onload="Guardar()">
+    <div>
+        <div id="loginForm">
+            <h2 class="form-signin-heading">Iniciar Sesión</h2>
+            <section>
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    @Html.TextBoxFor(m => m.Username, new { @class = "form-control", @placeholder = "Nombre de Usuario", @required = "true" })
+                    @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+
+                    <br />
+
+                    @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @placeholder = "Contraseña", @type = "password", @required = "true" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+                    <h4>Periodo</h4>
+
+                    if (Model.Periods.Count > 0)
+                    {
+                        @Html.DropDownListFor(m => m.Periods, new SelectList(Model.Periods), new { @id = "ComboPeriodos", @class = "form-control", @onChange = "Guardar()" })
+                    }
+                    else
+                    {
+                        @Html.DropDownListFor(m => m.Periods, new SelectList(Model.Periods), "No se pudieron cargar los periodos.", new { @id = "ComboPeriodos", @class = "form-control", @disabled = "disabled", @onChange = "Guardar()" })
+                    }
+
+                    <hr />
+
+                    if (Model.Periods.Count > -1) //Cambiar a 0
+                    {
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Iniciar Sesión</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-lg btn-primary btn-block" type="submit" disabled>Iniciar Sesión</button>
+                    }
+                }
+            </section>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

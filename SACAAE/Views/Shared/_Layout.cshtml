@@ -1,0 +1,65 @@
+﻿<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - SACAAE</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/css")
+    <style>
+        body {
+            padding-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="navbar-brand">@Html.ActionLink("SACAAE", "Login", "Account")</div>
+                <!--<a class="navbar-brand" href="#">SACAAE</a>-->
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    @if (!Request.IsAuthenticated)
+                    {
+
+                        <li class="active">@Html.ActionLink("Login", "Login", "Account")</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Html.ActionLink("Administrar Cuenta", "Administrar", "Account")</li>
+
+                    }
+                    <li><a href="#about">Acerca</a></li>
+                    <li><a href="#contact">Contacto</a></li>
+
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+    <!--Body-->
+    <div class="container">
+        @RenderBody()
+    </div>
+    <!--Footer-->
+    <div id="footer">
+        <div class="container">
+            <p class="text-muted">Escuela de Administraci&oacute;n de Empresas - @DateTime.Now.Year.</p>
+
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

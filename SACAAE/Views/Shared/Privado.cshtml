@@ -1,0 +1,188 @@
+﻿<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - SACAAE</title>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/datatables")
+    <style>
+        body {
+            padding-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="navbar-brand">@Html.ActionLink("SACAAE", "Index", "Home")</div>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-right top-nav">
+                @*<li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-bell" aria-hidden="true"></span> <b class="caret"></b></a>
+                    <ul class="dropdown-menu alert-dropdown">
+                        @if (SACAAE.Models.AlertaProyectoProfesor.getProyectosAtrasados(100).Count > 0)
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "AlertaProyectoProfesor", new  { Dias = "100" })"><span class="label label-danger">@SACAAE.Models.AlertaProyectoProfesor.getProyectosAtrasados(100).Count+ Proyectos Vencidos/O vencer</span></a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "AlertaProyectoProfesor", new  { Dias = "100" })">Alert Name <span class="label label-success">No hay proyectos vencidos</span></a>
+                            </li>
+                        }
+                        <li class="divider"></li>
+                        @if (SACAAE.Models.AlertaComisionProfesor.getComisionesAtrasados(100).Count > 0)
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "AlertaComisionProfesor", new  { Dias = "100" })"><span class="label label-danger">@SACAAE.Models.AlertaComisionProfesor.getComisionesAtrasados(100).Count+ Comisiones Vencidas/O vencer</span></a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "AlertaComisionProfesor", new  { Dias = "100" })">Alert Name <span class="label label-success">No hay comisiones vencidas</span></a>
+                            </li>
+                        }
+
+                    </ul>
+                </li>*@
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> amasis <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Cuenta</a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configuración</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="@Url.Action("Logoff", "Account")"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Log Out</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#asignacion_carga_academica">Gestión de Carga Académica <b class="caret"></b></a>
+                        <ul id="asignacion_carga_academica" class="collapse">
+                            <li>
+                                <a href="@Url.Action("Asignar", "CursoProfesor")">Asignar Profesor a Curso</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Revocar", "CursoProfesor")">Revocar Profesor de Curso</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Asignar", "ComisionProfesor")">Asignar Profesor a Comisión</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Revocar", "ComisionProfesor")">Revocar Profesor de Comisión</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Asignar", "ProyectoProfesor")">Asignar Profesor a Proyecto</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Revocar", "ProyectoProfesor")">Revocar Profesor de Proyecto</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#descargar_reportes">Descarga de Reportes <b class="caret"></b></a>
+                        <ul id="descargar_reportes" class="collapse">
+                            <li>
+                                <a href="@Url.Action("Download", "Reportes")">Reporte General</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "ReporteProfeCursoPlan")">Reporte de Profesores y Cursos por Plan</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo">Mantenimientos <b class="caret"></b></a>
+                        <ul id="demo" class="collapse">
+                            <li>
+                                <a href="@Url.Action("Index", "Plans")">Planes de Estudio</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Bloque")">Bloques Académicos</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Curso")">Cursos</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "OfertaAcademica")">Oferta Académica</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Aula")">Aulas</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Horarios")">Horarios</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Proyecto")">Proyectos</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Comision")">Comisiones</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Profesor")">Profesores</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Plazas")">Plazas</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Sedes")">Sedes</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!-- Pill Nav Menu-->
+        <nav>
+            <ul class="nav nav-pills pull-right">
+                <li id="TEC"><a data-toggle="pill" href="#" onclick="return setEntidad('TEC')">TEC</a></li>
+                <li id="CIADEG "><a data-toggle="pill" href="#" title="Centro de Investigación en Administración, Economía y Gestión Tecnológica" onclick="return setEntidad('CIADEG')">CIADEG</a></li>
+                <li id="TAE"><a data-toggle="pill" href="#" title="Técnico en Administración de Empresas" onclick="return setEntidad('TAE')">TAE</a></li>
+                <li id="MAE"><a data-toggle="pill" href="#" title="Maestría en Administración de Empresas" onclick="return setEntidad('MAE')">MAE</a></li>
+                <li id="MDE"><a data-toggle="pill" href="#" title="Maestría en Dirección de Empresas" onclick="return setEntidad('MDE')">MDE</a></li>
+                <li id="MGP"><a data-toggle="pill" href="#" title="Maestría en Gerencia de Proyectos" onclick="return setEntidad('MGP')">MGP</a></li>
+                <li id="DDE"><a data-toggle="pill" href="#" title="Doctorado en Dirección de Empresas" onclick="return setEntidad('DDE')">DDE</a></li>
+                <li id="Emprendedores"><a data-toggle="pill" href="#" onclick="return setEntidad('Emprendedores')">Emprendedores</a></li>
+                <li id="CIE"><a data-toggle="pill" href="#" title="Centro de Incubación de Empresas" onclick="return setEntidad('CIE')">CIE</a></li>
+                <li id="Actualizacion_Cartago"><a data-toggle="pill" href="#" onclick="return setEntidad('Actualizacion_Cartago')">Actualización Cartago</a></li>
+                <li id="Actualizacion_San_Carlos"><a data-toggle="pill" href="#" onclick="return setEntidad('Actualizacion_San_Carlos')">Actualización San Carlos</a></li>
+            </ul>
+        </nav>
+        <!--Page Content-->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                @RenderBody()
+            </div>
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/datatables")
+    @Scripts.Render("~/Scripts/SiteScripts/entidades.js")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

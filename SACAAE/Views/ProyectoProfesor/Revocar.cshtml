@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Revocar";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/SiteScripts/RevocarProyectoProfesor.js")"></script>
+}
+
+<h2 class="page-header">Revocar Profesor de Proyecto</h2>
+<div class="row-fluid">
+    <div class="col-lg-5">
+        <div class="span12">
+            @if (TempData.ContainsKey("Message"))
+            {
+                String message = TempData["Message"].ToString();
+
+                if (message.Equals("Profesor revocado de proyecto correctamente."))
+                {
+                    <p class="text-success">@message</p>
+                }
+                else
+                {
+                    <p class="text-danger">@message</p>
+                }
+            }
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+
+                <div class="editor-label">
+                    @Html.Label("Profesores")
+                </div>
+                <div class="editor-field">
+                    @Html.DropDownList("Profesores", null, "-- Seleccione Profesor --", htmlAttributes: new { @class = "form-control" })
+                    @if (ViewBag.Profesores == null)
+                    {
+
+                        @Html.ActionLink("Crear Profesor", "Crear", "Profesor")
+                    }
+                </div>
+                <br />
+
+                <div class="editor-label">
+                    @Html.Label("Proyectos")
+                </div>
+                <div class="editor-field">
+                    <select id="sltProyectos" name="sltProyectos" class="form-control"></select>
+                </div>
+                <br />
+
+                <p>
+                    <input type="submit" value="Revocar" class="btn" id="Revocar" disabled="disabled" />
+                    |
+                    @if (ViewBag.returnUrl != null)
+                    {
+                        <a href="@ViewBag.returnUrl">Cancelar</a>
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Cancelar", "Index", "Proyecto");
+                    }
+                </p>
+            }
+        </div>
+    </div>
+</div>

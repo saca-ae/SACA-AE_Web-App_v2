@@ -1,0 +1,156 @@
+﻿@model SACAAE.Models.ProfesorXCurso
+@{
+    ViewBag.Title = "Asignar Profesor a Curso";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/SiteScripts/CursoProfesor.js")"></script>
+}
+
+<h2 class="page-header">Asignar Profesor a Curso</h2>
+<div class="row-fluid">
+    <div class="col-lg-5">
+        <div class="span12">
+            @if (TempData.ContainsKey("Message"))
+            {
+                String message = TempData["Message"].ToString();
+
+                if (message.Equals("Profesor asignado correctamente."))
+                {
+                    <p class="text-success">@message</p>
+                }
+                else
+                {
+                    <p class="text-danger">@message</p>
+                }
+            }
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+
+                <div class="editor-label">
+                    @Html.Label("Profesor")
+                </div>
+                <div class="editor-field">
+                    @Html.DropDownList("Profesores", null, "-- Seleccione Profesor si existe --", htmlAttributes: new { @class = "form-control" })
+                    @if (ViewBag.Profesores == null)
+                    {
+
+                        @Html.ActionLink("Crear Profesor", "Crear", "Profesor")
+                    }
+                </div>
+                <br />
+
+                <div class="editor-label">
+                    @Html.Label("Sede")
+                </div>
+                <div class="editor-field">
+                    @Html.DropDownList("Sedes", null, "-- Seleccione la sede --", htmlAttributes: new { @class = "form-control" })
+                    @if (ViewBag.Sedes == null)
+                    {
+                        @Html.ActionLink("Agregar Sede", "Crear", "Sede")
+                    }
+                </div>
+                <br />
+
+                <div class="editor-label">
+                    @Html.Label("Modalidad")
+                </div>
+                <div class="editor-field">
+                    @Html.DropDownList("Modalidades", null, "-- Seleccione la modalidad --", htmlAttributes: new { @class = "form-control" })
+                    @if (ViewBag.Modalidades == null)
+                    {
+                        @Html.ActionLink("Agregar Modalidad", "Crear", "Modalidad")
+                    }
+                </div>
+                <br />
+
+                <div class="editor-label">
+                    @Html.Label("Plan de Estudio")
+                </div>
+                <div class="editor-field">
+                    <select id="sltPlan" name="sltPlan" class="form-control"></select>
+                </div>
+                <br />
+
+                <div class="editor-label">
+                    @Html.Label("Bloque")
+                </div>
+                <div class="editor-field">
+                    <select id="sltBloque" name="sltBloque" class="form-control"></select>
+                </div>
+                <br />
+
+                <div class="editor-label">
+                    @Html.Label("Curso")
+                </div>
+                <div class="editor-field">
+                    <select id="sltCurso" name="sltCurso" class="form-control"></select>
+                </div>
+                <br />
+
+                <div class="editor-label">
+                    @Html.Label("Grupos sin profesor asignado")
+                </div>
+                <div class="editor-field">
+                    <select id="sltGrupo" name="sltGrupo" class="form-control"></select>
+                </div>
+                <br />
+
+                <div class="editor-label">
+                    @Html.Label("Horas")
+                </div>
+                <div class="editor-field">
+                    @Html.TextBox("txtHoras", null, new { @class = "form-control", @disabled = "disabled" })
+                    <!--<input type="text" name="txtHoras" id="txtHoras" disabled="disabled" class="form-control">-->
+                </div>
+                <br />
+
+                <div class="editor-label">
+                    @Html.Label("Cupo")
+                </div>
+                <div class="editor-field">
+                    <input type="text" name="txtCupo" id="txtCupo" disabled="disabled" class="form-control">
+                </div>
+                <br />
+
+                <div class="editor-label">
+                    @Html.Label("Aula")
+                </div>
+                <div class="editor-field">
+                    <input type="text" name="txtAula" id="txtAula" disabled="disabled" class="form-control">
+                </div>
+                <br />
+
+                <div class="editor-label">
+                    @Html.Label("Horario")
+                </div>
+                <div class="editor-field">
+                    <textarea id="txtHorario" name="txtHorario" disabled="disabled" class="form-control"></textarea>
+                </div>
+
+                <div class="editor-label">
+                    @Html.Label("Horas Estimadas")
+                </div>
+                <div class="editor-field">
+                    @Html.TextBox("txtHorasEstimadas", null, new { @class = "form-control", @type = "number", @required = "true" })
+                </div>
+                <hr />
+                <p>
+                    <input type="submit" onclick="habilitarHoras()" value="Asignar" class="btn" id="Asignar" disabled="disabled" />
+                    |
+                    @if (ViewBag.returnUrl != null)
+                    {
+                        <a href="@ViewBag.returnUrl">Cancelar</a>
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Cancelar", "Index", "Proyecto");
+                    }
+                </p>
+            }
+        </div>
+    </div>
+</div>
