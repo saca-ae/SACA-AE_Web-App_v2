@@ -102,7 +102,7 @@ namespace SACAAE.Controllers
 
         private ActionResult loginSelect()
         {
-            var periodo = Request.Cookies["Periodo"].Value;
+           var periodo = Request.Cookies["Periodo"].Value;
             if (periodo == "Nuevo Periodo")
             {
                 return RedirectToAction("Index", "Curso");
