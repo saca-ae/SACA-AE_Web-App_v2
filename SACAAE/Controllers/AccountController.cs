@@ -105,7 +105,7 @@ namespace SACAAE.Controllers
            var periodo = Request.Cookies["Periodo"].Value;
             if (periodo == "Nuevo Periodo")
             {
-                return RedirectToAction("Index", "Curso");
+                return RedirectToAction("Index", "Periodo");
             }
             return RedirectToAction("Index", "Home");
         }
