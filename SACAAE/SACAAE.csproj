@@ -167,10 +167,12 @@
     <Compile Include="Controllers\AulaController.cs" />
     <Compile Include="Controllers\BloqueController.cs" />
     <Compile Include="Controllers\ComisionProfesorController.cs" />
+    <Compile Include="Controllers\CSVController.cs" />
     <Compile Include="Controllers\CursoController.cs" />
     <Compile Include="Controllers\CursoProfesorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PeriodoController.cs" />
     <Compile Include="Controllers\ProyectoProfesorController.cs" />
     <Compile Include="Controllers\SedesController.cs" />
     <Compile Include="Data Access\DBInitializer.cs" />
@@ -348,6 +350,8 @@
     <Content Include="Views\Curso\Details.cshtml" />
     <Content Include="Views\Curso\Edit.cshtml" />
     <Content Include="Views\Curso\Index.cshtml" />
+    <Content Include="Views\CSV\CargarCSV.cshtml" />
+    <Content Include="Views\Periodo\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
