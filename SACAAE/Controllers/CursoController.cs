@@ -50,6 +50,7 @@ namespace SACAAE.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(curso);
         }
 

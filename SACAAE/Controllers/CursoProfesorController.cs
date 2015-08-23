@@ -228,6 +228,38 @@ namespace SACAAE.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
+        /*Esteban Segura Benavides 
+         * Obtener grupos de un curso de acuerdo al id del curso*/
+
+        [Route("CursoProfesor/Cursos/{idCurso:int}")]
+        public ActionResult ObtenerGruposdeCurso(int idCurso)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var listaCursos = (from curso in db.Cursos
+                                   join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
+                                   join bloque_planes in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
+                                   join bloque_academico in db.BloquesAcademicos on bloque_planes.BlockID equals bloque_academico.ID
+                                   join grupo in db.Grupos on bloque_planes_curso.ID equals grupo.BlockXPlanXCourse
+                                   join profesor in db.Profesores on grupo.Professor equals profesor.ID
+                                   join plan_estudio in db.PlanesDeEstudio on bloque_planes.PlanID equals plan_estudio.ID
+                                   join plan_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_sede.StudyPlan
+                                   join sede in db.Sedes on plan_sede.SedeID equals sede.ID
+                                   join grupo_aula in db.GrupoAula on grupo.ID equals grupo_aula.Group
+                                   join aula in db.Aulas on grupo_aula.Classroom equals aula.ID
+                                   join horario in db.Horarios on grupo_aula.Schedule equals horario.ID
+                                   where curso.ID == idCurso && sede.Name == "San Carlos"
+
+                                   select new { grupo.ID, grupo.Number, profesor.Name, aula.Code, horario.StartHour, horario.EndHour, horario.Day });
+                                    
+                  
+                 
+                var json = JsonConvert.SerializeObject(listaCursos);
+                return Content(json);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+        
         #endregion
     }
 }
