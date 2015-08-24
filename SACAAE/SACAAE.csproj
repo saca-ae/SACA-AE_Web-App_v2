@@ -352,6 +352,7 @@
     <Content Include="Views\Curso\Index.cshtml" />
     <Content Include="Views\CSV\CargarCSV.cshtml" />
     <Content Include="Views\Periodo\Index.cshtml" />
+    <Content Include="Views\Curso\AsignarProfesoraCurso.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
