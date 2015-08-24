@@ -10,11 +10,11 @@ namespace SACAAE.Models
     {
         public int ID { get; set; }
         [ForeignKey("Grupo")]
-        public int Group { get; set; }
+        public int GroupID { get; set; }
         [ForeignKey("Aula")]
-        public int? Classroom { get; set; }
+        public int? ClassroomID { get; set; }
         [ForeignKey("Horario")]
-        public int? Schedule { get; set; }
+        public int? ScheduleID { get; set; }
 
         public virtual Grupo Grupo { get; set; }
         public virtual Aula Aula { get; set; }

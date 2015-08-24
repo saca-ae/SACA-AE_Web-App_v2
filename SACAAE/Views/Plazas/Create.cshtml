@@ -1,0 +1,51 @@
+﻿@model SACAAE.Models.ViewModels.PlazaCreateViewModel
+
+@{
+    ViewBag.Title = "Agregar Plaza";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<h2 class="page-header">Agregar Plaza</h2>
+
+<div class="col-lg-4">
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    
+    <div class="form-group">
+        @Html.Label("Código", htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @placeholder = "Código de Plaza" } })
+        @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Tipo de Plaza", htmlAttributes: new { @class = "control-label" })
+        @Html.DropDownListFor(model => model.PlazaType, Model.PlazaTypeList, new { @class = "form-control" } )
+        @Html.ValidationMessageFor(model => model.PlazaType, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Tipo según Tiempo", htmlAttributes: new { @class = "control-label" })
+        @Html.DropDownListFor(model => model.TimeType, Model.TimeTypeList, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.TimeType, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+       @Html.Label("Horas Totales", htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.TotalHours, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.TotalHours, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Tiempo de Vigencia (Meses)", htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.EffectiveTime, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.EffectiveTime, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn" /> |
+        @Html.ActionLink("Regresar", "Index")
+    </div>
+}
+</div>

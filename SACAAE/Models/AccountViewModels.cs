@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace SACAAE.Models
 {
@@ -60,7 +61,8 @@ namespace SACAAE.Models
         [Display(Name = "¿Recordarme?")]
         public bool RememberMe { get; set; }
 
-        public List<string> Periods { get; set; }
+        public int Periods { get; set; }
+        public SelectList PeriodsList { get; set; }
     }
 
     public class RegisterViewModel
@@ -86,7 +88,7 @@ namespace SACAAE.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -105,7 +107,7 @@ namespace SACAAE.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
