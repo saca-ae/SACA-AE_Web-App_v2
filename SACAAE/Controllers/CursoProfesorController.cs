@@ -40,8 +40,10 @@ namespace SACAAE.Controllers
         // POST: CursoProfesor/Asignar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Asignar(int sltProfesor, int sltGrupo, int txtHoras, int txtHorasEstimadas)
+        public ActionResult Asignar(int idProfesor, int idGrupo, int txtHoras, int txtHorasEstimadas)
         {
+            db.Grupos.Find(idGrupo).Professor=idProfesor;
+            db.SaveChanges();
             //var creado = 0;
             //var idProfesorXCurso = 0;
             //var idDetalleGrupo = vRepositorioGrupos.obtenerUnDetalleGrupo(sltGrupo);
@@ -293,7 +295,9 @@ namespace SACAAE.Controllers
 
         /*Esteban Segura Benavides
        * Obtener el plan de estudio segun el curso especifico de acuerdo a su id, sede y modalidad*/
-
+        /*CursoProfesor/Curso/{idCurso:int}/Sedes/{idSedes:int}/Modalida
+         
+        */
         [Route("CursoProfesor/Cursos/Sedes/Modalidad/Plan/{idCurso:int}/{idSede:int}/{idModalidad:int}")]
         public ActionResult ObtenerModalidadsegunCursoySedeyModalidad(int idCurso, int idSede, int idModalidad)
         {
