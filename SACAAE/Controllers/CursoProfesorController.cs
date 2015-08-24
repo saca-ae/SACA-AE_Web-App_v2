@@ -66,6 +66,7 @@ namespace SACAAE.Controllers
 
             return RedirectToAction("Asignar");
         }
+        
 
         // GET: CursoProfesor/revocar
         public ActionResult Revocar()
@@ -185,31 +186,14 @@ namespace SACAAE.Controllers
             if (HttpContext.Request.IsAjaxRequest())
             {
                 var grupo = db.Grupos.Find(cursoxgrupo);
-                var info = new { grupo.ID, grupo.Capacity };
+                var info = new { grupo.ID, grupo.Capacity,grupo.BloqueXPlanXCurso.Curso.TheoreticalHours };
 
                 return Json(info, JsonRequestBehavior.AllowGet);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-
-        //public ActionResult ObtenerHorario(int cursoxgrupo)
-        //{
-        //    int idHorario = repositorioCursoProfesor.obtenerHorario(cursoxgrupo);
-        //    IQueryable listaHorario = null;
-
-        //    if (idHorario != 0)
-        //    {
-        //        listaHorario = repositorioCursoProfesor.obtenerInfoHorario(idHorario);
-
-        //        var json = JsonConvert.SerializeObject(listaHorario);
-
-        //        return Content(json);
-        //    }
-
-        //    return View(listaHorario);
-        //}
-
+        
         [Route("CursoProfesor/Profesor/Cursos/{idProfesor:int}")]
         public ActionResult ObtenerCursosPorProfesor(int idProfesor)
         {
@@ -258,7 +242,134 @@ namespace SACAAE.Controllers
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
-        
+
+
+        /*Esteban Segura Benavides
+        * Obtener la sede de curso especifico de acuerdo a su id*/
+        [Route("CursoProfesor/Cursos/Sedes/{idCurso:int}")]
+        public ActionResult ObtenerSedesegunCurso(int idCurso)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var listaSedesxCurso = (
+                                        from curso in db.Cursos
+                                        join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
+                                        join bloque_plan in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
+                                        join plan_estudio in db.PlanesDeEstudio on bloque_plan.PlanID equals plan_estudio.ID
+                                        join plan_estudio_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlan
+                                        join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
+                                        where curso.ID == idCurso
+                                        select new { sede.ID,sede.Name }).Distinct();
+                var json = JsonConvert.SerializeObject(listaSedesxCurso);
+                return Content(json);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        /*Esteban Segura Benavides
+       * Obtener la modalidad de curso especifico de acuerdo a su id*/
+        [Route("CursoProfesor/Cursos/Sedes/Modalidad/{idCurso:int}/{idSede:int}")]
+        public ActionResult ObtenerModalidadsegunCursoySede(int idCurso, int idSede)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            { 
+                 var listaModalidadxCursoxSede = (
+                                        from curso in db.Cursos
+                                        join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
+                                        join bloque_plan in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
+                                        join plan_estudio in db.PlanesDeEstudio on bloque_plan.PlanID equals plan_estudio.ID
+                                        join plan_estudio_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlan
+                                        join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
+                                        join modalidad in db.Modalidades on plan_estudio.Mode equals modalidad.ID
+                                        where curso.ID == idCurso  && sede.ID == idSede
+                                        select new { modalidad.ID,modalidad.Name }).Distinct();
+                var json = JsonConvert.SerializeObject(listaModalidadxCursoxSede);
+                return Content(json);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+
+        /*Esteban Segura Benavides
+       * Obtener el plan de estudio segun el curso especifico de acuerdo a su id, sede y modalidad*/
+
+        [Route("CursoProfesor/Cursos/Sedes/Modalidad/Plan/{idCurso:int}/{idSede:int}/{idModalidad:int}")]
+        public ActionResult ObtenerModalidadsegunCursoySedeyModalidad(int idCurso, int idSede, int idModalidad)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var listaPlansegunCursoxSedexModalidad = (from curso in db.Cursos
+                                                          join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
+                                                          join bloque_plan in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
+                                                          join plan_estudio in db.PlanesDeEstudio on bloque_plan.PlanID equals plan_estudio.ID
+                                                          join plan_estudio_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlan
+                                                          join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
+                                                          join modalidad in db.Modalidades on plan_estudio.Mode equals modalidad.ID
+                                                          where curso.ID == idCurso && sede.ID == idSede&& modalidad.ID==idModalidad
+                                                          select new { plan_estudio.ID, plan_estudio.Name}).Distinct();
+
+                var json = JsonConvert.SerializeObject(listaPlansegunCursoxSedexModalidad);
+                return Content(json);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        /*Esteban Segura Benavides
+       * Obtener el bloque segun el curso especifico de acuerdo a su id, sede y modalidad y plan de estudio*/
+
+        [Route("CursoProfesor/Cursos/Sedes/Modalidad/Plan/Bloque/{idCurso:int}/{idSede:int}/{idModalidad:int}/{idPlan:int}")]
+        public ActionResult ObtenerModalidadsegunCursoySedeyModalidadyPlan(int idCurso, int idSede, int idModalidad, int idPlan)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var listaPlansegunCursoxSedexModalidad = (from curso in db.Cursos
+                                                          join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
+                                                          join bloque_plan in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
+                                                          join bloque in db.BloquesAcademicos on bloque_plan.BlockID equals bloque.ID
+                                                          join plan_estudio in db.PlanesDeEstudio on bloque_plan.PlanID equals plan_estudio.ID
+                                                          join plan_estudio_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlan
+                                                          join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
+                                                          join modalidad in db.Modalidades on plan_estudio.Mode equals modalidad.ID
+                                                          where curso.ID == idCurso && sede.ID == idSede && modalidad.ID == idModalidad && plan_estudio.ID == idPlan
+                                                          select new { bloque.ID, bloque.Description }).Distinct();
+
+                var json = JsonConvert.SerializeObject(listaPlansegunCursoxSedexModalidad);
+                return Content(json);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        /*Esteban Segura Benavides
+         Obtener el horario de un grupo especifico
+         de acuerdo a su codigo de curso, sede, modalidad, plan de estudio y numero de grupo*/
+        [Route("CursoProfesor/Cursos/Sedes/Modalidad/Plan/Grupo/Horario/{idCurso:int}/{idSede:int}/{idModalidad:int}/{idPlan:int}/{idGrupo:int}")]
+        public ActionResult ObtenerHorario(int idCurso,int idSede, int idModalidad, int idPlan, int idGrupo)
+        {
+
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var HorariosegunCursoxGrupoxSedexModalidadxPlan = from curso in db.Cursos
+                                                                  join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
+                                                                  join bloque_plan in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
+                                                          
+                                                                  join plan_estudio in db.PlanesDeEstudio on bloque_plan.PlanID equals plan_estudio.ID
+                                                                  join plan_estudio_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlan
+                                                                  join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
+                                                                  join modalidad in db.Modalidades on plan_estudio.Mode equals modalidad.ID
+                                                                  join grupo in db.Grupos on bloque_planes_curso.ID equals grupo.BlockXPlanXCourse
+                                                                  join grupo_aula in db.GrupoAula on grupo.ID equals grupo_aula.Group
+                                                                  join horario in db.Horarios on grupo_aula.Schedule equals horario.ID
+                                                                  join aula in db.Aulas on grupo_aula.Classroom equals aula.ID 
+                                                                  where curso.ID == idCurso && sede.ID == idSede && modalidad.ID == idModalidad && plan_estudio.ID == idPlan &&
+                                                                  grupo.ID == idGrupo
+                                                                  select new { horario.Day, horario.StartHour, horario.EndHour,aula.Code };
+
+                var json = JsonConvert.SerializeObject(HorariosegunCursoxGrupoxSedexModalidadxPlan);
+                return Content(json);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
         #endregion
     }
 }
