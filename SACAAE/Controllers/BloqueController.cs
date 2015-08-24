@@ -29,8 +29,8 @@ namespace SACAAE.Controllers
                 result = from bloque in db.BloquesAcademicos
                          join BloquesXPlan in db.BloquesAcademicosXPlanesDeEstudio on bloque.ID equals BloquesXPlan.BlockID
                          join planDeEstudio in db.PlanesDeEstudio on BloquesXPlan.PlanID equals planDeEstudio.ID
-                         where planDeEstudio.EntityType == 1 || planDeEstudio.EntityType == 2 ||
-                         planDeEstudio.EntityType == 3 || planDeEstudio.EntityType == 4 || planDeEstudio.EntityType == 10
+                         where planDeEstudio.EntityTypeID == 1 || planDeEstudio.EntityTypeID == 2 ||
+                         planDeEstudio.EntityTypeID == 3 || planDeEstudio.EntityTypeID == 4 || planDeEstudio.EntityTypeID == 10
                          select bloque;
             }
             else
@@ -38,7 +38,7 @@ namespace SACAAE.Controllers
                 result = from bloque in db.BloquesAcademicos
                          join BloquesXPlan in db.BloquesAcademicosXPlanesDeEstudio on bloque.ID equals BloquesXPlan.BlockID
                          join planDeEstudio in db.PlanesDeEstudio on BloquesXPlan.PlanID equals planDeEstudio.ID
-                         where planDeEstudio.EntityType == entityID
+                         where planDeEstudio.EntityTypeID == entityID
                          select bloque;
             }
 

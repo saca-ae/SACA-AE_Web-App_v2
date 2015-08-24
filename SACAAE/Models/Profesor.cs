@@ -12,7 +12,7 @@ namespace SACAAE.Models
         public string Name { get; set; }
         public string Link { get; set; }
         [ForeignKey("Estado")]
-        public int? State { get; set; }
+        public int? StateID { get; set; }
         public string Tel1 { get; set; }
         public string Tel2 { get; set; }
         public string Email { get; set; }
@@ -20,7 +20,7 @@ namespace SACAAE.Models
         public virtual Estado Estado { get; set; }
         public virtual ICollection<ComisionXProfesor> ComisionesXProfesores { get; set; }
         public virtual ICollection<PlazaXProfesor> PlazasXProfesores { get; set; }
-        public virtual ICollection<ProfesorXGrupo> ProfesoresXCursos { get; set; }
+        public virtual ICollection<Grupo> Grupos { get; set; }
         public virtual ICollection<ProyectoXProfesor> ProyectosXProfesores { get; set; }
     }
 }

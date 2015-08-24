@@ -253,7 +253,7 @@ namespace SACAAE.Controllers
                 return from aula in db.Aulas
                        join Sedes in db.Sedes on aula.SedeID equals Sedes.ID
                        join planXSede in db.PlanesDeEstudioXSedes on Sedes.ID equals planXSede.SedeID
-                       join planDeEstudio in db.PlanesDeEstudio on planXSede.StudyPlan equals planDeEstudio.ID
+                       join planDeEstudio in db.PlanesDeEstudio on planXSede.StudyPlanID equals planDeEstudio.ID
                        where planDeEstudio.TipoEntidad.ID == 1 || planDeEstudio.TipoEntidad.ID == 2 ||
                        planDeEstudio.TipoEntidad.ID == 3 || planDeEstudio.TipoEntidad.ID == 4 || planDeEstudio.TipoEntidad.ID == 10
                        select aula;
@@ -262,7 +262,7 @@ namespace SACAAE.Controllers
                 return from aula in db.Aulas
                        join Sedes in db.Sedes on aula.SedeID equals Sedes.ID
                        join planXSede in db.PlanesDeEstudioXSedes on Sedes.ID equals planXSede.SedeID
-                       join planDeEstudio in db.PlanesDeEstudio on planXSede.StudyPlan equals planDeEstudio.ID
+                       join planDeEstudio in db.PlanesDeEstudio on planXSede.StudyPlanID equals planDeEstudio.ID
                        where planDeEstudio.TipoEntidad.ID == entidadID
                        select aula;
             }

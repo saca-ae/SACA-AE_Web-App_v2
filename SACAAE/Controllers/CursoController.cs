@@ -28,10 +28,10 @@ namespace SACAAE.Controllers
                     ID = p.ID,
                     Name = p.Name,
                     TheoreticalHours = p.TheoreticalHours,
-                    PracticeHours = (p.PracticeHours != null) ? (int)p.PracticeHours : 0,
+                    PracticeHours = p.PracticeHours.GetValueOrDefault(),
                     Block = p.Block,
                     Code = p.Code,
-                    Credits = (p.Credits != null) ? (int)p.Credits : 0,
+                    Credits = p.Credits.GetValueOrDefault(),
                     External = p.External
                 }));
 

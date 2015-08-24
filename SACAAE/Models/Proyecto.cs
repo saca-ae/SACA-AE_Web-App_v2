@@ -13,10 +13,10 @@ namespace SACAAE.Models
         public DateTime? Start { get; set; }
         public DateTime? End { get; set; }
         [ForeignKey("Estado")]
-        public int? State { get; set; }
+        public int? StateID { get; set; }
         public string Link { get; set; }
         [ForeignKey("TipoEntidad")]
-        public int? EntityType { get; set; }
+        public int? EntityTypeID { get; set; }
 
         public virtual Estado Estado { get; set; }
         public virtual ICollection<ProyectoXProfesor> ProyectosXProfesores { get; set; }
