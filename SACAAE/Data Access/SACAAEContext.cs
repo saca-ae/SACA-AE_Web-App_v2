@@ -43,9 +43,10 @@ namespace SACAAE.Data_Access
         public DbSet<Horario> Horarios { get; set; }
         public DbSet<Modalidad> Modalidades { get; set; }
         public DbSet<Periodo> Periodos { get; set; }
+        public DbSet<TipoPeriodo> TiposPeriodo { get; set; }
+        public DbSet<NumeroPeriodo> PeriodoAño { get; set; }
         public DbSet<PlanDeEstudio> PlanesDeEstudio { get; set; }
         public DbSet<PlanDeEstudioXSede> PlanesDeEstudioXSedes { get; set; }
-        public DbSet<ProfesorXGrupo> ProfesoresXCursos { get; set; }
         public DbSet<Proyecto> Proyectos { get; set; }
         public DbSet<ProyectoXProfesor> ProyectosXProfesores { get; set; }
         public DbSet<Sede> Sedes { get; set; }
@@ -53,6 +54,8 @@ namespace SACAAE.Data_Access
         public DbSet<PlazaXProfesor> PlazasXProfesores { get; set; }
         public DbSet<Profesor> Profesores { get; set; }
         public DbSet<TipoEntidad> TipoEntidades { get; set; }
+
+        public DbSet<GrupoAula> GrupoAula { get; set; }
     }
 }
 /*

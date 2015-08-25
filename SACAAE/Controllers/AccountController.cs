@@ -57,13 +57,16 @@ namespace SACAAE.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login(string returnUrl) //Test
         {
-            var periodos = db.Periodos.Select(p => p.Name).ToList();
-            periodos.Add("Nuevo Periodo");
+            var periodos = db.Periodos.Select(p => new {
+                                                ID = p.ID,
+                                                Name = (p.Year + " - " + p.Numero.Tipo.Name + " " + p.Numero.Number)
+                                            }).ToList();
+            periodos.Add(new { ID = 0, Name = "Nuevo Periodo" });
             var viewModel = new LoginViewModel()
             {
-                Periods = periodos
+                PeriodsList = new SelectList(periodos, "ID", "Name")
             };
 
             ViewBag.ReturnUrl = returnUrl;
@@ -102,10 +105,10 @@ namespace SACAAE.Controllers
 
         private ActionResult loginSelect()
         {
-            var periodo = Request.Cookies["Periodo"].Value;
+           var periodo = Request.Cookies["Periodo"].Value;
             if (periodo == "Nuevo Periodo")
             {
-                return RedirectToAction("Index", "Curso");
+                return RedirectToAction("Index", "Periodo");
             }
             return RedirectToAction("Index", "Home");
         }

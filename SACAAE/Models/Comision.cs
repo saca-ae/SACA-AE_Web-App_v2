@@ -15,9 +15,9 @@ namespace SACAAE.Models
         [Column(TypeName = "Date")]
         public DateTime End { get; set; }
         [ForeignKey("Estado")]
-        public int? State { get; set; }
+        public int? StateID { get; set; }
         [ForeignKey("TipoEntidad")]
-        public int? EntityType { get; set; }
+        public int? EntityTypeID { get; set; }
 
         public virtual Estado Estado { get; set; }
         public virtual TipoEntidad TipoEntidad { get; set; }

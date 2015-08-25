@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using SACAAE.Data_Access;
 using SACAAE.Models;
 using SACAAE.Models.ViewModels;
+using Newtonsoft.Json;
 
 namespace SACAAE.Controllers
 {
@@ -28,10 +29,10 @@ namespace SACAAE.Controllers
                     ID = p.ID,
                     Name = p.Name,
                     TheoreticalHours = p.TheoreticalHours,
-                    PracticeHours = (p.PracticeHours != null) ? (int)p.PracticeHours : 0,
+                    PracticeHours = p.PracticeHours.GetValueOrDefault(),
                     Block = p.Block,
                     Code = p.Code,
-                    Credits = (p.Credits != null) ? (int)p.Credits : 0,
+                    Credits = p.Credits.GetValueOrDefault(),
                     External = p.External
                 }));
 
@@ -50,6 +51,7 @@ namespace SACAAE.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(curso);
         }
 
@@ -128,7 +130,32 @@ namespace SACAAE.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        /*-----------------------------------------------------------------*/
+        /*
+         * Esteban Segura Benavides
+         * Metodo que llama a la vista para asignar un profesor a un curso definido seleccionado de 'Ver Detalle Curso'
+         * */
+        
+        
+        // GET: Curso/AsignarProfesoraCurso/{id:int}
+        public ActionResult AsignarProfesoraCurso(int id)
+        {
+            if (Request.UrlReferrer != null)
+            {
+                ViewBag.returnUrl = Request.UrlReferrer.ToString();
+            }
+            else
+            {
+                ViewBag.returnUrl = null;
+            }
 
+
+            /* Se obtiene la lista de profesores */
+            ViewBag.Profesores = new SelectList(db.Profesores, "ID", "Name");
+            Curso curso = db.Cursos.Find(id);
+            return View(curso);
+        }
+        /*-------------------------------------------------------------------*/
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -137,5 +164,13 @@ namespace SACAAE.Controllers
             }
             base.Dispose(disposing);
         }
+
+        /*----------------------------------------------------------------------------*/
+        /* Esteban Segura Benavides Creacion funciones ajax
+         * Obtener informacion ajax*/
+        #region Ajax
+       
+        #endregion
+
     }
 }

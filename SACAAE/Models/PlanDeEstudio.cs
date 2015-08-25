@@ -11,9 +11,9 @@ namespace SACAAE.Models
         public int ID { get; set; }
         public string Name { get; set; }
         [ForeignKey("Modalidad")]
-        public int Mode { get; set; }
+        public int ModeID { get; set; }
         [ForeignKey("TipoEntidad")]
-        public int? EntityType { get; set; }
+        public int? EntityTypeID { get; set; }
 
         public virtual Modalidad Modalidad { get; set; }
         public virtual TipoEntidad TipoEntidad { get; set; }

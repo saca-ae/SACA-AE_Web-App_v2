@@ -10,11 +10,11 @@ namespace SACAAE.Models
     {
         public int ID { get; set; }
         [ForeignKey("Comision")]
-        public int Commission { get; set; }
+        public int CommissionID { get; set; }
         [ForeignKey("Profesor")]
-        public int Professor { get; set; }
+        public int ProfessorID { get; set; }
         [ForeignKey("Periodo")]
-        public int Period { get; set; }
+        public int PeriodID { get; set; }
         public int? Hours { get; set; }
 
         public virtual Comision Comision { get; set; }

@@ -60,15 +60,15 @@ namespace SACAAE.Controllers
 
             if (entidadID == 1)
             {
-                var proyectos = db.Proyectos.Where(p => p.State == 1 && (p.EntityType == 1 ||     //TEC
-                                                         p.EntityType == 2 || p.EntityType == 3 || //TEC-VIC TEC-REC
-                                                         p.EntityType == 4 || p.EntityType == 10)) //TEC-MIXTO TEC-Académico
+                var proyectos = db.Proyectos.Where(p => p.StateID == 1 && (p.EntityTypeID == 1 ||      //TEC
+                                                         p.EntityTypeID == 2 || p.EntityTypeID == 3 || //TEC-VIC TEC-REC
+                                                         p.EntityTypeID == 4 || p.EntityTypeID == 10)) //TEC-MIXTO TEC-Académico
                                              .OrderBy(p => p.Name);
                 ViewBag.proyectos = new SelectList(proyectos, "ID", "Name");
             }
             else
             {
-                var proyectos = db.Proyectos.Where(p => p.EntityType == entidadID).OrderBy(p => p.Name);
+                var proyectos = db.Proyectos.Where(p => p.EntityTypeID == entidadID).OrderBy(p => p.Name);
                 ViewBag.proyectos = new SelectList(proyectos, "ID", "Name");
             }
             return View();
@@ -92,7 +92,7 @@ namespace SACAAE.Controllers
             }
 
             var periodo = Request.Cookies["Periodo"].Value;
-            var IdPeriodo = db.Periodos.Where(p => p.Name == periodo).FirstOrDefault().ID;
+            var IdPeriodo = db.Periodos.Find(int.Parse(periodo)).ID;
 
             for (int i = 1; i < Cantidad; i++)
             {

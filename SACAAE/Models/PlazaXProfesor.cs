@@ -12,7 +12,7 @@ namespace SACAAE.Models
         [ForeignKey("Plaza")]
         public int PlazaID { get; set; }
         [ForeignKey("Profesor")]
-        public int Professor { get; set; }
+        public int ProfessorID { get; set; }
         public int PercentHours { get; set; }
         public int PropertyHours { get; set; }
 

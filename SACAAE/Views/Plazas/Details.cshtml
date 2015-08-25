@@ -1,0 +1,92 @@
+﻿@model SACAAE.Models.ViewModels.PlazaDetailViewModel
+
+@{
+    ViewBag.Title = "Detalles de la Plaza";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<h2 class="page-header">Detalles de la Plaza</h2>
+
+<div class="col-md-8">
+    <p class="col-md-1">
+        <strong>Código</strong>
+    </p>
+    <p class="col-md-11">
+        @Html.DisplayFor(model => model.Code)
+    </p>
+
+    <p class="col-md-1">
+        <strong>Tipo</strong>
+    </p>
+    <div class="col-md-2">
+        <strong>Plaza</strong>
+        <br />
+        <span>@Html.DisplayFor(model => model.PlazaType)</span>
+    </div>
+    <div class="col-md-9">
+        <strong>Tiempo</strong>
+        <br />
+        <span>@Html.DisplayFor(model => model.TimeType)</span>
+    </div>
+
+    <p class="col-md-1">
+        <strong>Tiempo</strong>
+    </p>
+    <div class="col-md-2">
+        <strong>Horas Totales</strong>
+        <br />
+        <span>@Html.DisplayFor(model => model.TotalHours)</span>
+    </div>
+    <div class="col-md-9">
+        <strong>Vigencia</strong>
+        <br />
+        <span>@Html.DisplayFor(model => model.EffectiveTime)</span>
+    </div>
+
+    <p class="col-md-12">
+        <strong>Distribución de la Plaza</strong>
+    </p>
+    <div class="col-md-12">
+        @{
+            var ta = @Model.TotalAllocate;
+        }
+        <div class="col-md-11" style="padding-left:0px;">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="@ta" aria-valuemin="0" aria-valuemax="100" style="width: @ta%;">
+                    <span class="sr-only">@ta% Asignado</span>
+                </div>
+            </div>
+        </div>
+        <p class="col-md-1">
+            @ta%
+        </p>
+    </div>
+
+    <p class="col-md-12">
+        <strong>Profesores</strong>
+    </p>
+    <div class="col-md-12">
+        @for (var i = 0; i < Model.Professors.Count; i++)
+        {
+            var pa = @Model.ProfessorsAllocate[i];
+        <p class="col-md-5" style="padding-left:0px">
+            @Model.Professors[i]
+        </p>
+        <div class="col-md-6" style="padding-left:0px;">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="@pa" aria-valuemin="0" aria-valuemax="100" style="width: @pa%;">
+                    <span class="sr-only">@pa Asignado</span>
+                </div>
+            </div>
+        </div>
+        <p class="col-md-1">
+            @pa%
+        </p>
+        }
+    </div>
+
+    <br />
+    <input class="btn" value="Editar" type="button" onclick="location.href='@Url.Action("Edit", new { id = Model.ID })';" />
+    <input class="btn" value="Asignaciones" type="button" onclick="location.href='@Url.Action("Allocate", new { id = Model.ID })';" />
+    <input class="btn" value="Volver" type="button" onclick="location.href='@Url.Action("Index")';" />
+</div>

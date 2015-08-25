@@ -12,7 +12,7 @@ namespace SACAAE.Models
         [ForeignKey("Sede")]
         public int SedeID { get; set; }
         [ForeignKey("PlanDeEstudio")]
-        public int StudyPlan { get; set; }
+        public int StudyPlanID { get; set; }
 
         public virtual PlanDeEstudio PlanDeEstudio { get; set; }
         public virtual Sede Sede { get; set; }
