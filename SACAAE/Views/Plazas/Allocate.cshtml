@@ -8,7 +8,7 @@
 <h2 class="page-header">Asignación de Plazas</h2>
 
 <div class="col-md-10">
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Allocate", "Plazas", FormMethod.Post, new { id = "allocateForm" }))
     {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.ID)
@@ -38,11 +38,12 @@
     <div class="col-md-12" id="profesores">
         @for (var i = 0; i < Model.Professors.Count; i++)
         {
-            @Html.HiddenFor(model => model.Professors[i])
-            @Html.HiddenFor(model => model.ProfessorsAllocate[i])
-            var pa = @Model.ProfessorsAllocate[i];
+            @Html.HiddenFor(model => model.Professors[i].ID)
+            @Html.HiddenFor(model => model.Professors[i].Name)
+            @Html.HiddenFor(model => model.Professors[i].Allocate)
+            var pa = @Model.Professors[i].Allocate;
             <p class="col-md-5" style="padding-left:0px">
-                @Model.Professors[i]
+                @Model.Professors[i].Name
             </p>
             <div class="col-md-4" style="padding-left:0px;">
                 <div class="progress">
@@ -55,18 +56,19 @@
                 @pa%
             </p>
             <div class="col-md-2">
-                <a href="@Url.Action("Edit", new { id = Model.ID })" title="Editar"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> &nbsp
+                <a href="" onclick="initEdit(@i)" data-toggle="modal" data-target="#editModal" title="Editar"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> &nbsp
                 <a href="@Url.Action("Delete", new { id = Model.ID })" title="Eliminar"><span class="glyphicon  glyphicon-trash" aria-hidden="true"></span></a>
             </div>
         }
     </div>
 
     <br />
-    <input class="btn" value="Volver" type="button" onclick="location.href='@Url.Action("Index")';" /> 
-    <a href="" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>  Agregar Profesor</a>
+    <input class="btn" value="Volver" type="button" onclick="location.href='@Url.Action("Index")';" />
+    <a href="" onclick="initAdd()" data-toggle="modal" data-target="#addModal"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>  Agregar Profesor</a>
 
     <!-- Modals -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <!-- Add professor -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
         <div class="modal-dialog" role="document">
 
             <div class="modal-content">
@@ -75,12 +77,59 @@
                     <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                 </div>
                 <div class="modal-body">
-                    <input id="newProfessor" value="" placeholder="Profesor" />
-                    <input id="percent" type="text" value="" placeholder="% de Plaza max(@(100 - ta)" oninput="validatePercent();" />
+                    <label>Profesor</label>
+                    <select id="newProfe" class="form-control"></select>
+                    <label>Porcentaje</label>
+                    <input id="addPercent" class="form-control" type="number" value="" min="0" placeholder="max @(100 - ta)%" oninput="addValidate();" />
+                    <label>*Máximo @(100 - ta)%</label>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" id="addBtn" onclick="addProfessor()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit professor -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <label>Profesor</label>
+                    <input id="editProfe" class="form-control" value="nestor" disabled />
+                    <label>Porcentaje</label>
+                    <input id="editPercent" class="form-control" type="number" min="0" value="" oninput="editValidate();" />
+                    <label id="editLabel"></label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="editBtn" onclick="editProfessor()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete professor -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <input id="editProfe" class="form-control" value="nestor" disabled />
+                    <input id="editPercent" class="form-control" type="number" min="0" value="" oninput="editValidate();" />
+                    <label id="editLabel"></label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="editBtn" onclick="editProfessor()">Save changes</button>
                 </div>
             </div>
         </div>
@@ -92,23 +141,96 @@
     <script type="text/javascript">
         var totalAllocate = @Model.TotalAllocate;
         var count = @Model.Professors.Count;
+        var editRoute = '@Url.Action("EditAllocate")/@Model.ID';
+        var tempIndex = 0;
 
-        function addProfessor() {            
+        function initAdd(){
+            var route = "/Plazas/Professors/List/@Model.ID";
+            $.getJSON(route, function (data) {
+                var items = "";
+
+                $.each(data, function (i, profesor) {
+                    items += "<option value='" + profesor.ID + "'>" + profesor.Name + "</option>";
+                });
+
+                if (items != "") {
+                    $("#newProfe").html(items);
+                    $("#newProfe").prepend("<option value='' selected='selected'>-- Seleccione Profesor --</option>");
+                    $("#newProfe").prop("disabled", false);
+                }
+                else {
+                    $("#newProfe").html("<option>No hay grupos abiertos para ese curso.</option>")
+                    $("#newProfe").prop("disabled", true);
+                }
+            });
+        }
+
+        function addProfessor() {
             var temp = $("#profesores").html();
-            temp += "<input name='Professors["+count+"]' value='"+$("#newProfessor").val()+"' type='hidden'>";
-            temp += "<input name='ProfessorsAllocate["+count+"]' value='"+$("#percent").val()+"' type='hidden'>";
+            temp += "<input name='Professors["+count+"].ID' value='"+$("#newProfe").val()+"' type='hidden'>";
+            temp += "<input name='Professors["+count+"].Name' value='"+getSelectedText("newProfe")+"' type='hidden'>";
+            temp += "<input name='Professors["+count+"].Allocate' value='"+$("#addPercent").val()+"' type='hidden'>";
             $("#profesores").html(temp);
         }
 
-        function validatePercent() {
-            var percent = parseInt($("#percent").val());
+        function initEdit(n){
+            var max = 100 - totalAllocate + parseInt($("#ProfessorsAllocate_" + n + "_").val());
+            $('#editProfe').val($("#Professors_" + n + "__Name").val());
+            $('#editPercent').val($("#Professors_" + n + "__Allocate").val());
+            $('#editLabel').text("*Máximo " + max);
+            tempIndex = n;
+        }
+
+        function editProfessor() {
+            $("#Professors_" + tempIndex + "__Allocate").val($('#editPercent').val());
+
+            $('#allocateForm').attr('action', editRoute);
+            $('#allocateForm').submit();
+        }
+
+        function addValidate(){
+            var regex = /[0-9]/;
+            if(!regex.test($("#addPercent").val())){
+                document.getElementById("addBtn").disabled = true;
+                return;
+            }
+
+            var percent = parseInt($("#addPercent").val());
             if(percent < 0){
                 document.getElementById("addBtn").disabled = true;
             }else if(percent > (100 - totalAllocate)){
-                document.getElementById("addBtn").disabled = true; 
+                document.getElementById("addBtn").disabled = true;
             }else{
                 document.getElementById("addBtn").disabled = false;
             }
+        }
+
+        function editValidate(){
+            var regex = /[0-9]/;
+            if(!regex.test($("#editPercent").val())){
+                document.getElementById("editBtn").disabled = true;
+                return;
+            }
+
+            var percent = parseInt($("#editPercent").val());
+            var pa = parseInt($("#ProfessorsAllocate_" + tempIndex + "_").val());
+
+            if(percent < 0){
+                document.getElementById("editBtn").disabled = true;
+            }else if(percent > (100 - totalAllocate + pa)){
+                document.getElementById("editBtn").disabled = true;
+            }else{
+                document.getElementById("editBtn").disabled = false;
+            }
+        }
+
+        function getSelectedText(elementId) {
+            var elt = document.getElementById(elementId);
+
+            if (elt.selectedIndex == -1)
+                return null;
+
+            return elt.options[elt.selectedIndex].text;
         }
     </script>
 }
