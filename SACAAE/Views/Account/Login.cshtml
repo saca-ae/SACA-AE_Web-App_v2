@@ -6,13 +6,20 @@
 
 <script>
     function setCookie(cname, cvalue, exdays) {
-
         document.cookie = cname + "=" + cvalue;
     }
 
-    function Guardar() {
-        var Periodo = document.getElementById("ComboPeriodos").value;
-        setCookie("Periodo", Periodo, 1);
+    function savePeriod() {
+        var period = document.getElementById("ComboPeriodos").value;
+        setCookie("Periodo", period, 1);
+    }
+
+    function checkNewPeriod(form) {
+        var period = document.getElementById("ComboPeriodos").value;
+        if ((parseInt(period)) == 0) {
+            return confirm("Está seguro que desea crear el nuevo periodo");
+        }
+        return true
     }
 
     function getCookie(cname) {
@@ -26,7 +33,7 @@
     }
 </script>
 
-<body onload="Guardar()">
+<body onload="savePeriod()">
     <div>
         <div id="loginForm">
             <h2 class="form-signin-heading">Iniciar Sesión</h2>
@@ -48,11 +55,11 @@
 
                     if (Model.PeriodsList.Count() > 0)
                     {
-                        @Html.DropDownListFor(m => m.Periods, Model.PeriodsList, new { @id = "ComboPeriodos", @class = "form-control", @onChange = "Guardar()" })
+                        @Html.DropDownListFor(m => m.Periods, Model.PeriodsList, new { @id = "ComboPeriodos", @class = "form-control", @onChange = "savePeriod()" })
                     }
                     else
                     {
-                        @Html.DropDownListFor(m => m.Periods, Model.PeriodsList, "No se pudieron cargar los periodos.", new { @id = "ComboPeriodos", @class = "form-control", @disabled = "disabled", @onChange = "Guardar()" })
+                        @Html.DropDownListFor(m => m.Periods, Model.PeriodsList, "No se pudieron cargar los periodos.", new { @id = "ComboPeriodos", @class = "form-control", @disabled = "disabled", @onChange = "savePeriod()" })
                     }
 
                     <hr />
@@ -69,6 +76,8 @@
             </section>
         </div>
     </div>
+
+
 </body>
 
 @section Scripts {

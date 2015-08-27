@@ -46,6 +46,9 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>..\packages\CsvHelper.2.13.2.0\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -223,6 +226,7 @@
     <Compile Include="Models\Comision.cs" />
     <Compile Include="Models\ComisionXProfesor.cs" />
     <Compile Include="Models\Curso.cs" />
+    <Compile Include="Models\DataCSV.cs" />
     <Compile Include="Models\Estado.cs" />
     <Compile Include="Models\Grupo.cs" />
     <Compile Include="Models\GrupoAula.cs" />
