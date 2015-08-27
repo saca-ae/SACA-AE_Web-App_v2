@@ -298,6 +298,8 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\SiteScripts\GuardarDias.js" />
     <Content Include="Scripts\SiteScripts\horarioAula.js" />
+    <Content Include="Scripts\SiteScripts\plazaAllocate.js" />
+    <Content Include="Scripts\SiteScripts\plazaIndex.js" />
     <Content Include="Scripts\SiteScripts\RevocarComisionProfesor.js" />
     <Content Include="Scripts\SiteScripts\RevocarCursoProfesor.js" />
     <Content Include="Scripts\SiteScripts\RevocarProyectoProfesor.js" />
@@ -365,7 +367,6 @@
     <Content Include="Views\CSV\CargarCSV.cshtml" />
     <Content Include="Views\Periodo\Index.cshtml" />
     <Content Include="Views\Plazas\Create.cshtml" />
-    <Content Include="Views\Plazas\Delete.cshtml" />
     <Content Include="Views\Plazas\Details.cshtml" />
     <Content Include="Views\Plazas\Edit.cshtml" />
     <Content Include="Views\Plazas\Index.cshtml" />
