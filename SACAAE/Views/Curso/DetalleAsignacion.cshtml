@@ -1,0 +1,207 @@
+﻿@model SACAAE.Models.Grupo
+
+@{
+    ViewBag.Title = "Detalle Asignacion";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+
+<style type="text/css">
+    body {
+        margin-left: 10px;
+    }
+
+    p {
+        margin-left: 20px;
+    }
+
+    h3 {
+        margin-top: 30px;
+    }
+
+    .header {
+        padding: 10px;
+        margin-top: 2%;
+    }
+
+    hr {
+        margin-top: 0px;
+    }
+
+
+    #columna_1, #columna_2 {
+        margin-left: 50px;
+        float: left;
+        width: 40%;
+    }
+
+    #columna_inferior {
+        margin-top: 400px;
+        margin-left: 900px;
+    }
+
+    th {
+        border: 1px solid #818291;
+        background-color: #93939B;
+        width: 150px;
+        text-align: center;
+        height: 40px;
+    }
+
+    td {
+        border: 1px solid #818291;
+        width: 250px;
+        text-align: center;
+        height: 40px;
+    }
+</style>
+
+<script type="text/javascript">
+   
+   window.onload = function()
+        {
+            var idGrupo = obtener_id();
+            var idCurso = "";
+            var idSede = "";
+            var idModalidad = "";
+            var idPlan = "";
+            route = "/Cursos/Grupo/" + obtener_id();
+            $.getJSON(route,function(data)
+            {
+                $.each(data, function (i, grupo) {
+                    idCurso = data[i].curso_id;
+                    idSede = data[i].sede_id;
+                    idModalidad = data[i].modalidad_id;
+                    idPlan = data[i].plan_id;
+                    document.getElementById('nombreCurso').innerHTML = "<p>" + data[i].curso_name + "</p>";
+                    document.getElementById('numeroGrupo').innerHTML = "<p>" + data[i].Number + "</p>";
+                    document.getElementById('nombreProfesor').innerHTML = "<p>" + data[i].profesor_name + "</p>";
+                    document.getElementById('sede').innerHTML = "<p>" + data[i].sede_name + "</p>";
+                    document.getElementById('modalidad').innerHTML = "<p>" + data[i].modalidad_name + "</p>";
+                    document.getElementById('plan').innerHTML = "<p>" + data[i].plan_name + "</p>";
+                    document.getElementById('bloque').innerHTML = "<p>" + data[i].descripcion_bloque + "</p>";
+
+                   
+
+                });
+
+                cargar_horario(idCurso, idSede, idModalidad, idPlan, idGrupo);
+            })
+             
+            /* Obtener información del horario */
+   };
+
+        function obtener_id()
+        {
+            var url = window.location.pathname.split('/');
+            return url[3];
+        }
+
+        function ver_detalle_grupo(id_grupo)
+        {
+            alert(id_grupo);
+            var route_temporal = "/Curso/DetalleAsignacion/" + id_grupo;
+            var host = window.location.host;
+            var full_url = host + route_temporal;
+            window.location = route_temporal;
+        }
+
+        function editar_asignacion_grupo(id_grupo) {
+            alert(id_grupo);
+            var route_temporal = "/Curso/EditarAsignacion/" + id_grupo;
+            var host = window.location.host;
+            var full_url = host + route_temporal;
+            window.location = route_temporal;
+        }
+
+        function eliminar_asignacion_grupo(id_grupo) {
+            alert(id_grupo);
+            var route_temporal = "/Curso/EliminarAsignacion/" + id_grupo;
+            var host = window.location.host;
+            var full_url = host + route_temporal;
+            window.location = route_temporal;
+        }
+
+        function cargar_horario(idCurso, idSede, idModalidad, idPlan,idGrupo)
+        {
+            route2 = "/CursoProfesor/Cursos/Sedes/Modalidad/Plan/Grupo/Horario/" + idCurso + "/" + idSede + "/" + idModalidad + "/" + idPlan + "/" + idGrupo;
+            var tabla = "<table id=\"profesores_asignados_a_curso\" >" +
+           "<thead>" +
+               "<th>Dia</th>" +
+               "<th>Hora Inicio</th>" +
+               "<th>Hora Fin</th>" +
+               "<th>Aula</th>" +
+           "</thead>" +
+           "<tbody>";
+            $.getJSON(route2, function (data) {
+
+                if (data.length != 0) {
+                    for (i = 0; i < data.length; i++) {
+                        tabla = tabla + "<tr>" +
+                        "<td>" + data[i].Day + "</td>" +
+                        "<td>" + data[i].StartHour + "</td>" +
+                        "<td>" + data[i].EndHour + "</td>" +
+                        "<td>" + data[i].Code + "</td>" +
+                        "</tr>";
+
+
+                    }
+
+                    tabla = tabla + "</tbody> </table>";
+
+                    document.getElementById('tabla_grupos').innerHTML = tabla;
+                }
+                else {
+                    /*Sin Profesores asignados*/
+                    document.getElementById('tabla_grupos').innerHTML = "<p> Sin profesores asignados</p>";
+                }
+            });
+        }
+
+
+</script>
+    
+<div class="header">
+    <h2>Detalle del Grupo</h2>
+    <hr />
+</div>
+
+
+    <input id="idProfesor" type="hidden" value="@Html.DisplayFor(model => model.ID)">
+    <div id="columna_1">
+        @Html.Label("Curso")
+        <div id="nombreCurso"></div>
+
+        @Html.Label("Numero de Grupo")
+        <div id="numeroGrupo"></div>
+
+        @Html.Label("Profesor")
+        <div id="nombreProfesor"></div>
+
+        @Html.Label("Sede")
+        <div id="sede"></div>
+
+        @Html.Label("Modalidad")
+        <div id="modalidad"></div>
+
+        @Html.Label("Plan de Estudio")
+        <div id="plan"></div>
+
+        @Html.Label("Bloque")
+        <div id="bloque"></div>
+    </div>
+    
+    <div id="columna_2">
+        @Html.Label("Horario")
+        <div id="tabla_grupos" class="editor-field">
+
+        </div>
+    </div>   
+    
+    <div id="columna_inferior">
+        <p>
+            @Html.ActionLink("Editar", "EditarAsignacion", new { id = Model.ID }) |
+            @Html.ActionLink("Atras", "Index")
+        </p>
+    </div>
+

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SACAAE.Data_Access;
+using SACAAE.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace SACAAE.Controllers
     {
         private SACAAEContext db = new SACAAEContext();
         private const string TempDataMessageKey = "Message";
+        private const string TempDataMessageKeySuccess = "MessageSuccess";
 
         // GET: CursoProfesor/Asignar
         public ActionResult Asignar()
@@ -40,8 +42,21 @@ namespace SACAAE.Controllers
         // POST: CursoProfesor/Asignar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Asignar(int sltProfesor, int sltGrupo, int txtHoras, int txtHorasEstimadas)
+        public ActionResult Asignar(AsignacionCursoProfesorViewModel viewModel)
         {
+            if (ModelState.IsValid)
+            {
+                int idGrupo = viewModel.idGrupo;
+                int idProfesor = viewModel.idProfesor;
+
+
+                db.Grupos.Find(idGrupo).Profesor.ID = idProfesor;
+                db.SaveChanges();
+
+                TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
+                return RedirectToAction("Curso","Index");
+            }
+            return View(viewModel);
             //var creado = 0;
             //var idProfesorXCurso = 0;
             //var idDetalleGrupo = vRepositorioGrupos.obtenerUnDetalleGrupo(sltGrupo);
@@ -62,9 +77,6 @@ namespace SACAAE.Controllers
             //else
             //{
             //    TempData[TempDataMessageKey] = "No se pudo obtener el id de profesor x curso.";
-            //}
-
-            return RedirectToAction("Asignar");
         }
         
 
@@ -292,7 +304,9 @@ namespace SACAAE.Controllers
 
         /*Esteban Segura Benavides
        * Obtener el plan de estudio segun el curso especifico de acuerdo a su id, sede y modalidad*/
-
+        /*CursoProfesor/Curso/{idCurso:int}/Sedes/{idSedes:int}/Modalida
+         
+        */
         [Route("CursoProfesor/Cursos/Sedes/Modalidad/Plan/{idCurso:int}/{idSede:int}/{idModalidad:int}")]
         public ActionResult ObtenerModalidadsegunCursoySedeyModalidad(int idCurso, int idSede, int idModalidad)
         {
