@@ -217,6 +217,10 @@
     <Compile Include="Migrations\201508262323443_changes26Ago.Designer.cs">
       <DependentUpon>201508262323443_changes26Ago.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508272109401_fix-grupo.cs" />
+    <Compile Include="Migrations\201508272109401_fix-grupo.Designer.cs">
+      <DependentUpon>201508272109401_fix-grupo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Aula.cs" />
@@ -408,6 +412,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508262323443_changes26Ago.resx">
       <DependentUpon>201508262323443_changes26Ago.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508272109401_fix-grupo.resx">
+      <DependentUpon>201508272109401_fix-grupo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
