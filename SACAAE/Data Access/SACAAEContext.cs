@@ -54,7 +54,7 @@ namespace SACAAE.Data_Access
         public DbSet<PlazaXProfesor> PlazasXProfesores { get; set; }
         public DbSet<Profesor> Profesores { get; set; }
         public DbSet<TipoEntidad> TipoEntidades { get; set; }
-
+        public DbSet<TipoAsignacionProfesor> TipoAsignacionesProfesores { get; set; }
         public DbSet<GrupoAula> GrupoAula { get; set; }
     }
 }
