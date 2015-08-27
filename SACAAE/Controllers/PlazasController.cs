@@ -179,12 +179,20 @@ namespace SACAAE.Controllers
             {
                 return HttpNotFound();
             }
+            var PPList = plaza.PlazasXProfesores.ToList();
+            var professors = new List<PlazaAllocateProfessor>();
+            PPList.ForEach(p => professors.Add(new PlazaAllocateProfessor()
+            {
+                ID = p.ProfessorID,
+                Name = p.Profesor.Name,
+                Allocate = p.PercentHours
+            }));
+
             var viewModel = new PlazaAllocateViewModel()
             {
                 ID = plaza.ID,
-                TotalAllocate = 70,
-                Professors = new List<string>() { "Nestor", "test" },
-                ProfessorsAllocate = new List<int>() { 60, 10 }
+                TotalAllocate = sumAllocate(professors),
+                Professors = professors
             };
 
             return View(viewModel);
@@ -195,14 +203,50 @@ namespace SACAAE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Allocate(PlazaAllocateViewModel viewModel)
         {
+            var plaza = db.Plazas.Find(viewModel.ID);
+            var newProfe = viewModel.Professors.Last();
+            plaza.PlazasXProfesores.Add(new PlazaXProfesor()
+            {
+                ProfessorID = newProfe.ID,
+                PercentHours = newProfe.Allocate
+            });
+            db.SaveChanges();
+            
+            return RedirectToAction("Allocate", new { id = viewModel.ID });
+        }
+
+        // POST: Plaza/EditAllocate/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditAllocate(PlazaAllocateViewModel viewModel)
+        {
+            for (var i = 0; i < viewModel.Professors.Count; i++)
+            {
+                var plazaID = viewModel.ID;
+                var profeID = viewModel.Professors[i].ID;
+                var PxP = db.PlazasXProfesores.Where(p => p.PlazaID == plazaID && p.ProfessorID == profeID).Single();
+                PxP.PercentHours = viewModel.Professors[i].Allocate;
+
+                db.Entry(PxP).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Allocate", new { id = viewModel.ID });
+        }
+
+        // POST: Plaza/DeleteAllocate/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteAllocate(PlazaAllocateViewModel viewModel)
+        {
             //Plaza plaza = db.Plazas.Find(id);
             //db.Plazas.Remove(plaza);
             //db.SaveChanges();
             //viewModel.Professors.Add("new");
             //viewModel.ProfessorsAllocate.Add(10);
-            viewModel.TotalAllocate = viewModel.ProfessorsAllocate.Sum();
-            return View(viewModel);
-            //return RedirectToAction("Allocate");
+            //viewModel.ProfessorsAllocate[0] = 26;
+            viewModel.TotalAllocate = sumAllocate(viewModel.Professors);
+            //return View("Allocate", viewModel);     //redirect should work
+            return RedirectToAction("Allocate", new { id = viewModel.ID });
         }
 
         protected override void Dispose(bool disposing)
@@ -213,5 +257,33 @@ namespace SACAAE.Controllers
             }
             base.Dispose(disposing);
         }
+
+        #region Ajax Post
+        [Route("Plazas/Professors/List/{plaza:int}")]
+        public ActionResult getProfessors(int plaza)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var plazaProfes = db.Plazas.Find(plaza).PlazasXProfesores.Select(p => p.Profesor).ToList();
+                var listaProfes = db.Profesores.ToList();
+                var json = listaProfes.Except(plazaProfes).Select(p => new { p.ID, p.Name });
+
+                return Json(json, JsonRequestBehavior.AllowGet);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+        #endregion
+        
+        #region Helpers
+        private int sumAllocate(List<PlazaAllocateProfessor> PPList)
+        {
+            var result = 0;
+            for (var i = 0; i < PPList.Count; i++)
+            {
+                result += PPList[i].Allocate;
+            }
+            return result;
+        }
+        #endregion 
     }
 }

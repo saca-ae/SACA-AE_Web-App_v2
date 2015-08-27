@@ -53,43 +53,84 @@
 </style>
 
 <script type="text/javascript">
-    window.onload = function() 
+    window.onload = function()
     {
         var route = "/CursoProfesor/Cursos/" + obtener_id();
-            
-        var tabla = "<table id=\"profesores_asignados_a_curso\" class=\"table table-hover\">"+
-            "<thead>" +
-                "<th>Grupo</th>"+
-                "<th>Nombre Profesor</th>"+
-                "<th>Inicio</th>"+
-                "<th>Fin</th>"+
-                "<th>Aula</th>"+
-                "<th>Dia</th>"+
-                "<th>Acciones</th>"+
-            "</thead>"+
-            "<tbody>";
-             $.getJSON(route, function (data) {
-                
-                 if (data.length != 0) {
-                     for (i = 0; i < data.length; i++) {
-                         if (data[i + 1] != undefined) {
+        generar_tabla(route);
+        
+    };
 
-                             if (data[i].ID == data[i + 1].ID) {
-                                 tabla = tabla + "<tr>" +
-                                 "<td rowspan=\"2\">" + data[i].Number + "</td>" +
-                                 "<td rowspan=\"2\">" + data[i].Name + "</td>" +
-                                 "<td>" + data[i].StartHour + "</td>" +
-                                 "<td>" + data[i].EndHour + "</td>" +
-                                 "<td>" + data[i].Code + "</td>" +
-                                 "<td>" + data[i].Day + "</td>" +
-                                 "<td rowspan=\"2\">" +
-                                     /*<!-- Esteban Segura Benavides
-                                     Agregacion de opcion ver detalle de asignaion
-                                     RECORDAR AGREGAR ESTAS FUNCIONALIDADES *****************************************-->*/
-                                         "<a title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                         "<a title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                         " <a title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
-                                     "</td> " +
+    function obtener_id()
+    {
+        var url = window.location.pathname.split('/');
+        return url[3];
+    }
+
+    function ver_detalle_grupo(id_grupo)
+    {
+        var route_temporal = "/Curso/DetalleAsignacion/" + id_grupo;
+        window.location = route_temporal;
+    }
+
+    function editar_asignacion_grupo(id_grupo) {
+       
+        var route_temporal = "/Curso/EditarAsignacion/" + id_grupo;
+        window.location = route_temporal;
+    }
+
+    function eliminar_asignacion_grupo(id_grupo) 
+    {
+        var route_temporal = "/Cursos/Grupo/EliminarGrupo/"+ id_grupo;
+        $.getJSON(route_temporal, function (data) {
+            if (data.respuesta = 'success') {
+                var route = "/CursoProfesor/Cursos/" + obtener_id();
+                alert('El profesor fue removido del grupo exitosamente');
+                document.getElementById('tabla_grupos').innerHTML = "";
+                generar_tabla(route);
+
+            }
+            else
+            {
+                alert('Error');
+            }
+        });
+    }
+
+    function generar_tabla(route)
+    {
+        var tabla = "<table id=\"profesores_asignados_a_curso\" class=\"table\">" +
+            "<thead>" +
+                "<th>Grupo</th>" +
+                "<th>Nombre Profesor</th>" +
+                "<th>Inicio</th>" +
+                "<th>Fin</th>" +
+                "<th>Aula</th>" +
+                "<th>Dia</th>" +
+                "<th>Acciones</th>" +
+            "</thead>" +
+            "<tbody>";
+        $.getJSON(route, function (data) {
+
+            if (data.length != 0) {
+                for (i = 0; i < data.length; i++) {
+                    if (data[i + 1] != undefined) {
+                        if (data[i].ID == data[i + 1].ID) {
+                            tabla = tabla + "<tr>" +
+                            "<td rowspan=\"2\">" + data[i].Number + "</td>" +
+                            "<td rowspan=\"2\">" + data[i].Name + "</td>" +
+                            "<td>" + data[i].StartHour + "</td>" +
+                            "<td>" + data[i].EndHour + "</td>" +
+                            "<td>" + data[i].Code + "</td>" +
+                            "<td>" + data[i].Day + "</td>" +
+                            "<td rowspan=\"2\">" +
+                                /*<!-- Esteban Segura Benavides
+                                Agregacion de opcion ver detalle de asignaion
+                                RECORDAR AGREGAR ESTAS FUNCIONALIDADES *****************************************-->*/
+
+                                    "<a onclick=ver_detalle_grupo(" + data[i].ID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                    "<a onclick=editar_asignacion_grupo(" + data[i].ID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                    "<a onclick=eliminar_asignacion_grupo(" + data[i].ID + ") title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                             "</td> " +
                                  "</tr>" +
 
                                  "<tr>" +
@@ -99,69 +140,61 @@
                                      "<td>" + data[i + 1].Day + "</td>" +
 
                                  "</tr>";
-                                 i++;
-                             }
-                             else {
+                            i++;
+                        }
+                        else {
 
-                                 tabla = tabla + "<tr>" +
-                                 "<td>" + data[i].Number + "</td>" +
-                                 "<td>" + data[i].Name + "</td>" +
-                                 "<td>" + data[i].StartHour + "</td>" +
-                                 "<td>" + data[i].EndHour + "</td>" +
-                                 "<td>" + data[i].Code + "</td>" +
-                                 "<td>" + data[i].Day + "</td>" +
-                                 "<td>" +
-                                     /*<!-- Esteban Segura Benavides
-                                     Agregacion de opcion ver detalle de asignaion
-                                     RECORDAR AGREGAR ESTAS FUNCIONALIDADES *****************************************-->*/
-                                         "<a title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                         "<a title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                         " <a title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
-                                     "</td> " +
-                                 "</tr>";
+                            tabla = tabla + "<tr>" +
+                            "<td>" + data[i].Number + "</td>" +
+                            "<td>" + data[i].Name + "</td>" +
+                            "<td>" + data[i].StartHour + "</td>" +
+                            "<td>" + data[i].EndHour + "</td>" +
+                            "<td>" + data[i].Code + "</td>" +
+                            "<td>" + data[i].Day + "</td>" +
+                            "<td>" +
+                                /*<!-- Esteban Segura Benavides
+                                Agregacion de opcion ver detalle de asignaion
+                                RECORDAR AGREGAR ESTAS FUNCIONALIDADES *****************************************-->*/
+                                    //"<a title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                    "<a title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                    " <a title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                                "</td> " +
+                            "</tr>";
 
-                             }
-                         }
-                         else {
+                        }
+                    }
+                    else {
 
-                             tabla = tabla + "<tr>" +
-                             "<td>" + data[i].Number + "</td>" +
-                             "<td>" + data[i].Name + "</td>" +
-                             "<td>" + data[i].StartHour + "</td>" +
-                             "<td>" + data[i].EndHour + "</td>" +
-                             "<td>" + data[i].Code + "</td>" +
-                             "<td>" + data[i].Day + "</td>" +
-                             "<td>" +
-                                 /*<!-- Esteban Segura Benavides
-                                 Agregacion de opcion ver detalle de asignaion
-                                 RECORDAR AGREGAR ESTAS FUNCIONALIDADES *****************************************-->*/
-                                     "<a title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                     "<a title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                     " <a title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
-                                 "</td> " +
-                             "</tr>";
+                        tabla = tabla + "<tr>" +
+                        "<td>" + data[i].Number + "</td>" +
+                        "<td>" + data[i].Name + "</td>" +
+                        "<td>" + data[i].StartHour + "</td>" +
+                        "<td>" + data[i].EndHour + "</td>" +
+                        "<td>" + data[i].Code + "</td>" +
+                        "<td>" + data[i].Day + "</td>" +
+                        "<td>" +
+                            /*<!-- Esteban Segura Benavides
+                            Agregacion de opcion ver detalle de asignaion
+                            RECORDAR AGREGAR ESTAS FUNCIONALIDADES *****************************************-->*/
+                                //"<a title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                "<a title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                " <a title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                            "</td> " +
+                        "</tr>";
 
-                         }
-                     };
-                     tabla = tabla + "</tbody> </table>";
+                    }
+                };
+                tabla = tabla + "</tbody> </table>";
 
-                     document.getElementById('tabla_grupos').innerHTML = tabla;
-                 }
-                 else
-                 {
-                     /*Sin Profesores asignados*/
-                     //document.getElementById('tabla_grupos').innerHTML = "<p> Sin profesores asignados</p>";
-                 }
+                document.getElementById('tabla_grupos').innerHTML = tabla;
+            }
+            else {
+                /*Sin Profesores asignados*/
+                //document.getElementById('tabla_grupos').innerHTML = "<p> Sin profesores asignados</p>";
+            }
 
         });
-    };
-
-    function obtener_id()
-    {
-        var url = window.location.pathname.split('/');
-        return url[3];
     }
-
 </script>
 <div class="header">
     <h2>Detalle del Curso</h2>

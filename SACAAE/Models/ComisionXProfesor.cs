@@ -13,6 +13,8 @@ namespace SACAAE.Models
         public int CommissionID { get; set; }
         [ForeignKey("Profesor")]
         public int ProfessorID { get; set; }
+        [ForeignKey("TipoAsignacionProfesor")]
+        public int? AssignProfessorTypeID { get; set; }
         [ForeignKey("Periodo")]
         public int PeriodID { get; set; }
         public int? Hours { get; set; }
@@ -20,6 +22,7 @@ namespace SACAAE.Models
         public virtual Comision Comision { get; set; }
         public virtual Periodo Periodo { get; set; }
         public virtual Profesor Profesor { get; set; }
+        public virtual TipoAsignacionProfesor TipoAsignacionProfesor { get; set; }
         public virtual ICollection<Horario> Horario { get; set; }
     }
 }

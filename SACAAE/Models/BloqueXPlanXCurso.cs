@@ -13,6 +13,7 @@ namespace SACAAE.Models
         public int BlockXPlanID { get; set; }
         [ForeignKey("Curso")]
         public int CourseID { get; set; }
+        public int GroupsPerPeriods { get; set; }
 
         public virtual BloqueAcademicoXPlanDeEstudio BloqueAcademicoXPlanDeEstudio { get; set; }
         public virtual Curso Curso { get; set; }

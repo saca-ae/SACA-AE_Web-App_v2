@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -212,6 +213,10 @@
     <Compile Include="Migrations\201508241801033_periodo+fixesv2.Designer.cs">
       <DependentUpon>201508241801033_periodo+fixesv2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508262323443_changes26Ago.cs" />
+    <Compile Include="Migrations\201508262323443_changes26Ago.Designer.cs">
+      <DependentUpon>201508262323443_changes26Ago.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Aula.cs" />
@@ -239,8 +244,10 @@
     <Compile Include="Models\Proyecto.cs" />
     <Compile Include="Models\ProyectoXProfesor.cs" />
     <Compile Include="Models\Sede.cs" />
+    <Compile Include="Models\TipoAsignacionProfesor.cs" />
     <Compile Include="Models\TipoEntidad.cs" />
     <Compile Include="Models\TipoPeriodo.cs" />
+    <Compile Include="Models\ViewModels\AsignacionCursoProfesorViewModel.cs" />
     <Compile Include="Models\ViewModels\CursoViewModel.cs" />
     <Compile Include="Models\ViewModels\PlazaViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -273,7 +280,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
-    <Content Include="ClassDiagram1.cd" />
     <Content Include="Content\DataTables\dataTables.responsive.scss" />
     <Content Include="Content\DataTables\Spanish.json" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
@@ -368,6 +374,9 @@
     <Content Include="Views\Plazas\Edit.cshtml" />
     <Content Include="Views\Plazas\Index.cshtml" />
     <Content Include="Views\Plazas\Allocate.cshtml" />
+    <Content Include="Views\Curso\AsignarProfesoraCurso.cshtml" />
+    <Content Include="Views\Curso\EditarAsignacion.cshtml" />
+    <Content Include="Views\Curso\DetalleAsignacion.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -395,6 +404,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508241801033_periodo+fixesv2.resx">
       <DependentUpon>201508241801033_periodo+fixesv2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508262323443_changes26Ago.resx">
+      <DependentUpon>201508262323443_changes26Ago.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

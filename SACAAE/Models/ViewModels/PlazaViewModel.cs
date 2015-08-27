@@ -46,8 +46,14 @@ namespace SACAAE.Models.ViewModels
     {
         public int ID { get; set; }
         public int TotalAllocate { get; set; }
-        public List<string> Professors { get; set; }
-        public List<int> ProfessorsAllocate { get; set; }
+        public List<PlazaAllocateProfessor> Professors { get; set; }
+    }
+
+    public class PlazaAllocateProfessor
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public int Allocate { get; set; }
     }
 
 }
