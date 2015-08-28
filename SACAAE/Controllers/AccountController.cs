@@ -105,8 +105,8 @@ namespace SACAAE.Controllers
 
         private ActionResult loginSelect()
         {
-           var periodo = int.Parse(Request.Cookies["Periodo"].Value);
-            if (periodo == 0)
+            var periodo = Request.Cookies["Periodo"].Value;
+            if (Convert.ToInt32(periodo) == 0)
             {
                 return RedirectToAction("Index", "Periodo");
             }

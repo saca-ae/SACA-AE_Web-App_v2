@@ -66,11 +66,17 @@
         <strong>Profesores</strong>
     </p>
     <div class="col-md-12">
-        @for (var i = 0; i < Model.Professors.Count; i++)
-        {
-            var pa = @Model.ProfessorsAllocate[i];
+    @if(Model.Professors.Count == 0)
+    {
+        <div class="row text-center">
+            <label>No existen profesores asignados</label>
+        </div>
+    }
+    @for (var i = 0; i < Model.Professors.Count; i++)
+    {
+        var pa = @Model.Professors[i].Allocate;
         <p class="col-md-5" style="padding-left:0px">
-            @Model.Professors[i]
+            @Model.Professors[i].Name
         </p>
         <div class="col-md-6" style="padding-left:0px;">
             <div class="progress">
@@ -82,7 +88,7 @@
         <p class="col-md-1">
             @pa%
         </p>
-        }
+    }
     </div>
 
     <br />

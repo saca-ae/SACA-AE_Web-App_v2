@@ -46,6 +46,9 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>..\packages\CsvHelper.2.13.2.0\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -215,6 +218,10 @@
     <Compile Include="Migrations\201508262323443_changes26Ago.Designer.cs">
       <DependentUpon>201508262323443_changes26Ago.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508272109401_fix-grupo.cs" />
+    <Compile Include="Migrations\201508272109401_fix-grupo.Designer.cs">
+      <DependentUpon>201508272109401_fix-grupo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Aula.cs" />
@@ -224,6 +231,7 @@
     <Compile Include="Models\Comision.cs" />
     <Compile Include="Models\ComisionXProfesor.cs" />
     <Compile Include="Models\Curso.cs" />
+    <Compile Include="Models\DataCSV.cs" />
     <Compile Include="Models\Estado.cs" />
     <Compile Include="Models\Grupo.cs" />
     <Compile Include="Models\GrupoAula.cs" />
@@ -300,6 +308,8 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\SiteScripts\GuardarDias.js" />
     <Content Include="Scripts\SiteScripts\horarioAula.js" />
+    <Content Include="Scripts\SiteScripts\plazaAllocate.js" />
+    <Content Include="Scripts\SiteScripts\plazaIndex.js" />
     <Content Include="Scripts\SiteScripts\RevocarComisionProfesor.js" />
     <Content Include="Scripts\SiteScripts\RevocarCursoProfesor.js" />
     <Content Include="Scripts\SiteScripts\RevocarProyectoProfesor.js" />
@@ -367,7 +377,6 @@
     <Content Include="Views\CSV\CargarCSV.cshtml" />
     <Content Include="Views\Periodo\Index.cshtml" />
     <Content Include="Views\Plazas\Create.cshtml" />
-    <Content Include="Views\Plazas\Delete.cshtml" />
     <Content Include="Views\Plazas\Details.cshtml" />
     <Content Include="Views\Plazas\Edit.cshtml" />
     <Content Include="Views\Plazas\Index.cshtml" />
@@ -410,6 +419,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508262323443_changes26Ago.resx">
       <DependentUpon>201508262323443_changes26Ago.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508272109401_fix-grupo.resx">
+      <DependentUpon>201508272109401_fix-grupo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

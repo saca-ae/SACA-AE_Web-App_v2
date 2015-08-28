@@ -38,8 +38,7 @@ namespace SACAAE.Models.ViewModels
         public int TotalHours { get; set; }
         public int EffectiveTime { get; set; }
         public int TotalAllocate { get; set; }
-        public List<string> Professors { get; set; }
-        public List<int> ProfessorsAllocate { get; set; }
+        public List<PlazaAllocateProfessor> Professors { get; set; }
     }
 
     public class PlazaAllocateViewModel
