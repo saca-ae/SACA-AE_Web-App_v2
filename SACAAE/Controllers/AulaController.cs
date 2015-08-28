@@ -357,7 +357,7 @@ namespace SACAAE.Controllers
         #region Ajax
             /*Obtener horario segun id del aula*/
             [Route("Aula/Schedules/{idAula:int}")]
-        public ActionResult getSchedule(int idAula)
+        public ActionResult getScheduleAula(int idAula)
         {
             var periodo_actual = int.Parse(Request.Cookies["Periodo"].Value);
             if (HttpContext.Request.IsAjaxRequest())

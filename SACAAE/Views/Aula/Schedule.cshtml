@@ -4,45 +4,9 @@
     ViewBag.Title = "Horario Aula";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
-
-<style type="text/css">
-
-
-    table {
-        border-collapse: collapse;
-        width: 1000;
-    }
-
-    thead {
-        background-color: #939699;
-        height: 40px;
-        width: 150px;
-        vertical-align: middle;
-        text-align: center;
-        color: #2C5B8C;
-    }
-
-    #seleccion_td {
-        background-color: #437659;
-        text-align: center;
-    }
-
-    th {
-        font-weight: normal;
-    }
-
-    #td_horario {
-        width: 150px;
-    }
-
-    table, td, th {
-        border: 1px solid black;
-        width: 1000px;
-        empty-cells: hide;
-    }
-
-
-</style>
+<head>
+        @Styles.Render("~/Content/custom")
+</head>
 <body onload="load_window('@(Model.ID)')">
 
     <h2> Horario de Aula </h2>
@@ -71,6 +35,11 @@
 @section Scripts {
  
     <script type="text/javascript">
+        $(document).ready(function () {
+            var entidadid = "#" + getCookie("Entidad");
+            if (entidadid == "#") { Load('TEC'); }
+            $(entidadid).addClass('active');
+        });
         function datos_matriz(data)
         {
             var datos=[];
@@ -230,7 +199,7 @@
                         break;
                 }
                 body_table = body_table + "<tr>";
-                var info_temp = "<th>" + hora + "</th>";
+                var info_temp = "<th class=\"tabla_horario_th\">" + hora + "</th>";
 
 
                 //1 Lunes
@@ -245,7 +214,7 @@
                             posicion_datos = posicion_datos + 1;
                     }
                     else {
-                        info_temp = info_temp + "<td  >" +
+                        info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
                         "</td >";
                     }
                 }
@@ -262,7 +231,7 @@
                             posicion_datos = posicion_datos + 1;
                     }
                     else {
-                        info_temp = info_temp + "<td  >" +
+                        info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
                         "</td >";
                     }
                 }
@@ -279,7 +248,7 @@
                             posicion_datos = posicion_datos + 1;
                     }
                     else {
-                        info_temp = info_temp + "<td  >" +
+                        info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
                         "</td >";
                     }
                 }
@@ -296,8 +265,8 @@
                             posicion_datos = posicion_datos + 1;
                     }
                     else {
-                        info_temp = info_temp + "<td >" +
-                        "</td >";
+                        info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
+                         "</td >";
                     }
                 }
                 //5 Viernes
@@ -313,7 +282,7 @@
                             posicion_datos = posicion_datos + 1;
                     }
                     else {
-                        info_temp = info_temp + "<td>" 
+                        info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
                         "</td >";
                     }
                 }
@@ -330,7 +299,7 @@
                             posicion_datos = posicion_datos + 1;
                     }
                     else {
-                        info_temp = info_temp + "<td  >" +
+                        info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
                         "</td >";
                     }
                 }
@@ -359,9 +328,9 @@
 
         function table_header() {
             var table_header = "<table id=\"tabla_horario\">" +
-                "<thead>" +
-                    "<tr>" +
-                        "<td id=\"td_horario\">" +
+                "<thead id=\"tabla_horario_head\">" +
+                    "<tr \">" +
+                        "<td class = \"tabla_horario_td\" id=\"td_horario\">" +
                             "Horario" +
                         "</td>" +
                         "<td id=\"row1\">" +

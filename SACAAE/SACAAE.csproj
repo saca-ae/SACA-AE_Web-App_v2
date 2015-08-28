@@ -389,6 +389,7 @@
     <Content Include="Views\Profesor\Details.cshtml" />
     <Content Include="Views\Profesor\Edit.cshtml" />
     <Content Include="Views\Profesor\Index.cshtml" />
+    <Content Include="Views\Profesor\Schedule.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
