@@ -16,7 +16,7 @@ namespace SACAAE.Migrations
             RenameColumn(table: "dbo.Grupo", name: "BlockXPlanXCourse", newName: "BlockXPlanXCourseID");
             RenameColumn(table: "dbo.Grupo", name: "Period", newName: "PeriodID");
             RenameColumn(table: "dbo.PlanDeEstudio", name: "Mode", newName: "ModeID");
-            RenameColumn(table: "dbo.PlanDeEstudioXSede", name: "StudyPlan", newName: "StudyPlanID");
+            RenameColumn(table: "dbo.StudyPlanXSede", name: "StudyPlan", newName: "StudyPlanID");
             RenameColumn(table: "dbo.PlanDeEstudio", name: "EntityType", newName: "EntityTypeID");
             RenameColumn(table: "dbo.Comision", name: "EntityType", newName: "EntityTypeID");
             RenameColumn(table: "dbo.Proyecto", name: "EntityType", newName: "EntityTypeID");
@@ -36,7 +36,7 @@ namespace SACAAE.Migrations
             RenameIndex(table: "dbo.Grupo", name: "IX_BlockXPlanXCourse", newName: "IX_BlockXPlanXCourseID");
             RenameIndex(table: "dbo.PlanDeEstudio", name: "IX_Mode", newName: "IX_ModeID");
             RenameIndex(table: "dbo.PlanDeEstudio", name: "IX_EntityType", newName: "IX_EntityTypeID");
-            RenameIndex(table: "dbo.PlanDeEstudioXSede", name: "IX_StudyPlan", newName: "IX_StudyPlanID");
+            RenameIndex(table: "dbo.StudyPlanXSede", name: "IX_StudyPlan", newName: "IX_StudyPlanID");
             RenameIndex(table: "dbo.Comision", name: "IX_State", newName: "IX_StateID");
             RenameIndex(table: "dbo.Comision", name: "IX_EntityType", newName: "IX_EntityTypeID");
             RenameIndex(table: "dbo.ComisionXProfesor", name: "IX_Commission", newName: "IX_CommissionID");
@@ -119,7 +119,7 @@ namespace SACAAE.Migrations
             RenameIndex(table: "dbo.ComisionXProfesor", name: "IX_CommissionID", newName: "IX_Commission");
             RenameIndex(table: "dbo.Comision", name: "IX_EntityTypeID", newName: "IX_EntityType");
             RenameIndex(table: "dbo.Comision", name: "IX_StateID", newName: "IX_State");
-            RenameIndex(table: "dbo.PlanDeEstudioXSede", name: "IX_StudyPlanID", newName: "IX_StudyPlan");
+            RenameIndex(table: "dbo.StudyPlanXSede", name: "IX_StudyPlanID", newName: "IX_StudyPlan");
             RenameIndex(table: "dbo.PlanDeEstudio", name: "IX_EntityTypeID", newName: "IX_EntityType");
             RenameIndex(table: "dbo.PlanDeEstudio", name: "IX_ModeID", newName: "IX_Mode");
             RenameIndex(table: "dbo.Grupo", name: "IX_BlockXPlanXCourseID", newName: "IX_BlockXPlanXCourse");
@@ -139,7 +139,7 @@ namespace SACAAE.Migrations
             RenameColumn(table: "dbo.Proyecto", name: "EntityTypeID", newName: "EntityType");
             RenameColumn(table: "dbo.Comision", name: "EntityTypeID", newName: "EntityType");
             RenameColumn(table: "dbo.PlanDeEstudio", name: "EntityTypeID", newName: "EntityType");
-            RenameColumn(table: "dbo.PlanDeEstudioXSede", name: "StudyPlanID", newName: "StudyPlan");
+            RenameColumn(table: "dbo.StudyPlanXSede", name: "StudyPlanID", newName: "StudyPlan");
             RenameColumn(table: "dbo.PlanDeEstudio", name: "ModeID", newName: "Mode");
             RenameColumn(table: "dbo.Grupo", name: "PeriodID", newName: "Period");
             RenameColumn(table: "dbo.Grupo", name: "BlockXPlanXCourseID", newName: "BlockXPlanXCourse");

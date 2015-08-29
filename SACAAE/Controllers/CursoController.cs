@@ -20,7 +20,7 @@ namespace SACAAE.Controllers
         // GET: Curso
         public ActionResult Index()
         {
-            var cursos = db.Cursos.ToList();
+            var cursos = db.Courses.ToList();
             var viewModel = new List<CursoIndexViewModel>();
 
             cursos.ForEach(p => viewModel.Add(
@@ -46,7 +46,7 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Curso curso = db.Cursos.Find(id);
+            Course curso = db.Courses.Find(id);
             if (curso == null)
             {
                 return HttpNotFound();
@@ -64,11 +64,11 @@ namespace SACAAE.Controllers
         // POST: Curso/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Curso curso)
+        public ActionResult Create([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Course curso)
         {
             if (ModelState.IsValid)
             {
-                db.Cursos.Add(curso);
+                db.Courses.Add(curso);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -83,7 +83,7 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Curso curso = db.Cursos.Find(id);
+            Course curso = db.Courses.Find(id);
             if (curso == null)
             {
                 return HttpNotFound();
@@ -94,7 +94,7 @@ namespace SACAAE.Controllers
         // POST: Curso/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Curso curso)
+        public ActionResult Edit([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Course curso)
         {
             if (ModelState.IsValid)
             {
@@ -112,7 +112,7 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Curso curso = db.Cursos.Find(id);
+            Course curso = db.Courses.Find(id);
             if (curso == null)
             {
                 return HttpNotFound();
@@ -125,8 +125,8 @@ namespace SACAAE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Curso curso = db.Cursos.Find(id);
-            db.Cursos.Remove(curso);
+            Course curso = db.Courses.Find(id);
+            db.Courses.Remove(curso);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -139,7 +139,7 @@ namespace SACAAE.Controllers
             if (ModelState.IsValid)
             {
 
-                Grupo grupo = db.Grupos.Find(Grupos_Disponibles);
+                Group grupo = db.Groups.Find(Grupos_Disponibles);
                 grupo.ProfessorID = Profesores;
                 db.SaveChanges();
 
@@ -176,7 +176,7 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Grupo grupo = db.Grupos.Find(id);
+            Group grupo = db.Groups.Find(id);
             if (grupo == null)
             {
                 return HttpNotFound();
@@ -193,7 +193,7 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Grupo grupo = db.Grupos.Find(id);
+            Group grupo = db.Groups.Find(id);
             if (grupo == null)
             {
                 return HttpNotFound();
@@ -201,7 +201,7 @@ namespace SACAAE.Controllers
            
 
             /* Se obtiene la lista de profesores */
-            ViewBag.Profesores = new SelectList(db.Profesores, "ID", "Name");
+            ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
             return View(grupo);
         }
 
@@ -215,7 +215,7 @@ namespace SACAAE.Controllers
             if (ModelState.IsValid)
             {
 
-                Grupo grupo = db.Grupos.Find(idGrupo);
+                Group grupo = db.Groups.Find(idGrupo);
                 grupo.ProfessorID = Profesores;
                 db.SaveChanges();
 
@@ -246,8 +246,8 @@ namespace SACAAE.Controllers
 
 
             /* Se obtiene la lista de profesores */
-            ViewBag.Profesores = new SelectList(db.Profesores, "ID", "Name");
-            Curso curso = db.Cursos.Find(id);
+            ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
+            Course curso = db.Courses.Find(id);
             return View(curso);
         }
         /*-------------------------------------------------------------------*/
@@ -270,19 +270,19 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaCursos = (from curso in db.Cursos
-                                   join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
-                                   join bloque_planes in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
-                                   join bloque_academico in db.BloquesAcademicos on bloque_planes.BlockID equals bloque_academico.ID
-                                   join grupo in db.Grupos on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
-                                   join profesor in db.Profesores on grupo.ProfessorID equals profesor.ID
-                                   join plan_estudio in db.PlanesDeEstudio on bloque_planes.PlanID equals plan_estudio.ID
-                                   join modalidad in db.Modalidades on plan_estudio.ModeID equals modalidad.ID
-                                   join plan_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_sede.StudyPlanID
+                var listaCursos = (from curso in db.Courses
+                                   join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                   join bloque_planes in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
+                                   join bloque_academico in db.AcademicBlocks on bloque_planes.BlockID equals bloque_academico.ID
+                                   join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
+                                   join profesor in db.Professors on grupo.ProfessorID equals profesor.ID
+                                   join plan_estudio in db.StudyPlans on bloque_planes.PlanID equals plan_estudio.ID
+                                   join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
+                                   join plan_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_sede.StudyPlanID
                                    join sede in db.Sedes on plan_sede.SedeID equals sede.ID
-                                   join grupo_aula in db.GrupoAula on grupo.ID equals grupo_aula.GroupID
-                                   join aula in db.Aulas on grupo_aula.ClassroomID equals aula.ID
-                                   join horario in db.Horarios on grupo_aula.ScheduleID equals horario.ID
+                                   join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+                                   join aula in db.Classrooms on grupo_aula.ClassroomID equals aula.ID
+                                   join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
                                    where grupo.ID == idGrupo
 
                                    select new
@@ -303,7 +303,7 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                Grupo grupo = db.Grupos.Find(idGrupo);
+                Group grupo = db.Groups.Find(idGrupo);
                 grupo.ProfessorID = null;
                 db.SaveChanges();
                 var respuesta =  new{respuesta = "success"};

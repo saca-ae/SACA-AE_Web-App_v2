@@ -37,12 +37,12 @@ namespace SACAAE.Controllers
             {
                 return HttpNotFound();
             }
-            var PPList = plaza.PlazasXProfesores.ToList();
+            var PPList = plaza.PlazasXProfessors.ToList();
             var professors = new List<PlazaAllocateProfessor>();
             PPList.ForEach(p => professors.Add(new PlazaAllocateProfessor()
             {
                 ID = p.ProfessorID,
-                Name = p.Profesor.Name,
+                Name = p.Professor.Name,
                 Allocate = p.PercentHours
             }));
 
@@ -172,12 +172,12 @@ namespace SACAAE.Controllers
             {
                 return HttpNotFound();
             }
-            var PPList = plaza.PlazasXProfesores.ToList();
+            var PPList = plaza.PlazasXProfessors.ToList();
             var professors = new List<PlazaAllocateProfessor>();
             PPList.ForEach(p => professors.Add(new PlazaAllocateProfessor()
             {
                 ID = p.ProfessorID,
-                Name = p.Profesor.Name,
+                Name = p.Professor.Name,
                 Allocate = p.PercentHours
             }));
 
@@ -198,7 +198,7 @@ namespace SACAAE.Controllers
         {
             var plaza = db.Plazas.Find(viewModel.ID);
             var newProfe = viewModel.Professors.Last();
-            plaza.PlazasXProfesores.Add(new PlazaXProfesor()
+            plaza.PlazasXProfessors.Add(new PlazaXProfessor()
             {
                 ProfessorID = newProfe.ID,
                 PercentHours = newProfe.Allocate
@@ -215,7 +215,7 @@ namespace SACAAE.Controllers
         {
             var plazaID = viewModel.ID;
             var profeID = viewModel.Professors[0].ID;
-            var PxP = db.PlazasXProfesores.Where(p => p.PlazaID == plazaID && p.ProfessorID == profeID).Single();
+            var PxP = db.PlazasXProfessors.Where(p => p.PlazaID == plazaID && p.ProfessorID == profeID).Single();
             PxP.PercentHours = viewModel.Professors[0].Allocate;
 
             db.Entry(PxP).State = EntityState.Modified;
@@ -231,9 +231,9 @@ namespace SACAAE.Controllers
         {
             var plazaID = viewModel.ID;
             var profeID = viewModel.Professors[0].ID;
-            var PxP = db.PlazasXProfesores.Where(p => p.PlazaID == plazaID && p.ProfessorID == profeID).Single();
+            var PxP = db.PlazasXProfessors.Where(p => p.PlazaID == plazaID && p.ProfessorID == profeID).Single();
 
-            db.PlazasXProfesores.Remove(PxP);
+            db.PlazasXProfessors.Remove(PxP);
             db.SaveChanges();
 
             return RedirectToAction("Allocate", new { id = viewModel.ID });
@@ -254,8 +254,8 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var plazaProfes = db.Plazas.Find(plaza).PlazasXProfesores.Select(p => p.Profesor).ToList();
-                var listaProfes = db.Profesores.ToList();
+                var plazaProfes = db.Plazas.Find(plaza).PlazasXProfessors.Select(p => p.Professor).ToList();
+                var listaProfes = db.Professors.ToList();
                 var json = listaProfes.Except(plazaProfes).Select(p => new { p.ID, p.Name });
 
                 return Json(json, JsonRequestBehavior.AllowGet);
