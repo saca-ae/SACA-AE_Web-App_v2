@@ -178,3 +178,39 @@ ul.alert-dropdown {
     font-size: 15px;
     margin-left: 5px !important;
 }
+
+/*Horario Grafico Esteban Segura Benavides*/
+    #tabla_horario {
+        border-collapse: collapse;
+        border: 1px solid black;
+        width: 1000px;
+        empty-cells: hide;
+    }
+
+    #tabla_horario_head {
+        background-color: #939699;
+        height: 40px;
+        width: 150px;
+        vertical-align: middle;
+        text-align: center;
+        color: #2C5B8C;
+    }
+
+    #seleccion_td {
+        background-color: #5BC0DE;
+        text-align: center;
+    }
+
+    .tabla_horario_th {
+        font-weight: normal;
+    }
+
+    #td_horario {
+        width: 150px;
+    }
+
+     .tabla_horario_td, .tabla_horario_th {
+        border: 1px solid black;
+        width: 1000px;
+        empty-cells: hide;
+    }

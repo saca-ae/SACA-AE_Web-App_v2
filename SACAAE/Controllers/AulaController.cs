@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using SACAAE.Data_Access;
 using SACAAE.Models;
+using Newtonsoft.Json;
 
 namespace SACAAE.Controllers
 {
@@ -353,6 +354,43 @@ namespace SACAAE.Controllers
         private void Save()
         {
             db.SaveChanges();
+        }
+        #endregion
+
+        #region Ajax
+            /*Obtener horario segun id del aula*/
+            [Route("Aula/Schedules/{idAula:int}")]
+        public ActionResult getScheduleAula(int idAula)
+        {
+            var periodo_actual = int.Parse(Request.Cookies["Periodo"].Value);
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var listaPlanes = from aula in db.Aulas
+                                  join grupo_aula in db.GrupoAula on aula.ID equals grupo_aula.ClassroomID
+                                  join horario in db.Horarios on grupo_aula.ScheduleID equals horario.ID
+                                  join sede in db.Sedes on aula.SedeID equals sede.ID
+                                  join grupo in db.Grupos on grupo_aula.GroupID equals grupo.ID
+                                  join plan_bloque_curso in db.BloquesXPlanesXCursos on grupo.BlockXPlanXCourseID equals plan_bloque_curso.ID
+                                  join curso in db.Cursos on plan_bloque_curso.CourseID equals curso.ID
+                                  join periodo in db.Periodos on grupo.PeriodID equals periodo.ID
+                                  where (aula.ID == idAula) && (periodo.ID == periodo_actual) && (horario.StartHour != "700" && horario.StartHour != "900")
+                                  
+                                  select new { curso.Name, grupo.Number, horario.StartHour, horario.EndHour,Day=horario.Day== "Lunes"?1:
+                                                                                                                horario.Day=="Martes"?2:
+                                                                                                                horario.Day=="Miércoles"?3:
+                                                                                                                horario.Day == "Jueves" ? 4 :
+                                                                                                                horario.Day=="Viernes"?5:
+                                                                                                                horario.Day=="Sábado"?6:
+                                                                                                                0};
+                //listaPlanes.Where(p => p.Day == "lunes").OrderBy().ToList();
+                listaPlanes = listaPlanes.OrderBy(c => c.StartHour.Length).ThenBy(c => c.StartHour).ThenBy(c=>c.Day);
+                /*Es necesario remover elementos de la lista que los horarios no son correctos*/
+               
+                var json = JsonConvert.SerializeObject(listaPlanes);
+                return Content(json);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
         }
         #endregion
     }
