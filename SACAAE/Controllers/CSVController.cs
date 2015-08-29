@@ -78,18 +78,18 @@ namespace SACAAE.Controllers
             // Queries all the tables needed for the complete information of groups. 
             // Complete Information of groups: Group's Number, Course Name, Professor, Day, Start Hour, End Hour, Headquarter, Classroom, Study Plan and Modality
             IEnumerable<DataCSV> vGroupesCSV =
-                from Grupo G in database.Grupos
-                join BloqueXPlanXCurso BPC in database.BloquesXPlanesXCursos on G.ID equals BPC.BlockXPlanID
-                join BloqueAcademicoXPlanDeEstudio BP in database.BloquesAcademicosXPlanesDeEstudio on BPC.BlockXPlanID equals BP.ID
-                join PlanDeEstudio PE in database.PlanesDeEstudio on BP.PlanID equals PE.ID
-                join Curso C in database.Cursos on BPC.CourseID equals C.ID
-                join GrupoAula GA in database.GrupoAula on G.ID equals GA.GroupID
-                join Horario H in database.Horarios on GA.ScheduleID equals H.ID
-                join Profesor PF in database.Profesores on G.ProfessorID equals PF.ID
-                join Periodo PRD in database.Periodos on G.PeriodID equals PRD.ID
+                from Group G in database.Groups
+                join BlockXPlanXCourse BPC in database.BlocksXPlansXCourses on G.ID equals BPC.BlockXPlanID
+                join AcademicBlockXStudyPlan BP in database.AcademicBlocksXStudyPlans on BPC.BlockXPlanID equals BP.ID
+                join StudyPlan PE in database.StudyPlans on BP.PlanID equals PE.ID
+                join Course C in database.Courses on BPC.CourseID equals C.ID
+                join GroupClassroom GA in database.GroupClassrooms on G.ID equals GA.GroupID
+                join Schedule H in database.Schedules on GA.ScheduleID equals H.ID
+                join Professor PF in database.Professors on G.ProfessorID equals PF.ID
+                join Period PRD in database.Periods on G.PeriodID equals PRD.ID
                 join Sede SE in database.Sedes on BPC.SedeID equals SE.ID
-                join Aula AU in database.Aulas on GA.ClassroomID equals AU.ID
-                join Modalidad MO in database.Modalidades on PE.ModeID equals MO.ID
+                join Classroom AU in database.Classrooms on GA.ClassroomID equals AU.ID
+                join Modality MO in database.Modalities on PE.ModeID equals MO.ID
                 where G.PeriodID == pIDPeriod && PE.EntityTypeID == pIDEntity
                 select new DataCSV
                 {
@@ -111,44 +111,44 @@ namespace SACAAE.Controllers
         #region Helpers
         private int getEntityID(string entityName)
         {
-            TipoEntidad entity;
+            EntityType entity;
             switch (entityName)
             {
                 case "TEC":
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == "TEC");
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == "TEC");
                     break;
                 case "CIADEG":
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == "CIADEG");
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == "CIADEG");
                     break;
                 case "TAE":
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-TAE");
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-TAE");
                     break;
                 case "MAE":
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MAE");
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MAE");
                     break;
                 case "MDE":
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MDE");
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MDE");
                     break;
                 case "MGP":
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MGP");
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MGP");
                     break;
                 case "DDE":
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Doctorado");
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Doctorado");
                     break;
                 case "Emprendedores":
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Emprendedores");
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Emprendedores");
                     break;
                 case "CIE":
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-CIE");
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-CIE");
                     break;
                 case "Actualizacion_Cartago":
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion Cartago");
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion Cartago");
                     break;
                 case "Actualizacion_San_Carlos":
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion San Carlos");
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion San Carlos");
                     break;
                 default:
-                    entity = database.TipoEntidades.SingleOrDefault(p => p.Name == entityName);
+                    entity = database.EntityTypes.SingleOrDefault(p => p.Name == entityName);
                     break;
             }
 

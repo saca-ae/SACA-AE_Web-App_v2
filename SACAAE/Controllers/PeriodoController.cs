@@ -17,7 +17,7 @@ namespace SACAAE.Controllers
     public class PeriodoController : Controller
     {
         private SACAAEContext gvDatabase = new SACAAEContext();
-        private Periodo gPeriod = new Periodo();
+        private Period gPeriod = new Period();
 
         // GET: Periodo
         public ActionResult Index()
@@ -44,11 +44,11 @@ namespace SACAAE.Controllers
         private IQueryable<GroupsCreatedViewModel> getGroupsList(int pIdPeriod, int pIdEntity)
         {
             IQueryable<GroupsCreatedViewModel> vGroupsList = 
-                from Grupo Gru in gvDatabase.Grupos
-                join BloqueXPlanXCurso BPC in gvDatabase.BloquesXPlanesXCursos on Gru.BlockXPlanXCourseID equals BPC.ID
-                join BloqueAcademicoXPlanDeEstudio BP in gvDatabase.BloquesAcademicosXPlanesDeEstudio on BPC.BlockXPlanID equals BP.ID
-                join PlanDeEstudio P in gvDatabase.PlanesDeEstudio on BP.PlanID equals P.ID
-                join Curso C in gvDatabase.Cursos on BPC.CourseID equals C.ID
+                from Group Gru in gvDatabase.Groups
+                join BlockXPlanXCourse BPC in gvDatabase.BlocksXPlansXCourses on Gru.BlockXPlanXCourseID equals BPC.ID
+                join AcademicBlockXStudyPlan BP in gvDatabase.AcademicBlocksXStudyPlans on BPC.BlockXPlanID equals BP.ID
+                join StudyPlan P in gvDatabase.StudyPlans on BP.PlanID equals P.ID
+                join Course C in gvDatabase.Courses on BPC.CourseID equals C.ID
                 join Sede S in gvDatabase.Sedes on BPC.SedeID equals S.ID
                 where Gru.PeriodID == pIdPeriod && P.EntityTypeID == pIdEntity
                 select new GroupsCreatedViewModel
@@ -65,44 +65,44 @@ namespace SACAAE.Controllers
         #region helpers
         private int getEntityID(string entityName)
         {
-            TipoEntidad entity;
+            EntityType entity;
             switch (entityName)
             {
                 case "TEC":
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == "TEC");
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == "TEC");
                     break;
                 case "CIADEG":
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == "CIADEG");
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == "CIADEG");
                     break;
                 case "TAE":
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-TAE");
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-TAE");
                     break;
                 case "MAE":
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MAE");
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MAE");
                     break;
                 case "MDE":
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MDE");
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MDE");
                     break;
                 case "MGP":
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MGP");
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MGP");
                     break;
                 case "DDE":
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Doctorado");
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Doctorado");
                     break;
                 case "Emprendedores":
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Emprendedores");
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Emprendedores");
                     break;
                 case "CIE":
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-CIE");
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-CIE");
                     break;
                 case "Actualizacion_Cartago":
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion Cartago");
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion Cartago");
                     break;
                 case "Actualizacion_San_Carlos":
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion San Carlos");
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion San Carlos");
                     break;
                 default:
-                    entity = gvDatabase.TipoEntidades.SingleOrDefault(p => p.Name == entityName);
+                    entity = gvDatabase.EntityTypes.SingleOrDefault(p => p.Name == entityName);
                     break;
             }
 

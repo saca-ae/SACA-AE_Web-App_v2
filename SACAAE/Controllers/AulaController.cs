@@ -365,14 +365,14 @@ namespace SACAAE.Controllers
             var periodo_actual = int.Parse(Request.Cookies["Periodo"].Value);
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaPlanes = from aula in db.Aulas
-                                  join grupo_aula in db.GrupoAula on aula.ID equals grupo_aula.ClassroomID
-                                  join horario in db.Horarios on grupo_aula.ScheduleID equals horario.ID
+                var listaPlanes = from aula in db.Classrooms
+                                  join grupo_aula in db.GroupClassrooms on aula.ID equals grupo_aula.ClassroomID
+                                  join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
                                   join sede in db.Sedes on aula.SedeID equals sede.ID
-                                  join grupo in db.Grupos on grupo_aula.GroupID equals grupo.ID
-                                  join plan_bloque_curso in db.BloquesXPlanesXCursos on grupo.BlockXPlanXCourseID equals plan_bloque_curso.ID
-                                  join curso in db.Cursos on plan_bloque_curso.CourseID equals curso.ID
-                                  join periodo in db.Periodos on grupo.PeriodID equals periodo.ID
+                                  join grupo in db.Groups on grupo_aula.GroupID equals grupo.ID
+                                  join plan_bloque_curso in db.BlocksXPlansXCourses on grupo.BlockXPlanXCourseID equals plan_bloque_curso.ID
+                                  join curso in db.Courses on plan_bloque_curso.CourseID equals curso.ID
+                                  join periodo in db.Periods on grupo.PeriodID equals periodo.ID
                                   where (aula.ID == idAula) && (periodo.ID == periodo_actual) && (horario.StartHour != "700" && horario.StartHour != "900")
                                   
                                   select new { curso.Name, grupo.Number, horario.StartHour, horario.EndHour,Day=horario.Day== "Lunes"?1:

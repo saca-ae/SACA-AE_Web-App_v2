@@ -16,10 +16,10 @@ namespace SACAAE.Models
         [ForeignKey("Number")]
         public int NumberID { get; set; }
         
-        public virtual NumeroPeriodo Numero { get; set; }
-        public virtual ICollection<ComisionXProfesor> ComisionesXProfesores { get; set; }
-        public virtual ICollection<Grupo> Grupos { get; set; }
-        public virtual ICollection<ProyectoXProfesor> ProyectosXProfesores { get; set; }
+        public virtual PeriodNumber Number { get; set; }
+        public virtual ICollection<CommissionXProfessor> CommissionsXProfessors { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
+        public virtual ICollection<ProjectXProfessor> ProjectsXProfessors { get; set; }
 
         /// <summary>
         /// 
@@ -27,13 +27,13 @@ namespace SACAAE.Models
         /// <author> Cristian Araya Fuentes </author> 
         /// <param name=pPeriodType> Name of the period type</param>
         /// <returns></returns>
-        public Periodo GetNextPeriod(String pPeriodType)
+        public Period GetNextPeriod(String pPeriodType)
         {
             int vNumber = 0, vYear = 0;
             NuevoPeriodo vLastPeriod =
-                (from TipoPeriodo TP in gvDatabase.TiposPeriodo
-                 from NumeroPeriodo N in gvDatabase.PeriodoAño
-                 from Periodo P in gvDatabase.Periodos
+                (from PeriodType TP in gvDatabase.PeriodTypes
+                 from PeriodNumber N in gvDatabase.PeriodNumbers
+                 from Period P in gvDatabase.Periods
                  where TP.Name == pPeriodType
                  where N.ID == P.NumberID
                  where TP.ID == N.TypeID
@@ -52,7 +52,7 @@ namespace SACAAE.Models
                 }
             }
 
-            Periodo vPeriod = new Periodo();
+            Period vPeriod = new Period();
             vPeriod.NumberID = vNumber;
             vPeriod.Year = vYear;
 
@@ -61,8 +61,8 @@ namespace SACAAE.Models
 
         public int getIDPeriodNumber(int pPeriodNumber, String pPeriodType) 
         {
-            return (from NumeroPeriodo in gvDatabase.PeriodoAño
-                    join TipoPeriodo in gvDatabase.TiposPeriodo on NumeroPeriodo.TypeID equals TipoPeriodo.ID
+            return (from NumeroPeriodo in gvDatabase.PeriodNumbers
+                    join TipoPeriodo in gvDatabase.PeriodTypes on NumeroPeriodo.TypeID equals TipoPeriodo.ID
                     where TipoPeriodo.Name == pPeriodType
                     where NumeroPeriodo.Number == pPeriodNumber
                     select NumeroPeriodo).FirstOrDefault().ID;
@@ -70,22 +70,22 @@ namespace SACAAE.Models
 
         public int getIDPeriod(int pPeriodYear, int pPeriodNumberID)
         {
-            return (from Periodo P in gvDatabase.Periodos
+            return (from Period P in gvDatabase.Periods
                     where P.NumberID == pPeriodNumberID
                     where P.Year == pPeriodYear
                     select P).FirstOrDefault().ID;
         }
 
-        public Periodo AddNewSemester() 
+        public Period AddNewSemester() 
         {
-            Periodo vPeriod = GetNextPeriod("Semestre");
+            Period vPeriod = GetNextPeriod("Semestre");
             AddPeriod(vPeriod);
             return vPeriod;
         }
 
-        public void AddPeriod(Periodo pPeriod)
+        public void AddPeriod(Period pPeriod)
         {
-            gvDatabase.Periodos.Add(pPeriod);
+            gvDatabase.Periods.Add(pPeriod);
             gvDatabase.SaveChanges();
         }
 

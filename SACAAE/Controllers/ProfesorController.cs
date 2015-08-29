@@ -17,13 +17,13 @@ namespace SACAAE.Controllers
     {
         private SACAAEContext db = new SACAAEContext();
 
-        // GET: /Profesor/
+        // GET: /Professor/
         public ActionResult Index()
         {
-            var profesores = db.Profesores.ToList();
+            var Professors = db.Professors.ToList();
             var viewModel = new List<ProfesorViewModel>();
 
-            profesores.ForEach(p => viewModel.Add(
+            Professors.ForEach(p => viewModel.Add(
                 new ProfesorViewModel()
                 {
                     ID = p.ID,
@@ -38,14 +38,14 @@ namespace SACAAE.Controllers
             return View(viewModel);
         }
 
-        // GET: /Profesor/Details/5
+        // GET: /Professor/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Profesor profesor = db.Profesores.Find(id);
+            Professor profesor = db.Professors.Find(id);
             if (profesor == null)
             {
                 return HttpNotFound();
@@ -53,53 +53,53 @@ namespace SACAAE.Controllers
             return View(profesor);
         }
 
-        // GET: /Profesor/Create
+        // GET: /Professor/Create
         public ActionResult Create()
         {
-            ViewBag.StateID = new SelectList(db.Estados, "ID", "Name");
+            ViewBag.StateID = new SelectList(db.States, "ID", "Name");
             return View();
         }
 
-        // POST: /Profesor/Create
+        // POST: /Professor/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="ID,Name,Link,StateID,Tel1,Tel2,Email")] Profesor profesor)
+        public ActionResult Create([Bind(Include="ID,Name,Link,StateID,Tel1,Tel2,Email")] Professor profesor)
         {
             if (ModelState.IsValid)
             {
-                db.Profesores.Add(profesor);
+                db.Professors.Add(profesor);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.StateID = new SelectList(db.Estados, "ID", "Name", profesor.StateID);
+            ViewBag.StateID = new SelectList(db.States, "ID", "Name", profesor.StateID);
             return View(profesor);
         }
 
-        // GET: /Profesor/Edit/5
+        // GET: /Professor/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Profesor profesor = db.Profesores.Find(id);
+            Professor profesor = db.Professors.Find(id);
             if (profesor == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.StateID = new SelectList(db.Estados, "ID", "Name", profesor.StateID);
+            ViewBag.StateID = new SelectList(db.States, "ID", "Name", profesor.StateID);
             return View(profesor);
         }
 
-        // POST: /Profesor/Edit/5
+        // POST: /Professor/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="ID,Name,Link,StateID,Tel1,Tel2,Email")] Profesor profesor)
+        public ActionResult Edit([Bind(Include="ID,Name,Link,StateID,Tel1,Tel2,Email")] Professor profesor)
         {
             if (ModelState.IsValid)
             {
@@ -107,18 +107,18 @@ namespace SACAAE.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.StateID = new SelectList(db.Estados, "ID", "Name", profesor.StateID);
+            ViewBag.StateID = new SelectList(db.States, "ID", "Name", profesor.StateID);
             return View(profesor);
         }
 
-        // GET: /Profesor/Delete/5
+        // GET: /Professor/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Profesor profesor = db.Profesores.Find(id);
+            Professor profesor = db.Professors.Find(id);
             if (profesor == null)
             {
                 return HttpNotFound();
@@ -126,13 +126,13 @@ namespace SACAAE.Controllers
             return View(profesor);
         }
 
-        // POST: /Profesor/Delete/5
+        // POST: /Professor/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Profesor profesor = db.Profesores.Find(id);
-            db.Profesores.Remove(profesor);
+            Professor profesor = db.Professors.Find(id);
+            db.Professors.Remove(profesor);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -146,14 +146,14 @@ namespace SACAAE.Controllers
             base.Dispose(disposing);
         }
 
-        // GET: Profesor/Schedule/5
+        // GET: Professor/Schedule/5
         public ActionResult Schedule(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Profesor profesor = db.Profesores.Find(id);
+            Professor profesor = db.Professors.Find(id);
             if (profesor == null)
             {
                 return HttpNotFound();
@@ -163,18 +163,18 @@ namespace SACAAE.Controllers
 
         #region Ajax
         /*Obtener horario segun id del aula*/
-        [Route("Profesor/Schedules/{idProfesor:int}")]
+        [Route("Professor/Schedules/{idProfesor:int}")]
         public ActionResult getScheduleProfesor(int idProfesor)
         {
             var periodo_actual = int.Parse(Request.Cookies["Periodo"].Value);
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaPlanes = from profesor in db.Profesores
-                                  join grupo in db.Grupos on profesor.ID equals grupo.ProfessorID
-                                  join plan_bloque_curso in db.BloquesXPlanesXCursos on grupo.BlockXPlanXCourseID equals plan_bloque_curso.ID
-                                  join curso in db.Cursos on plan_bloque_curso.CourseID equals curso.ID
-                                  join grupo_aula in db.GrupoAula on grupo.ID equals grupo_aula.GroupID
-                                 join horario in db.Horarios on grupo_aula.ScheduleID equals horario.ID
+                var listaPlanes = from profesor in db.Professors
+                                  join grupo in db.Groups on profesor.ID equals grupo.ProfessorID
+                                  join plan_bloque_curso in db.BlocksXPlansXCourses on grupo.BlockXPlanXCourseID equals plan_bloque_curso.ID
+                                  join curso in db.Courses on plan_bloque_curso.CourseID equals curso.ID
+                                  join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+                                 join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
                                  where (profesor.ID==idProfesor) && (horario.StartHour != "700" && horario.StartHour != "900")
                                 select new{curso.Name,grupo.Number,horario.StartHour,horario.EndHour,Day = horario.Day == "Lunes" ? 1 :horario.Day == "Martes" ? 2 :
                                           horario.Day == "Miércoles" ? 3 : horario.Day == "Jueves" ? 4 :horario.Day == "Viernes" ? 5 :horario.Day == "Sábado" ? 6 :0
