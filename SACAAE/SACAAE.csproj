@@ -254,6 +254,7 @@
     <Compile Include="Models\TipoPeriodo.cs" />
     <Compile Include="Models\ViewModels\AsignacionCursoProfesorViewModel.cs" />
     <Compile Include="Models\ViewModels\CursoViewModel.cs" />
+    <Compile Include="Models\ViewModels\GroupsCreatedViewModel.cs" />
     <Compile Include="Models\ViewModels\PlazaViewModel.cs" />
     <Compile Include="Models\ViewModels\ProfesorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
