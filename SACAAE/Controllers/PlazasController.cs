@@ -1,31 +1,40 @@
-﻿using System;
+﻿using SACAAE.Data_Access;
+using SACAAE.Models;
+using SACAAE.Models.ViewModels;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using SACAAE.Data_Access;
-using SACAAE.Models;
-using SACAAE.Models.ViewModels;
 
 namespace SACAAE.Controllers
 {
     [Authorize]
     public class PlazasController : Controller
     {
-        private SACAAEContext db = new SACAAEContext();
-        private const string TempDataMessageKey = "MessageError";
+        private SACAAEContext db = new SACAAEContext();                     // Database context
+        private const string TempDataMessageKey = "MessageError";          
         private const string TempDataMessageKeySuccess = "MessageSuccess";
 
-        // GET: Plaza
+        /// GET: Plaza
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// All plazas from database
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View(db.Plazas.ToList());
         }
 
-        // GET: Plaza/Details/5
+        /// GET: Plaza/Details/5
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Details from a specific plaza and allocation of professors
+        /// </summary>
+        /// <param name="id">Plaza's id</param>
+        /// <returns></returns>
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -61,7 +70,12 @@ namespace SACAAE.Controllers
             return View(viewModel);
         }
 
-        // GET: Plaza/Create
+        /// GET: Plaza/Create
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Initialize the view to add new plazas
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Create()
         {
             var viewModel = new PlazaCreateViewModel()
@@ -73,7 +87,13 @@ namespace SACAAE.Controllers
             return View(viewModel);
         }
 
-        // POST: Plaza/Create
+        /// POST: Plaza/Create
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Add a new plaza to the system
+        /// </summary>
+        /// <param name="viewModel">Represents the information of a new plaza</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(PlazaCreateViewModel viewModel)
@@ -99,7 +119,13 @@ namespace SACAAE.Controllers
             return View(viewModel);
         }
 
-        // GET: Plaza/Edit/5
+        /// GET: Plaza/Edit/5
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Initialize the view to edit a plaza
+        /// </summary>
+        /// <param name="id">Plaza's id</param>
+        /// <returns></returns>
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -126,7 +152,13 @@ namespace SACAAE.Controllers
             return View(viewModel);
         }
 
-        // POST: Plaza/Edit/5
+        /// POST: Plaza/Edit/5
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Edit a plaza information
+        /// </summary>
+        /// <param name="viewModel">Represents the edited information of a plaza</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(PlazaEditViewModel viewModel)
@@ -149,7 +181,13 @@ namespace SACAAE.Controllers
             return View(viewModel);
         }
 
-        // POST: Plaza/Delete/5
+        /// POST: Plaza/Delete/5
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Delete a plaza from the system
+        /// </summary>
+        /// <param name="id">Plaza's id</param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -157,10 +195,18 @@ namespace SACAAE.Controllers
             Plaza plaza = db.Plazas.Find(id);
             db.Plazas.Remove(plaza);
             db.SaveChanges();
+
+            TempData[TempDataMessageKeySuccess] = "Plaza eliminada exitosamente";
             return RedirectToAction("Index");
         }
 
-        // GET: Plaza/Allocate/5
+        /// GET: Plaza/Allocate/5
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Initialize the view to allocate professors to a plaza
+        /// </summary>
+        /// <param name="id">Plaza's id</param>
+        /// <returns></returns>
         public ActionResult Allocate(int? id)
         {
             if (id == null)
@@ -191,7 +237,13 @@ namespace SACAAE.Controllers
             return View(viewModel);
         }
 
-        // POST: Plaza/Allocate/5
+        /// POST: Plaza/Allocate/5
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Allocate a professor to a plaza
+        /// </summary>
+        /// <param name="viewModel">Represents the new professor allocation on a plaza</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Allocate(PlazaAllocateViewModel viewModel)
@@ -208,7 +260,13 @@ namespace SACAAE.Controllers
             return RedirectToAction("Allocate", new { id = viewModel.ID });
         }
 
-        // POST: Plaza/EditAllocate/5
+        /// POST: Plaza/EditAllocate/5
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Edit the professor allocated on a plaza
+        /// </summary>
+        /// <param name="viewModel">Represents the edited professor allocated on a plaza</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditAllocate(PlazaAllocateViewModel viewModel)
@@ -224,7 +282,13 @@ namespace SACAAE.Controllers
             return RedirectToAction("Allocate", new { id = viewModel.ID });
         }
 
-        // POST: Plaza/DeleteAllocate/5
+        /// POST: Plaza/DeleteAllocate/5
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Delete the professor allocated from a plaza
+        /// </summary>
+        /// <param name="viewModel">Represents the professor allocated to delete from a plaza</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteAllocate(PlazaAllocateViewModel viewModel)
@@ -249,12 +313,18 @@ namespace SACAAE.Controllers
         }
 
         #region Ajax Post
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Ajax post method for getting all the professors unallocated to a plaza
+        /// </summary>
+        /// <param name="pPlaza">Plaza's id</param>
+        /// <returns></returns>
         [Route("Plazas/Professors/List/{plaza:int}")]
-        public ActionResult getProfessors(int plaza)
+        public ActionResult getProfessors(int pPlaza)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var plazaProfes = db.Plazas.Find(plaza).PlazasXProfessors.Select(p => p.Professor).ToList();
+                var plazaProfes = db.Plazas.Find(pPlaza).PlazasXProfessors.Select(p => p.Professor).ToList();
                 var listaProfes = db.Professors.ToList();
                 var json = listaProfes.Except(plazaProfes).Select(p => new { p.ID, p.Name });
 
@@ -263,14 +333,20 @@ namespace SACAAE.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
         #endregion
-        
+
         #region Helpers
-        private int sumAllocate(List<PlazaAllocateProfessor> PPList)
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Sum the professors' percentages assigned a place
+        /// </summary>
+        /// <param name="pPlazaProfessorList">List of professors allocated on a plaza</param>
+        /// <returns></returns>
+        private int sumAllocate(List<PlazaAllocateProfessor> pPlazaProfessorList)
         {
             var result = 0;
-            for (var i = 0; i < PPList.Count; i++)
+            for (var i = 0; i < pPlazaProfessorList.Count; i++)
             {
-                result += PPList[i].Allocate;
+                result += pPlazaProfessorList[i].Allocate;
             }
             return result;
         }

@@ -13,8 +13,6 @@ using Newtonsoft.Json;
 namespace SACAAE.Controllers
 {
     [Authorize]
-    [RoutePrefix("Aula")]
-    [Route("{action=Index}")]
     public class AulaController : Controller
     {
         private SACAAEContext db = new SACAAEContext();
