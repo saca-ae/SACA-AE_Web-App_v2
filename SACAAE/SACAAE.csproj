@@ -351,6 +351,7 @@
     <Content Include="Scripts\SiteScripts\GuardarDias.js" />
     <Content Include="Scripts\SiteScripts\horarioAula.js" />
     <Content Include="Scripts\SiteScripts\plazaAllocate.js" />
+    <Content Include="Scripts\SiteScripts\plazaCreate.js" />
     <Content Include="Scripts\SiteScripts\plazaIndex.js" />
     <Content Include="Scripts\SiteScripts\RevocarComisionProfesor.js" />
     <Content Include="Scripts\SiteScripts\RevocarCursoProfesor.js" />
