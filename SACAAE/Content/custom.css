@@ -178,6 +178,23 @@ ul.alert-dropdown {
     font-size: 15px;
     margin-left: 5px !important;
 }
+/*Global Esteban Segura Beanvides*/
+.header {
+        padding: 10px;
+        margin-top: 2%;
+    }
+
+/*Division de la pantalla en dos columnas de acuerdo a prototipo*/
+#columna_1, #columna_2 {
+        margin-left: 50px;
+        float: left;
+        width: 40%;
+    }
+
+#columna_inferior {
+    margin-top: 400px;
+    margin-left: 820px;
+}
 
 /*Horario Grafico Esteban Segura Benavides*/
     #tabla_horario {
@@ -213,4 +230,43 @@ ul.alert-dropdown {
         border: 1px solid black;
         width: 1000px;
         empty-cells: hide;
+    }
+
+     /*Tablas Details*/
+     .detalles {
+        width: 100%;
+        margin-right: 100px;
+    }
+
+    .detalle_1, .detalle_2 {
+        margin-left: 50px;
+        float: left;
+    }
+
+    .detalle_1 th, .detalle_2 th {
+        border: 2px solid #4800ff;
+        background-color: #808080;
+        width: 150px;
+    }
+
+    .detalle_1 td, .detalle_2 td {
+        border: 2px solid #4800ff;
+        background-color: #93939B;
+        width: 250px;
+    }
+
+    /*Table Schedule Group*/
+    #table_schedule_group th {
+        border: 1px solid #818291;
+        background-color: #93939B;
+        width: 150px;
+        text-align: center;
+        height: 40px;
+    }
+
+    #table_schedule_group td {
+        border: 1px solid #818291;
+        width: 250px;
+        text-align: center;
+        height: 40px;
     }

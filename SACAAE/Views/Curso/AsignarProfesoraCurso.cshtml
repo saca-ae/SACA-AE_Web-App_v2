@@ -4,351 +4,219 @@
     Layout = "~/Views/Shared/Privado.cshtml";
 }
 
-<h2 class="page-header">Asignar Profesor a Curso</h2>
-<div class="row-fluid">
-    <div class="col-lg-5">
-        <div class="span12">
-            @if (TempData.ContainsKey("Message"))
-            {
-                String message = TempData["Message"].ToString();
+@section Scripts
+{
+    <script src="@Url.Content("~/Scripts/SiteScripts/table.js")"></script>
+    <script src="@Url.Content("~/Scripts/SiteScripts/assignProfesorCourse.js")"></script>
 
-                if (message.Equals("Profesor asignado correctamente."))
-                {
-                    <p class="text-success">@message</p>
-                }
-                else
-                {
-                    <p class="text-danger">@message</p>
-                }
-            }
-            @using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true)
-
-                <div class="editor-label">
-
-                    @Html.Label("Curso")
-                </div>
-                <div class="editor-field">
-                    @Html.DisplayFor(model => model.Name)
-                    
-                </div>
-                <br />
-                <div class="editor-label">
-                    @Html.Label("Profesor")
-                </div>
-                <div class="editor-field">
-                    @Html.DropDownList("Profesores", null, "-- Seleccione Profesor si existe --", htmlAttributes: new { @class = "form-control" })
-                    @if (ViewBag.Profesores == null)
-                    {
-
-                        @Html.ActionLink("Crear Profesor", "Crear", "Profesor")
-                    }
-                </div>
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Sede")
-                </div>
-                <div class="editor-field">
-                    <select id="Sedes" name="Sedes" class="form-control"></select>
-                </div>
-
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Modalidad")
-                </div>
-                <div class="editor-field">
-                    <select id="Modalidades" name="Modalidades" class="form-control"></select>
-
-                </div>
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Plan de Estudio")
-                </div>
-                <div class="editor-field">
-                    <select id="Planes" name="Planes" class="form-control"></select>
-                </div>
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Bloque")
-                </div>
-                <div class="editor-field">
-                    <select id="Bloques" name="Bloques" class="form-control"></select>
-                </div>
-                <br />
-
-
-                <div class="editor-label">
-                    @Html.Label("Grupos sin profesor asignado")
-                </div>
-                <div class="editor-field">
-                    <select id="Grupos_Disponibles" name="Grupos_Disponibles" class="form-control"></select>
-                </div>
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Horas del Curso")
-                </div>
-                <div class="editor-field">
-
-                    <input type="text" name="txtHoras" id="txtHoras" disabled="disabled" class="form-control">
-                </div>
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Cupo")
-                </div>
-                <div class="editor-field">
-                    <input type="text" name="txtCupo" id="txtCupo" disabled="disabled" class="form-control">
-                </div>
-                <br />
-
-
-                <div class="editor-label">
-                    @Html.Label("Horario")
-                </div>
-                <div id="tabla_grupos" class="editor-field">
-
-                </div>
-
-                <div class="editor-label">
-                    @Html.Label("Horas Estimadas")
-                </div>
-                <div class="editor-field">
-                    @Html.TextBox("txtHorasEstimadas", null, new { @class = "form-control", @type = "number", @required = "true" })
-                </div>
-                
-                
-                
-                <hr />
-                <p>
-                    <input id="idCurso" type="hidden" name="Grupo">
-                    <input type="submit"  value="Asignar" class="btn" id="Asignar" />
-                    |
-                    @if (ViewBag.returnUrl != null)
-                    {
-                        <a href="@ViewBag.returnUrl">Cancelar</a>
-                    }
-                    else
-                    {
-                        @Html.ActionLink("Cancelar", "Index", "Proyecto");
-                    }
-                </p>
-            }
-        </div>
-    </div>
-</div>
-
-
-@section Scripts {
-
-    <script>
-        window.onload = function () {
-            $("#Grupo").val(parseInt(obtener_id()));
-            $("#txtCupo").val("");
-            $("#txtHoras").val("");
-            var route = "/CursoProfesor/Cursos/Sedes/" + obtener_id();
-            $.getJSON(route, function (data) {
-                var items = "";
-
-                $.each(data, function (i, sede) {
-                    items += "<option value='" + sede.ID + "'>" + sede.Name + "</option>";
-                });
-
-
-                if (items != "") {
-                    $("#Sedes").html(items);
-                    $("#Sedes").prepend("<option value='' selected='selected'>-- Seleccionar Sede --</option>");
-
-                }
-                else {
-                    $("#Sedes").html("<option>No hay sedes relacionadas al grupo.</option>")
-
-                }
-            });
-        };
-
-        $("#Sedes").change(function () {
-            var sede = document.getElementById('Sedes').value
-            var route = "/CursoProfesor/Cursos/Sedes/Modalidad/" + obtener_id() + "/" + sede
-            $.getJSON(route, function (data) {
-                var items = "";
-
-                $.each(data, function (i, modalidad) {
-                    items += "<option value='" + modalidad.ID + "'>" + modalidad.Name + "</option>";
-                });
-
-
-                if (items != "") {
-                    $("#Modalidades").html(items);
-                    $("#Modalidades").prepend("<option value='' selected='selected'>-- Seleccionar Modalidad --</option>");
-
-                }
-                else {
-                    $("#Modalidades").html("<option>No hay modalidades relacionadas a la sede.</option>")
-
-                }
-            });
-        });
-
-        $('#Modalidades').change(function () {
-            var sede = document.getElementById('Sedes').value;
-            var modalidad = document.getElementById('Modalidades').value
-            var route = "/CursoProfesor/Cursos/Sedes/Modalidad/Plan/" + obtener_id() + "/" + sede + "/" + modalidad
-            $.getJSON(route, function (data) {
-                var items = "";
-
-                $.each(data, function (i, plan) {
-                    items += "<option value='" + plan.ID + "'>" + plan.Name + "</option>";
-                });
-
-
-                if (items != "") {
-                    $("#Planes").html(items);
-                    $("#Planes").prepend("<option value='' selected='selected'>-- Seleccionar Plan de estudio --</option>");
-
-                }
-                else {
-                    $("#Planes").html("<option>No hay planes de estudio relacionadas a la modalidad seleccionada.</option>")
-
-                }
-            });
-        });
-
-
-        $('#Planes').change(function () {
-            var sede = document.getElementById('Sedes').value;
-            var modalidad = document.getElementById('Modalidades').value
-            var plan = document.getElementById('Planes').value
-            var route = "/CursoProfesor/Cursos/Sedes/Modalidad/Plan/Bloque/" + obtener_id() + "/" + sede + "/" + modalidad + "/" + plan
-            $.getJSON(route, function (data) {
-                var items = "";
-
-                $.each(data, function (i, bloque) {
-
-                    items += "<option value='" + bloque.ID + "'>" + bloque.Description + "</option>";
-                });
-
-
-                if (items != "") {
-                    $("#Bloques").html(items);
-                    $("#Bloques").prepend("<option value='' selected='selected'>-- Seleccionar Plan de estudio --</option>");
-
-                }
-                else {
-                    $("#Bloques").html("<option>No hay bloques academicos relacionadas al plan de estudio seleccionado</option>")
-
-                }
-            });
-        });
-
-        $("#Bloques").change(function () {
-
-            var sede = document.getElementById('Sedes').value;
-            var modalidad = document.getElementById('Modalidades').value
-            var plan = document.getElementById('Planes').value
-            var bloque = document.getElementById('Bloques').value
-            var route = "/CursoProfesor/GruposSinProfesor/List/" + obtener_id() + "/" + plan + "/" + sede + "/" + bloque;
-
-            $.getJSON(route, function (data) {
-                var items = "";
-
-                $.each(data, function (i, grupo) {
-                    items += "<option value='" + grupo.ID + "'>" + grupo.Number + "</option>";
-                });
-
-
-                if (items != "") {
-                    $("#Grupos_Disponibles").html(items);
-                    $("#Grupos_Disponibles").prepend("<option value='' selected='selected'>-- Seleccionar Grupo --</option>");
-
-                }
-                else {
-                    $("#Grupos_Disponibles").html("<option>No hay grupos abiertos para ese curso.</option>")
-                }
-            });
-        });
-
-        $("#Grupos_Disponibles").change(function () {
-            var sede = document.getElementById('Sedes').value;
-            var modalidad = document.getElementById('Modalidades').value
-            var plan = document.getElementById('Planes').value
-            var grupo = document.getElementById('Grupos_Disponibles').value;
-            /*Obtiene la información del curso*/
-            var route1 = "/CursoProfesor/Grupos/Info/" + grupo;
-            /*Obtiene la información del horario*/
-            var route2;
-
-            /*Items del select de horarios*/
+<script>
+    window.onload = function () {
+        $("#Grupo").val(parseInt(get_id(3)));
+        $("#txtHoras").val("");
+        var route = "/CursoProfesor/Cursos/" + get_id(3) + "/Sedes/";
+        $.getJSON(route, function (data) {
             var items = "";
 
-            /*Variables de info de curso*/
-            var cupo = "";
-            var aula = "";
-            var id = "";
-
-            /*Horas calculadas de acuerdo al horario*/
-            var horas = 0.0;
-
-            $.getJSON(route1, function (data) {
-                cupo = data.Capacity;
-                horas = data.TheoreticalHours;
-
-
-                if (cupo != "" || aula != "" || id != "") {
-                    $("#txtCupo").val(cupo)
-                    $("#txtHoras").val(horas)
-                }
-                else {
-                    $("#txtCupo").val("No Disponible")
-
-                }
-
-                /* Obtener información del horario */
-                route2 = "/CursoProfesor/Cursos/Sedes/Modalidad/Plan/Grupo/Horario/" + obtener_id() + "/" + sede + "/" + modalidad + "/" + plan + "/" + grupo;
-                var tabla = "<table id=\"profesores_asignados_a_curso\" class=\"table table-hover\">" +
-               "<thead>" +
-                   "<th>Dia</th>" +
-                   "<th>Hora Inicio</th>" +
-                   "<th>Hora Fin</th>" +
-                   "<th>Aula</th>" +
-               "</thead>" +
-               "<tbody>";
-                $.getJSON(route2, function (data) {
-
-                    if (data.length != 0) {
-                        for (i = 0; i < data.length; i++) {
-                            tabla = tabla + "<tr>" +
-                            "<td>" + data[i].Day + "</td>" +
-                            "<td>" + data[i].StartHour + "</td>" +
-                            "<td>" + data[i].EndHour + "</td>" +
-                            "<td>" + data[i].Code + "</td>" +
-                            "</tr>";
-
-
-                        }
-
-                        tabla = tabla + "</tbody> </table>";
-
-                        document.getElementById('tabla_grupos').innerHTML = tabla;
-                    }
-                    else {
-                        /*Sin Profesores asignados*/
-                        document.getElementById('tabla_grupos').innerHTML = "<p> Sin profesores asignados</p>";
-                    }
-                });
+            $.each(data, function (i, sede) {
+                items += "<option value='" + sede.ID + "'>" + sede.Name + "</option>";
             });
+
+
+            if (items != "") {
+                $("#Sedes").html(items);
+                $("#Sedes").prepend("<option value='' selected='selected'>-- Seleccionar Sede --</option>");
+
+            }
+            else {
+                $("#Sedes").html("<option>No hay sedes relacionadas al grupo.</option>")
+
+            }
         });
 
-        function obtener_id() {
-            var url = window.location.pathname.split('/');
-            return url[3];
-        }
+       
+    };
 
-    </script>
+    
+
+
+</script>
+
 }
+
+<head>
+    @Styles.Render("~/Content/custom")
+</head>
+            
+@using (Html.BeginForm())
+{
+    <div class="header">
+        @if (TempData.ContainsKey("MessageError"))
+        {
+            <p class="text-danger">@TempData["MessageError"].ToString()</p>
+        }
+        <h2 >Asignar Profesor a Curso</h2>
+        <hr />
+    
+    </div>
+    
+    <div id="columna_1">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="editor-label">
+
+            @Html.Label("Curso")
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.Name)
+
+        </div>
+
+        <br />
+
+        <div class="editor-label">
+            @Html.Label("Profesor")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("Profesores", null, "-- Seleccione Profesor si existe --", htmlAttributes: new { @class = "form-control" })
+            @if (ViewBag.Profesores == null)
+            {
+
+                @Html.ActionLink("Crear Profesor", "Crear", "Profesor")
+            }
+        </div>
+
+        <br />
+
+
+        <div class="editor-label">
+            @Html.Label("Sede")
+        </div>
+        <div class="editor-field">
+            <select id="Sedes" name="Sedes" class="form-control"></select>
+        </div>
+
+        <br />
+
+        <div class="editor-label">
+            @Html.Label("Modalidad")
+        </div>
+        <div class="editor-field">
+            <select id="Modalidades" name="Modalidades" class="form-control"></select>
+
+        </div>
+                   
+
+        <br />
+
+        <div class="editor-label">
+            @Html.Label("Plan de Estudio")
+        </div>
+        <div class="editor-field">
+            <select id="Planes" name="Planes" class="form-control"></select>
+        </div>
+
+        <br />
+
+
+        <div class="editor-label">
+            @Html.Label("Bloque")
+        </div>
+        <div class="editor-field">
+            <select id="Bloques" name="Bloques" class="form-control"></select>
+        </div>
+                   
+    </div>
+
+    <div id="columna_2">
+        <div class="editor-label">
+            @Html.Label("Grupos sin profesor asignado")
+        </div>
+        <div class="editor-field">
+            <select id="Grupos_Disponibles" name="Grupos_Disponibles" class="form-control"></select>
+        </div>
+
+        <br />
+
+
+        <div class="editor-label">
+
+            @Html.Label("Horario")
+        </div>
+        <div id="table_schedule_group" class="editor-field">
+            <table>
+                <thead>
+                <th class="table_custom">Dia</th>
+                <th class="table_custom">Hora Inicio</th>
+                <th class="table_custom">Hora Fin</th>
+                <th class="table_custom">Aula</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="table_custom"></td>
+                        <td class="table_custom"></td>
+                        <td class="table_custom"></td>
+                        <td class="table_custom"></td>
+                    </tr>
+                    <tr>
+                        <td class="table_custom"></td>
+                        <td class="table_custom"></td>
+                        <td class="table_custom"></td>
+                        <td class="table_custom"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <div class="editor-label">
+            @Html.Label("Horas del Curso")
+        </div>
+        <div class="editor-field">
+
+            <input type="text" name="txtHoras" id="txtHoras" disabled="disabled" class="form-control">
+        </div>
+
+        <br />
+
+        <div class="editor-label">
+            @Html.Label("Horas Estimadas")
+        </div>
+        <div class="editor-field">
+            <input type="text" name="txtHorasEstimadas" id="txtHorasEstimadas" disabled="disabled" class="form-control">
+        </div>
+        <br />
+        <div class="editor-label">
+            @Html.Label("Horas Recargo")
+        </div>
+        <div class="editor-field">
+            <select id="HourCharge" name="HourCharge" class="form-control">
+
+                <option selected="selected" value="1">Si</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+    </div>
+
+    <br /> <br /><br /> <br />
+    <div id="columna_inferior">
+        <p>
+            <input id="idCurso" type="hidden" name="Grupo">
+            <input type="submit" value="Asignar" class="btn" id="Asignar" />
+            |
+            @if (ViewBag.returnUrl != null)
+            {
+                <a href="@ViewBag.returnUrl">Cancelar</a>
+            }
+            else
+            {
+                @Html.ActionLink("Cancelar", "Index", "Proyecto");
+            }
+        </p>
+    </div>
+}
+          
+
+  

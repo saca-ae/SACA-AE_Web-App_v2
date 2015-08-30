@@ -65,7 +65,7 @@
             var idSede = "";
             var idModalidad = "";
             var idPlan = "";
-            route = "/Cursos/Grupo/" + obtener_id();
+            route = "/Cursos/Group/" + obtener_id();
             $.getJSON(route,function(data)
             {
                 $.each(data, function (i, grupo) {
@@ -81,7 +81,20 @@
                     document.getElementById('plan').innerHTML = "<p>" + data[i].plan_name + "</p>";
                     document.getElementById('bloque').innerHTML = "<p>" + data[i].descripcion_bloque + "</p>";
 
-                   
+                    document.getElementById('horasTeoricas').innerHTML = "<p>" + data[i].TheoreticalHours + "</p>"
+
+                    var vEstimateHour = 0;
+                    if (data[i].asignacion_id == 1) {
+                        document.getElementById('tipoHoras').innerHTML = "<p>Si</p>";
+                        document.getElementById('horasEstimadas').innerHTML = "<p>" + vEstimateHour + "</p>"
+                    }
+                    else
+                    {
+                        vEstimateHour = 11 - data[i].TheoreticalHours
+                        document.getElementById('tipoHoras').innerHTML = "<p>No</p>";
+                        document.getElementById('horasEstimadas').innerHTML = "<p>" + vEstimateHour + "</p>"
+                    }
+                    
 
                 });
 
@@ -97,34 +110,10 @@
             return url[3];
         }
 
-        function ver_detalle_grupo(id_grupo)
-        {
-            alert(id_grupo);
-            var route_temporal = "/Curso/DetalleAsignacion/" + id_grupo;
-            var host = window.location.host;
-            var full_url = host + route_temporal;
-            window.location = route_temporal;
-        }
-
-        function editar_asignacion_grupo(id_grupo) {
-            alert(id_grupo);
-            var route_temporal = "/Curso/EditarAsignacion/" + id_grupo;
-            var host = window.location.host;
-            var full_url = host + route_temporal;
-            window.location = route_temporal;
-        }
-
-        function eliminar_asignacion_grupo(id_grupo) {
-            alert(id_grupo);
-            var route_temporal = "/Curso/EliminarAsignacion/" + id_grupo;
-            var host = window.location.host;
-            var full_url = host + route_temporal;
-            window.location = route_temporal;
-        }
 
         function cargar_horario(idCurso, idSede, idModalidad, idPlan,idGrupo)
         {
-            route2 = "/CursoProfesor/Cursos/Sedes/Modalidad/Plan/Grupo/Horario/" + idCurso + "/" + idSede + "/" + idModalidad + "/" + idPlan + "/" + idGrupo;
+            route2 = "/CursoProfesor/Cursos/" + idCurso + "/Sedes/" + idSede + "/Modalidades/" + idModalidad + "/Planes/" + idPlan + "/Grupos/"+idGrupo+"/Horario/";
             var tabla = "<table id=\"profesores_asignados_a_curso\" >" +
            "<thead>" +
                "<th>Dia</th>" +
@@ -162,6 +151,8 @@
 </script>
     
 <div class="header">
+   
+    
     <h2>Detalle del Grupo</h2>
     <hr />
 </div>
@@ -196,6 +187,15 @@
         <div id="tabla_grupos" class="editor-field">
 
         </div>
+        <br />
+        @Html.Label("Horas Recargo")
+        <div id="tipoHoras"></div>
+
+        @Html.Label("Horas Teoricas")
+        <div id="horasTeoricas"></div>
+
+        @Html.Label("Horas Estimadas")
+        <div id="horasEstimadas"></div>
     </div>   
     
     <div id="columna_inferior">

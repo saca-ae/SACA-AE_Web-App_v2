@@ -57,106 +57,122 @@
     }
 </style>
 
-<script type="text/javascript">
+@section Scripts
+{
+    <script src="@Url.Content("~/Scripts/SiteScripts/assignProfesorCourse.js")"></script>
+    <script type="text/javascript">
+        var TheoricalHour = "";
+        window.onload = function () {
+           
+            var idGrupo = obtener_id();
+            var idCurso = "";
+            var idSede = "";
+            var idModalidad = "";
+            var idPlan = "";
+           
+            route = "/Cursos/Group/" + obtener_id();
+            $.getJSON(route, function (data) {
+                $.each(data, function (i, grupo) {
+                    idCurso = data[i].curso_id;
+                    idSede = data[i].sede_id;
+                    idModalidad = data[i].modalidad_id;
+                    idPlan = data[i].plan_id;
+                    document.getElementById('nombreCurso').innerHTML = "<p>" + data[i].curso_name + "</p>";
+                    document.getElementById('idCurso').value = data[i].curso_id;
+                    document.getElementById('numeroGrupo').innerHTML = "<p>" + data[i].Number + "</p>";
+                    document.getElementById('sede').innerHTML = "<p>" + data[i].sede_name + "</p>";
+                    document.getElementById('modalidad').innerHTML = "<p>" + data[i].modalidad_name + "</p>";
+                    document.getElementById('plan').innerHTML = "<p>" + data[i].plan_name + "</p>";
+                    document.getElementById('bloque').innerHTML = "<p>" + data[i].descripcion_bloque + "</p>";
+                    TheoricalHour = data[i].TheoreticalHours;
+                    document.getElementById('horasTeoricas').innerHTML = "<p>" + data[i].TheoreticalHours + "</p>"
 
-    window.onload = function () {
-        var t = document.getElementById('ID')
-        t.value = obtener_id();
-        var idGrupo = obtener_id();
-        var idCurso = "";
-        var idSede = "";
-        var idModalidad = "";
-        var idPlan = "";
-        route = "/Cursos/Grupo/" + obtener_id();
-        $.getJSON(route, function (data) {
-            $.each(data, function (i, grupo) {
-                idCurso = data[i].curso_id;
-                idSede = data[i].sede_id;
-                idModalidad = data[i].modalidad_id;
-                idPlan = data[i].plan_id;
-                document.getElementById('nombreCurso').innerHTML = "<p>" + data[i].curso_name + "</p>";
-                document.getElementById('numeroGrupo').innerHTML = "<p>" + data[i].Number + "</p>";
-                document.getElementById('sede').innerHTML = "<p>" + data[i].sede_name + "</p>";
-                document.getElementById('modalidad').innerHTML = "<p>" + data[i].modalidad_name + "</p>";
-                document.getElementById('plan').innerHTML = "<p>" + data[i].plan_name + "</p>";
-                document.getElementById('bloque').innerHTML = "<p>" + data[i].descripcion_bloque + "</p>";
-
-
-
-            });
-
-            cargar_horario(idCurso, idSede, idModalidad, idPlan, idGrupo);
-        })
-
-    };
-
-    function obtener_id() {
-        var url = window.location.pathname.split('/');
-        return url[3];
-    }
-
-    function ver_detalle_grupo(id_grupo) {
-        alert(id_grupo);
-        var route_temporal = "/Curso/DetalleAsignacion/" + id_grupo;
-        var host = window.location.host;
-        var full_url = host + route_temporal;
-        window.location = route_temporal;
-    }
-
-    function editar_asignacion_grupo(id_grupo) {
-        alert(id_grupo);
-        var route_temporal = "/Curso/EditarAsignacion/" + id_grupo;
-        var host = window.location.host;
-        var full_url = host + route_temporal;
-        window.location = route_temporal;
-    }
-
-    function eliminar_asignacion_grupo(id_grupo) {
-        alert(id_grupo);
-        var route_temporal = "/Curso/EliminarAsignacion/" + id_grupo;
-        var host = window.location.host;
-        var full_url = host + route_temporal;
-        window.location = route_temporal;
-    }
-
-    function cargar_horario(idCurso, idSede, idModalidad, idPlan, idGrupo) {
-        route2 = "/CursoProfesor/Cursos/Sedes/Modalidad/Plan/Grupo/Horario/" + idCurso + "/" + idSede + "/" + idModalidad + "/" + idPlan + "/" + idGrupo;
-        var tabla = "<table id=\"profesores_asignados_a_curso\" >" +
-       "<thead>" +
-           "<th>Dia</th>" +
-           "<th>Hora Inicio</th>" +
-           "<th>Hora Fin</th>" +
-           "<th>Aula</th>" +
-       "</thead>" +
-       "<tbody>";
-        $.getJSON(route2, function (data) {
-
-            if (data.length != 0) {
-                for (i = 0; i < data.length; i++) {
-                    tabla = tabla + "<tr>" +
-                    "<td>" + data[i].Day + "</td>" +
-                    "<td>" + data[i].StartHour + "</td>" +
-                    "<td>" + data[i].EndHour + "</td>" +
-                    "<td>" + data[i].Code + "</td>" +
-                    "</tr>";
+                    var vEstimateHour = 0;
+                    if (data[i].asignacion_id == 1) {
+                        document.getElementById('editHourCharge').selectedIndex = 0;
+                        document.getElementById('divHorasEstimadas').innerHTML = "<p>" + vEstimateHour + "</p>"
+                    }
+                    else {
+                        vEstimateHour = 11 - data[i].TheoreticalHours
+                        document.getElementById('editHourCharge').selectedIndex = 1;
+                        document.getElementById('divHorasEstimadas').innerHTML = "<p>" + vEstimateHour + "</p>"
+                    }
 
 
+                });
+
+                cargar_horario(idCurso, idSede, idModalidad, idPlan, idGrupo);
+            })
+
+        };
+
+        function obtener_id() {
+            var url = window.location.pathname.split('/');
+            return url[3];
+        }
+
+        function ver_detalle_grupo(id_grupo) {
+            alert(id_grupo);
+            var route_temporal = "/Curso/DetalleAsignacion/" + id_grupo;
+            var host = window.location.host;
+            var full_url = host + route_temporal;
+            window.location = route_temporal;
+        }
+
+        function editar_asignacion_grupo(id_grupo) {
+            alert(id_grupo);
+            var route_temporal = "/Curso/EditarAsignacion/" + id_grupo;
+            var host = window.location.host;
+            var full_url = host + route_temporal;
+            window.location = route_temporal;
+        }
+
+        function eliminar_asignacion_grupo(id_grupo) {
+            alert(id_grupo);
+            var route_temporal = "/Curso/EliminarAsignacion/" + id_grupo;
+            var host = window.location.host;
+            var full_url = host + route_temporal;
+            window.location = route_temporal;
+        }
+
+        function cargar_horario(idCurso, idSede, idModalidad, idPlan, idGrupo) {
+            route2 = "/CursoProfesor/Cursos/" + idCurso + "/Sedes/" + idSede + "/Modalidades/" + idModalidad + "/Planes/" + idPlan + "/Grupos/" + idGrupo + "/Horario"
+            var tabla = "<table id=\"profesores_asignados_a_curso\" >" +
+           "<thead>" +
+               "<th>Dia</th>" +
+               "<th>Hora Inicio</th>" +
+               "<th>Hora Fin</th>" +
+               "<th>Aula</th>" +
+           "</thead>" +
+           "<tbody>";
+            $.getJSON(route2, function (data) {
+
+                if (data.length != 0) {
+                    for (i = 0; i < data.length; i++) {
+                        tabla = tabla + "<tr>" +
+                        "<td>" + data[i].Day + "</td>" +
+                        "<td>" + data[i].StartHour + "</td>" +
+                        "<td>" + data[i].EndHour + "</td>" +
+                        "<td>" + data[i].Code + "</td>" +
+                        "</tr>";
+
+
+                    }
+
+                    tabla = tabla + "</tbody> </table>";
+
+                    document.getElementById('tabla_grupos').innerHTML = tabla;
                 }
+                else {
+                    /*Sin Profesores asignados*/
+                    document.getElementById('tabla_grupos').innerHTML = "<p> Sin profesores asignados</p>";
+                }
+            });
+        }
 
-                tabla = tabla + "</tbody> </table>";
-
-                document.getElementById('tabla_grupos').innerHTML = tabla;
-            }
-            else {
-                /*Sin Profesores asignados*/
-                document.getElementById('tabla_grupos').innerHTML = "<p> Sin profesores asignados</p>";
-            }
-        });
-    }
-
-
-</script>
-
+        
+    </script>
+ }
 
 @if (TempData.ContainsKey("Message"))
 {
@@ -176,11 +192,18 @@
      @Html.AntiForgeryToken()
      @Html.ValidationSummary(true)
     <div class="header">
+
+        @if (TempData.ContainsKey("MessageError"))
+        {
+            <p class="text-danger">@TempData["MessageError"].ToString()</p>
+        }
+        
         <h2>Editar Asignacion</h2>
         <hr />
     </div>
     @Html.HiddenFor(model => model.ID)
-
+        <input type="text" hidden="hidden" id="idCurso" class="form-control ">
+        @Html.Label("idCurso2", "a")
     <div id="columna_1">
         @Html.Label("Profesor")
         <div class="editor-field">
@@ -214,6 +237,22 @@
         <div id="tabla_grupos" class="editor-field">
 
         </div>
+        <br />
+        @Html.Label("Horas Recargo")
+        
+        <div class="editor-field">
+            <select onchange="changeHourCharge()" id="editHourCharge" name="editHourCharge" class="form-control ">
+
+                <option selected="selected" value="1">Si</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+        @Html.Label("Horas Teoricas")
+        <div id="horasTeoricas"></div>
+
+        @Html.Label("Horas Estimadas")
+        <div id="divHorasEstimadas"></div>
+    
     </div>
     <div id="columna_inferior">
             <input type="submit" value="Editar" class="btn" id="Editar_Asignacion" /> |

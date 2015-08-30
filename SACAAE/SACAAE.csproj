@@ -291,6 +291,7 @@
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\SiteScripts\assignProfesorCourse.js" />
     <Content Include="Scripts\SiteScripts\CursoProfesor.js" />
     <Content Include="Scripts\SiteScripts\entidades.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
@@ -313,6 +314,7 @@
     <Content Include="Scripts\SiteScripts\RevocarComisionProfesor.js" />
     <Content Include="Scripts\SiteScripts\RevocarCursoProfesor.js" />
     <Content Include="Scripts\SiteScripts\RevocarProyectoProfesor.js" />
+    <Content Include="Scripts\SiteScripts\table.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
