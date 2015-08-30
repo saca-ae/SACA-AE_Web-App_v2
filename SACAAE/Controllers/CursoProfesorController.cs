@@ -29,11 +29,11 @@ namespace SACAAE.Controllers
                 ViewBag.returnUrl = null;
             }
 
-            /* Se obtiene la lista de profesores */
+            /* get List of all teachers */
             ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
-            /* Se obtiene la lista de sedes */
+            /*get List of all 'sedes' */
             ViewBag.Sedes = new SelectList(db.Sedes, "ID", "Name");
-            /* Se obtiene la lista de modalidades */
+            /* get List of all 'modalidades' */
             ViewBag.Modalidades = new SelectList(db.Modalities, "ID", "Name"); 
 
             return View();
@@ -49,7 +49,7 @@ namespace SACAAE.Controllers
                 int idGrupo = viewModel.idGrupo;
                 int idProfesor = viewModel.idProfesor;
 
-
+                
                 db.Groups.Find(idGrupo).Professor.ID = idProfesor;
                 db.SaveChanges();
 
@@ -57,26 +57,7 @@ namespace SACAAE.Controllers
                 return RedirectToAction("Curso","Index");
             }
             return View(viewModel);
-            //var creado = 0;
-            //var idProfesorXCurso = 0;
-            //var idDetalleGrupo = vRepositorioGrupos.obtenerUnDetalleGrupo(sltGrupo);
-            //idProfesorXCurso = repositorioCursoProfesor.asignarProfesor(sltProfesor, txtHoras + txtHorasEstimadas);
-            //if (idProfesorXCurso != 0)
-            //{
-            //    creado = repositorioCursoProfesor.actualizarDetalleGrupo(idProfesorXCurso, idDetalleGrupo.Id);
 
-            //    if (creado != 0)
-            //    {
-            //        TempData[TempDataMessageKey] = "Profesor asignado correctamente.";
-            //    }
-            //    else
-            //    {
-            //        TempData[TempDataMessageKey] = "Ocurrió un error al asignar el profesor.";
-            //    }
-            //}
-            //else
-            //{
-            //    TempData[TempDataMessageKey] = "No se pudo obtener el id de profesor x curso.";
         }
         
 
@@ -104,13 +85,7 @@ namespace SACAAE.Controllers
         public ActionResult revocar(int sltCursosImpartidos)
         {
             var revocado = false;
-            //var temp = db.ProfesoresXCursos.Find(sltCursosImpartidos);
-            //if (temp != null)
-            //{
-            //    db.ProfesoresXCursos.Remove(temp);
-            //    db.SaveChanges();
-            //    revocado = true;
-            //}
+  
 
             if (revocado)
             {
@@ -126,8 +101,17 @@ namespace SACAAE.Controllers
 
         #region Ajax Post
 
-        [Route("CursoProfesor/Planes/List/{sede:int}/{modalidad:int}")]
-        public ActionResult ObtenerPlanesEstudio(int sede, int modalidad)
+        /// <summary>
+        ///  Get the ID and Description of Plan Studt according to pSede and pModalidad
+        ///  
+        /// ***************** NOT USED  ********************************* 
+        /// </summary>
+        /// <autor> Unknown </autor>
+        /// <param name="pSede"> ID of Sede in database</param>
+        /// <param name="pModalidad">ID of Sede in database</param>
+        /// <returns>ID of Study Plan and Description of Study Plan</returns>
+        [Route("CursoProfesor/Planes/List/{pSede:int}/{pModalidad:int}")]
+        public ActionResult ObtenerPlanesEstudio(int pSede, int pModalidad)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
@@ -135,7 +119,7 @@ namespace SACAAE.Controllers
                                   join planesporsede in db.StudyPlansXSedes on sedes.ID equals planesporsede.SedeID
                                   join planesestudio in db.StudyPlans on planesporsede.StudyPlanID equals planesestudio.ID
                                   join modalidades in db.Modalities on planesestudio.ModeID equals modalidades.ID
-                                  where (sedes.ID == sede) && (modalidades.ID == modalidad)
+                                  where (sedes.ID == pSede) && (modalidades.ID == pModalidad)
                                   select new { planesestudio.ID, planesestudio.Name };
 
                 return Json(listaPlanes, JsonRequestBehavior.AllowGet);
@@ -143,12 +127,20 @@ namespace SACAAE.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        [Route("CursoProfesor/Bloques/List/{plan:int}")]
-        public ActionResult ObtenerBloques(int plan)
+        /// <summary>
+        /// Get the ID and description of blocks according to ID of Plan 
+        /// 
+        /// ***************** NOT USED  *********************************   
+        /// </summary>
+        /// <autor>Unknown</autor>
+        /// <param name="pPlan">ID of Study Plan in database</param>
+        /// <returns>ID and Description block</returns>
+        [Route("CursoProfesor/Bloques/List/{pPlan:int}")]
+        public ActionResult ObtenerBloques(int pPlan)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaBloques = db.StudyPlans.Find(plan)
+                var listaBloques = db.StudyPlans.Find(pPlan)
                                      .AcademicBlocksXStudyPlans
                                      .Select(p => new { p.AcademicBlock.ID, p.AcademicBlock.Description });
 
@@ -157,13 +149,21 @@ namespace SACAAE.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        [Route("CursoProfesor/Cursos/List/{plan:int}/{bloque:int}")]
-        public ActionResult ObtenerCursos(int plan, int bloque)
+        /// <summary>
+        /// Get a list of courses according to ID plan and ID block
+        /// 
+        /// ***************** NOT USED  *********************************  
+        /// </summary>
+        /// <param name="pPlan">ID of Study Plan in database</param>
+        /// <param name="pBloque">ID of Block in database</param>
+        /// <returns>ID, Code and Name of Course according a ID Plan and ID Bloc</returns>
+        [Route("CursoProfesor/Cursos/List/{pPlan:int}/{pBloque:int}")]
+        public ActionResult ObtenerCursos(int pPlan, int pBloque)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
                 var listaCursos = db.AcademicBlocksXStudyPlans
-                                    .Where(p => p.BlockID == bloque && p.PlanID == plan).FirstOrDefault()
+                                    .Where(p => p.BlockID == pBloque && p.PlanID == pPlan).FirstOrDefault()
                                     .BlocksXPlansXCourses.Select(p => new { p.Course.ID, p.Course.Code, p.Course.Name });
 
                 return Json(listaCursos, JsonRequestBehavior.AllowGet);
@@ -171,27 +171,58 @@ namespace SACAAE.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        [Route("CursoProfesor/GruposSinProfesor/List/{curso:int}/{plan:int}/{sede:int}/{bloque:int}")]
-        public ActionResult ObtenerGruposSinProfe(int curso, int plan, int sede, int bloque)
+    
+
+        /// <summary>
+        /// Get a list of groups without profesors in a determinated Sede,Plan,Block and Period
+        /// </summary>
+        /// 
+        /// <autor>Unknow</autor>
+        /// <changes>
+        /// Esteban Segura Benavides 8/28/2015
+        ///   
+        ///   Route:
+        ///   Before: CursoProfesor/GruposSinProfesor/List/{curso:int}/{plan:int}/{sede:int}/{bloque:int}
+        ///   New: CursoProfesor/Sedes/{sede:int}/Planes/{plan:int}/Bloques/{bloque:int}/Cursos/{curso:int}/GroupWithoutProfesor
+        ///
+        ///   Method Name:
+        ///   Before: ObtenerGruposSinProfesor
+        ///   New: getGroupWithoutProfesor
+        /// </changes>
+        /// <param name="pCurso">ID of Course in database</param>
+        /// <param name="pPlan">ID of Study Plan in database</param>
+        /// <param name="pSede">ID of Sede in database</param>
+        /// <param name="pBloque">ID of Block in database</param>
+        /// <returns>ID and Number of a group according a parameters and a Period</returns>
+        [Route("CursoProfesor/Sedes/{pSede:int}/Planes/{pPlan:int}/Bloques/{pBloque:int}/Cursos/{pCurso:int}/GroupWithoutProfesor")]
+        public ActionResult getGroupWithoutProfesor(int pCurso, int pPlan, int pSede, int pBloque)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var periodo = Request.Cookies["Periodo"].Value;
-                var periodoID = db.Periods.Find(int.Parse(periodo)).ID;
-                var listaGrupos = db.Groups
+                var vPeriod = Request.Cookies["Periodo"].Value;
+                var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
+                var vListGroup = db.Groups
                                     .Where(p => (p.ProfessorID == null || p.ProfessorID == 3)
-                                             && p.PeriodID == periodoID
-                                             && p.BlockXPlanXCourse.CourseID == curso
-                                             && p.BlockXPlanXCourse.AcademicBlockXStudyPlan.PlanID == plan
-                                             && p.BlockXPlanXCourse.AcademicBlockXStudyPlan.BlockID == bloque
+                                             && p.PeriodID == vIDPeriod
+                                             && p.BlockXPlanXCourse.CourseID == pCurso
+                                             && p.BlockXPlanXCourse.AcademicBlockXStudyPlan.PlanID == pPlan
+                                             && p.BlockXPlanXCourse.AcademicBlockXStudyPlan.BlockID == pBloque
                                             )
                                     .Select(p => new{ p.ID, p.Number });
 
-                return Json(listaGrupos, JsonRequestBehavior.AllowGet);
+                return Json(vListGroup, JsonRequestBehavior.AllowGet);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
+       
+
+        /// <summary>
+        /// Get info about a group
+        /// </summary>
+        /// <autor>Unknown</autor>
+        /// <param name="cursoxgrupo"></param>
+        /// <returns></returns>
         [Route("CursoProfesor/Grupos/Info/{cursoxgrupo:int}")]
         public ActionResult ObtenerInfo(int cursoxgrupo)
         {
@@ -205,7 +236,12 @@ namespace SACAAE.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        
+        /// <summary>
+        /// ***************** NOT USED  ********************************* 
+        /// </summary>
+        /// <autor>Unkown</autor>
+        /// <param name="idProfesor"></param>
+        /// <returns></returns>
         [Route("CursoProfesor/Profesor/Cursos/{idProfesor:int}")]
         public ActionResult ObtenerCursosPorProfesor(int idProfesor)
         {
@@ -223,18 +259,42 @@ namespace SACAAE.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        /*Esteban Segura Benavides 
-         * Obtener grupos de un curso de acuerdo al id del curso*/
-
-        [Route("CursoProfesor/Cursos/{idCurso:int}")]
-        public ActionResult ObtenerGruposdeCurso(int idCurso)
+        /// <summary>
+        /// Get a groups associated a determinated course 
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <changes>
+        /// Esteban Segura Benavides 8/28/2015
+        ///   
+        ///   Script Old:
+        ///   from curso in db.Courses
+///           join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+///           join bloque_planes in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
+///           join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
+///           join profesor in db.Professors on grupo.ProfessorID equals profesor.ID
+///           join plan_estudio in db.StudyPlans on bloque_planes.PlanID equals plan_estudio.ID
+//////        join plan_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_sede.StudyPlanID
+///           join sede in db.Sedes on plan_sede.SedeID equals sede.ID
+///           join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+///           join aula in db.Classrooms on grupo_aula.ClassroomID equals aula.ID
+///           join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
+///           where curso.ID == pIDCurso && sede.Name == "Cartago"
+ ///           select new { grupo.ID, grupo.Number, profesor.Name, aula.Code, horario.StartHour, horario.EndHour, horario.Day });
+///           Script New:
+///           
+        ///
+        ///                           select new { grupo.ID, grupo.Number, profesor.Name, aula.Code, horario.StartHour, horario.EndHour, horario.Day });
+        /// </changes>
+        /// <param name="pIDCurso">ID Course in database</param>
+        /// <returns>ID, Number of Group, Name of Profesor, Code of Aula and StartHour, EndHour and Day of Schedule</returns>
+        [Route("CursoProfesor/Cursos/{pIDCurso:int}")]
+        public ActionResult getCourseGroups(int pIDCurso)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaCursos = (from curso in db.Courses
+                var vListGroupCourse = (from curso in db.Courses
                                    join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
                                    join bloque_planes in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
-                                   join bloque_academico in db.AcademicBlocks on bloque_planes.BlockID equals bloque_academico.ID
                                    join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
                                    join profesor in db.Professors on grupo.ProfessorID equals profesor.ID
                                    join plan_estudio in db.StudyPlans on bloque_planes.PlanID equals plan_estudio.ID
@@ -243,49 +303,55 @@ namespace SACAAE.Controllers
                                    join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
                                    join aula in db.Classrooms on grupo_aula.ClassroomID equals aula.ID
                                    join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
-                                   where curso.ID == idCurso && sede.Name == "San Carlos"
+                                   where curso.ID == pIDCurso && sede.Name == "Cartago"
 
                                    select new { grupo.ID, grupo.Number, profesor.Name, aula.Code, horario.StartHour, horario.EndHour, horario.Day });
-                                    
-                  
-                 
-                var json = JsonConvert.SerializeObject(listaCursos);
+
+                var json = JsonConvert.SerializeObject(vListGroupCourse);
                 return Content(json);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-
-        /*Esteban Segura Benavides
-        * Obtener la sede de curso especifico de acuerdo a su id*/
-        [Route("CursoProfesor/Cursos/Sedes/{idCurso:int}")]
-        public ActionResult ObtenerSedesegunCurso(int idCurso)
+        /// <summary>
+        /// Get the headquarter according a ID of a Course
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDCurso">ID of a Course in database</param>
+        /// <returns>ID and Name Headquarter</returns>
+        [Route("CursoProfesor/Cursos/{pIDCurso:int}/Sedes")]
+        public ActionResult getSede(int pIDCurso)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaSedesxCurso = (
+                var vListaSedesForCourse = (
                                         from curso in db.Courses
                                         join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
                                         join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
                                         join plan_estudio in db.StudyPlans on bloque_plan.PlanID equals plan_estudio.ID
                                         join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
                                         join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
-                                        where curso.ID == idCurso
+                                        where curso.ID == pIDCurso
                                         select new { sede.ID,sede.Name }).Distinct();
-                var json = JsonConvert.SerializeObject(listaSedesxCurso);
+                var json = JsonConvert.SerializeObject(vListaSedesForCourse);
                 return Content(json);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        /*Esteban Segura Benavides
-       * Obtener la modalidad de curso especifico de acuerdo a su id*/
-        [Route("CursoProfesor/Cursos/Sedes/Modalidad/{idCurso:int}/{idSede:int}")]
-        public ActionResult ObtenerModalidadsegunCursoySede(int idCurso, int idSede)
+        /// <summary>
+        ///  Get modality ('Diurna' | 'Nocturna') according to Course and Headquarter
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDCurso">ID Course of the database</param>
+        /// <param name="pIDSede">ID Headquarter of the database</param>
+        /// <returns>ID and Name of Modality</returns>
+        [Route("CursoProfesor/Cursos/{pIDCurso:int}/Sedes/{pIDSede:int}/Modalidades")]
+        public ActionResult getModality(int pIDCurso, int pIDSede)
         {
             if (HttpContext.Request.IsAjaxRequest())
             { 
-                 var listaModalidadxCursoxSede = (
+                 var vListaModalidades = (
                                         from curso in db.Courses
                                         join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
                                         join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
@@ -293,61 +359,69 @@ namespace SACAAE.Controllers
                                         join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
                                         join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
                                         join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
-                                        where curso.ID == idCurso  && sede.ID == idSede
+                                        where curso.ID == pIDCurso  && sede.ID == pIDSede
                                         select new { modalidad.ID,modalidad.Name }).Distinct();
-                var json = JsonConvert.SerializeObject(listaModalidadxCursoxSede);
+                var json = JsonConvert.SerializeObject(vListaModalidades);
                 return Content(json);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-
-        /*Esteban Segura Benavides
-       * Obtener el plan de estudio segun el curso especifico de acuerdo a su id, sede y modalidad*/
-        /*CursoProfesor/Curso/{idCurso:int}/Sedes/{idSedes:int}/Modalida
-         
-        */
-        [Route("CursoProfesor/Cursos/Sedes/Modalidad/Plan/{idCurso:int}/{idSede:int}/{idModalidad:int}")]
-        public ActionResult ObtenerModalidadsegunCursoySedeyModalidad(int idCurso, int idSede, int idModalidad)
+        /// <summary>
+        /// Get Study Plan according a Course, Headquarter and Modality
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDCurso">ID of course in database</param>
+        /// <param name="pIDSede">ID  of headquarter in database</param>
+        /// <param name="pIDModalidad">ID of modality in database</param>
+        /// <returns>ID and Name of Study Plan</returns>
+        [Route("CursoProfesor/Cursos/{pIDCurso:int}/Sedes/{pIDSede:int}/Modalidades/{pIDModalidad:int}/Planes")]
+        public ActionResult getPlan(int pIDCurso, int pIDSede, int pIDModalidad)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaPlansegunCursoxSedexModalidad = (from curso in db.Courses
+                var vListaPlan = (from curso in db.Courses
                                                           join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
                                                           join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
                                                           join plan_estudio in db.StudyPlans on bloque_plan.PlanID equals plan_estudio.ID
                                                           join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
                                                           join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
                                                           join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
-                                                          where curso.ID == idCurso && sede.ID == idSede&& modalidad.ID==idModalidad
+                                                          where curso.ID == pIDCurso && sede.ID == pIDSede&& modalidad.ID==pIDModalidad
                                                           select new { plan_estudio.ID, plan_estudio.Name}).Distinct();
 
-                var json = JsonConvert.SerializeObject(listaPlansegunCursoxSedexModalidad);
+                var json = JsonConvert.SerializeObject(vListaPlan);
                 return Content(json);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        /*Esteban Segura Benavides
-       * Obtener el bloque segun el curso especifico de acuerdo a su id, sede y modalidad y plan de estudio*/
-
-        [Route("CursoProfesor/Cursos/Sedes/Modalidad/Plan/Bloque/{idCurso:int}/{idSede:int}/{idModalidad:int}/{idPlan:int}")]
-        public ActionResult ObtenerModalidadsegunCursoySedeyModalidadyPlan(int idCurso, int idSede, int idModalidad, int idPlan)
+        /// <summary>
+        /// Get ID and Description of Block according Course, Headquarter, Plan and Modality in database
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDCurso">id of course in database</param>
+        /// <param name="pIDSede">id of sede in database</param>
+        /// <param name="pIDModalidad">id of modality in database</param>
+        /// <param name="pIDPlan">id of plan study in database</param>
+        /// <returns>ID and Description of Block</returns>
+        [Route("CursoProfesor/Cursos/{pIDCurso:int}/Sedes/{pIDSede:int}/Modalidades/{pIDModalidad:int}/Planes/{pIDPlan:int}/Bloques")]
+        public ActionResult getBlock(int pIDCurso, int pIDSede, int pIDModalidad, int pIDPlan)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaPlansegunCursoxSedexModalidad = (from curso in db.Courses
-                                                          join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
-                                                          join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
-                                                          join bloque in db.AcademicBlocks on bloque_plan.BlockID equals bloque.ID
-                                                          join plan_estudio in db.StudyPlans on bloque_plan.PlanID equals plan_estudio.ID
-                                                          join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
-                                                          join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
-                                                          join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
-                                                          where curso.ID == idCurso && sede.ID == idSede && modalidad.ID == idModalidad && plan_estudio.ID == idPlan
-                                                          select new { bloque.ID, bloque.Description }).Distinct();
+                var vListaBlocks = (from curso in db.Courses
+                                        join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                        join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
+                                        join bloque in db.AcademicBlocks on bloque_plan.BlockID equals bloque.ID
+                                        join plan_estudio in db.StudyPlans on bloque_plan.PlanID equals plan_estudio.ID
+                                        join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
+                                        join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
+                                        join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
+                                        where curso.ID == pIDCurso && sede.ID == pIDSede && modalidad.ID == pIDModalidad && plan_estudio.ID == pIDPlan
+                                        select new { bloque.ID, bloque.Description }).Distinct();
 
-                var json = JsonConvert.SerializeObject(listaPlansegunCursoxSedexModalidad);
+                var json = JsonConvert.SerializeObject(vListaBlocks);
                 return Content(json);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -356,34 +430,68 @@ namespace SACAAE.Controllers
         /*Esteban Segura Benavides
          Obtener el horario de un grupo especifico
          de acuerdo a su codigo de curso, sede, modalidad, plan de estudio y numero de grupo*/
-        [Route("CursoProfesor/Cursos/Sedes/Modalidad/Plan/Grupo/Horario/{idCurso:int}/{idSede:int}/{idModalidad:int}/{idPlan:int}/{idGrupo:int}")]
-        public ActionResult ObtenerHorario(int idCurso,int idSede, int idModalidad, int idPlan, int idGrupo)
+
+        /// <summary>
+        /// Get Schedule of Group according a id of Group, Course, Plan, Headquarter, Modality
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDCurso">id of course in database</param>
+        /// <param name="pIDSede">id of sede in database</param>
+        /// <param name="pIDModalidad">id of modality in database</param>
+        /// <param name="pIDPlan">id of plan study in database</param>
+        /// <param name="pIDGrupo">id of group in database</param>
+        /// <returns>Code of Classroom and StartHour, EndHour and Day of Group</returns>
+        [Route("CursoProfesor/Cursos/{pIDCurso:int}/Sedes/{pIDSede:int}/Modalidades/{pIDModalidad:int}/Planes/{pIDPlan:int}/Grupos/{pIDGrupo:int}/Horario")]
+        public ActionResult getSchedule(int pIDCurso,int pIDSede, int pIDModalidad, int pIDPlan, int pIDGrupo)
         {
 
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var HorariosegunCursoxGrupoxSedexModalidadxPlan = from curso in db.Courses
-                                                                  join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
-                                                                  join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
-                                                          
-                                                                  join plan_estudio in db.StudyPlans on bloque_plan.PlanID equals plan_estudio.ID
-                                                                  join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
-                                                                  join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
-                                                                  join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
-                                                                  join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
-                                                                  join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
-                                                                  join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
-                                                                  join aula in db.Classrooms on grupo_aula.ClassroomID equals aula.ID 
-                                                                  where curso.ID == idCurso && sede.ID == idSede && modalidad.ID == idModalidad && plan_estudio.ID == idPlan &&
-                                                                  grupo.ID == idGrupo
+                var vListaSchedule = from curso in db.Courses
+                                        join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                        join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID     
+                                        join plan_estudio in db.StudyPlans on bloque_plan.PlanID equals plan_estudio.ID
+                                        join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
+                                        join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
+                                        join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
+                                        join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
+                                        join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+                                        join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
+                                        join aula in db.Classrooms on grupo_aula.ClassroomID equals aula.ID 
+                                        where curso.ID == pIDCurso && sede.ID == pIDSede && modalidad.ID == pIDModalidad && plan_estudio.ID == pIDPlan &&
+                                        grupo.ID == pIDGrupo
                                                                   select new { horario.Day, horario.StartHour, horario.EndHour,aula.Code };
 
-                var json = JsonConvert.SerializeObject(HorariosegunCursoxGrupoxSedexModalidadxPlan);
+                var json = JsonConvert.SerializeObject(vListaSchedule);
                 return Content(json);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
+        /// <summary>
+        ///  Remove a profesor from a group
+        /// </summary>
+        /// <autor> Esteban Segura Benavides </autor>
+        /// <param name="pIDGrupo"> ID of group in database</param>
+        /// <returns>Information about the action of remove a profesor from a group</returns>
+        [Route("CursoProfesor/Group/{pIDGroup:int}/removeProfesor")]
+        public ActionResult removeGroup(int pIDGroup)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var grupo = db.Groups.Find(pIDGroup);
+                grupo.ProfessorID = null;
+                grupo.HourAllocatedTypeID = null;
+                db.SaveChanges();
+                var respuesta = new { respuesta = "success" };
+                var json = JsonConvert.SerializeObject(respuesta);
+                return Content(json);
+            }
+            var respuesta_error = new { respuesta = "error" };
+            var json_error = JsonConvert.SerializeObject(respuesta_error);
+            return Content(json_error);
+        }
+      
         #endregion
     }
 }

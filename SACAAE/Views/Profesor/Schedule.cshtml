@@ -1,0 +1,56 @@
+﻿@model SACAAE.Models.Professor
+@{
+    ViewBag.Title = "Horario Aula";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<head>
+    @Styles.Render("~/Content/custom")
+</head>
+<body onload="load_window('@(Model.ID)')">
+
+    <h2> Horario de Profesor </h2>
+    <h4>
+        <span class="label label-info">
+            @Html.DisplayName("Profesor: ")
+            @Html.DisplayFor(model => model.Name)
+        </span>
+    </h4>
+    <div id="div_tabla">
+
+        <div>
+            <p>
+                <br />
+                <br />
+                |  @Html.ActionLink("Regresar", "Index")  |
+
+                <br />
+            </p>
+
+        </div>
+    </div>
+
+</body>
+
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/SiteScripts/scheduleChart.js")"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var entidadid = "#" + getCookie("Entidad");
+            if (entidadid == "#") { Load('TEC'); }
+            $(entidadid).addClass('active');
+
+            var route = "/Professor/Schedules/" + get_id(3);
+            $.getJSON(route, function (data) {
+                datos = datos_matriz(data);
+                obtener_dias(datos);
+
+            });
+        });
+        
+
+
+
+
+    </script>
+}
