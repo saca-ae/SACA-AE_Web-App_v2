@@ -259,3 +259,16 @@ function get_id(number) {
     var url = window.location.pathname.split('/');
     return url[number];
 }
+
+function adjust_hour(hour)
+{
+    
+    if (hour > '1000')
+    {
+
+        var new_hour = 
+    }
+    else
+    {
+    }
+}
