@@ -1,4 +1,11 @@
-﻿function generate_table(route)
+﻿/// <summary>
+///  Function generate table for a list of a groups with number of group, hour, day and profesor
+///  
+/// </summary>
+/// <autor> Esteban Segura Benavides </autor>
+/// <param name="route"> Ruta donde buscar la informacion</param>
+/// <returns>None</returns>
+function generate_table(route)
 {
     var tabla = "<table id=\"profesores_asignados_a_curso\" class=\"table\">" +
         "<thead>" +
@@ -80,7 +87,7 @@
             };
             tabla = tabla + "</tbody> </table>";
 
-            document.getElementById('tabla_grupos').innerHTML = tabla;
+            document.getElementById('table_information_group').innerHTML = tabla;
         }
         else {
             //Return a empty table with 2 rows
@@ -109,3 +116,49 @@
 
 };
 
+/// <summary>
+///  Function generate table for a list of a groups with the schedule of the group (Start Hour, End Hour and Day)
+///  
+/// </summary>
+/// <autor> Esteban Segura Benavides </autor>
+/// <param name="route"> Ruta donde buscar la informacion</param>
+/// <returns>None</returns>
+function generate_table_schedule_group(route2) {
+
+    var tabla = "<table id=\"profesores_asignados_a_curso\" >" +
+   "<thead>" +
+       "<th>Dia</th>" +
+       "<th>Hora Inicio</th>" +
+       "<th>Hora Fin</th>" +
+       "<th>Aula</th>" +
+   "</thead>" +
+   "<tbody>";
+    $.getJSON(route2, function (data) {
+
+        if (data.length != 0) {
+            for (i = 0; i < data.length; i++) {
+                tabla = tabla + "<tr>" +
+                "<td>" + data[i].Day + "</td>" +
+                "<td>" + data[i].StartHour + "</td>" +
+                "<td>" + data[i].EndHour + "</td>" +
+                "<td>" + data[i].Code + "</td>" +
+                "</tr>";
+
+
+            }
+
+            tabla = tabla + "</tbody> </table>";
+
+            document.getElementById('table_schedule_group').innerHTML = tabla;
+        }
+        else {
+
+
+        }
+    });
+}
+
+generate_graphic_schedule(route)
+{
+
+}

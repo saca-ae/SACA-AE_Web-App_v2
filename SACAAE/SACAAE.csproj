@@ -323,6 +323,7 @@
     <Content Include="Scripts\SiteScripts\RevocarComisionProfesor.js" />
     <Content Include="Scripts\SiteScripts\RevocarCursoProfesor.js" />
     <Content Include="Scripts\SiteScripts\RevocarProyectoProfesor.js" />
+    <Content Include="Scripts\SiteScripts\scheduleChart.js" />
     <Content Include="Scripts\SiteScripts\table.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />

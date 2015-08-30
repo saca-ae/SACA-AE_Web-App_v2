@@ -30,11 +30,11 @@ namespace SACAAE.Controllers
             }
 
             /* get List of all teachers */
-            ViewBag.Profesores = new SelectList(db.Profesores, "ID", "Name");
+            ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
             /*get List of all 'sedes' */
             ViewBag.Sedes = new SelectList(db.Sedes, "ID", "Name");
             /* get List of all 'modalidades' */
-            ViewBag.Modalidades = new SelectList(db.Modalidades, "ID", "Name"); 
+            ViewBag.Modalidades = new SelectList(db.Modalities, "ID", "Name"); 
 
             return View();
         }
@@ -50,7 +50,7 @@ namespace SACAAE.Controllers
                 int idProfesor = viewModel.idProfesor;
 
                 
-                db.Grupos.Find(idGrupo).Profesor.ID = idProfesor;
+                db.Groups.Find(idGrupo).Professor.ID = idProfesor;
                 db.SaveChanges();
 
                 TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
@@ -74,7 +74,7 @@ namespace SACAAE.Controllers
             }
 
             /* Se obtiene la lista de profesores */
-            ViewBag.Profesores = new SelectList(db.Profesores, "ID", "Name");
+            ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
 
             return View();
         }
@@ -116,9 +116,9 @@ namespace SACAAE.Controllers
             if (HttpContext.Request.IsAjaxRequest())
             {
                 var listaPlanes = from sedes in db.Sedes
-                                  join planesporsede in db.PlanesDeEstudioXSedes on sedes.ID equals planesporsede.SedeID
-                                  join planesestudio in db.PlanesDeEstudio on planesporsede.StudyPlanID equals planesestudio.ID
-                                  join modalidades in db.Modalidades on planesestudio.ModeID equals modalidades.ID
+                                  join planesporsede in db.StudyPlansXSedes on sedes.ID equals planesporsede.SedeID
+                                  join planesestudio in db.StudyPlans on planesporsede.StudyPlanID equals planesestudio.ID
+                                  join modalidades in db.Modalities on planesestudio.ModeID equals modalidades.ID
                                   where (sedes.ID == pSede) && (modalidades.ID == pModalidad)
                                   select new { planesestudio.ID, planesestudio.Name };
 
@@ -140,9 +140,9 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaBloques = db.PlanesDeEstudio.Find(pPlan)
-                                     .BloquesAcademicosXPlanesDeEstudio
-                                     .Select(p => new { p.BloqueAcademico.ID, p.BloqueAcademico.Description });
+                var listaBloques = db.StudyPlans.Find(pPlan)
+                                     .AcademicBlocksXStudyPlans
+                                     .Select(p => new { p.AcademicBlock.ID, p.AcademicBlock.Description });
 
                 return Json(listaBloques, JsonRequestBehavior.AllowGet);
             }
@@ -162,9 +162,9 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaCursos = db.BloquesAcademicosXPlanesDeEstudio
+                var listaCursos = db.AcademicBlocksXStudyPlans
                                     .Where(p => p.BlockID == pBloque && p.PlanID == pPlan).FirstOrDefault()
-                                    .BloquesXPlanesXCursos.Select(p => new { p.Curso.ID, p.Curso.Code, p.Curso.Name });
+                                    .BlocksXPlansXCourses.Select(p => new { p.Course.ID, p.Course.Code, p.Course.Name });
 
                 return Json(listaCursos, JsonRequestBehavior.AllowGet);
             }
@@ -200,13 +200,13 @@ namespace SACAAE.Controllers
             if (HttpContext.Request.IsAjaxRequest())
             {
                 var vPeriod = Request.Cookies["Periodo"].Value;
-                var vIDPeriod = db.Periodos.Find(int.Parse(vPeriod)).ID;
-                var vListGroup = db.Grupos
+                var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
+                var vListGroup = db.Groups
                                     .Where(p => (p.ProfessorID == null || p.ProfessorID == 3)
                                              && p.PeriodID == vIDPeriod
-                                             && p.BloqueXPlanXCurso.CourseID == pCurso
-                                             && p.BloqueXPlanXCurso.BloqueAcademicoXPlanDeEstudio.PlanID == pPlan
-                                             && p.BloqueXPlanXCurso.BloqueAcademicoXPlanDeEstudio.BlockID == pBloque
+                                             && p.BlockXPlanXCourse.CourseID == pCurso
+                                             && p.BlockXPlanXCourse.AcademicBlockXStudyPlan.PlanID == pPlan
+                                             && p.BlockXPlanXCourse.AcademicBlockXStudyPlan.BlockID == pBloque
                                             )
                                     .Select(p => new{ p.ID, p.Number });
 
@@ -228,8 +228,8 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var grupo = db.Grupos.Find(cursoxgrupo);
-                var info = new { grupo.ID, grupo.Capacity,grupo.BloqueXPlanXCurso.Curso.TheoreticalHours };
+                var grupo = db.Groups.Find(cursoxgrupo);
+                var info = new { grupo.ID, grupo.Capacity,grupo.BlockXPlanXCourse.Course.TheoreticalHours };
 
                 return Json(info, JsonRequestBehavior.AllowGet);
             }
@@ -247,11 +247,11 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaCursos = from profesores in db.Profesores
-                                  join grupo in db.Grupos on profesores.ID equals grupo.ProfessorID
-                                  join bloqueXPlanXCurso in db.BloquesXPlanesXCursos on grupo.BlockXPlanXCourseID equals bloqueXPlanXCurso.ID
+                var listaCursos = from profesores in db.Professors
+                                  join grupo in db.Groups on profesores.ID equals grupo.ProfessorID
+                                  join bloqueXPlanXCurso in db.BlocksXPlansXCourses on grupo.BlockXPlanXCourseID equals bloqueXPlanXCurso.ID
                                   where profesores.ID == idProfesor
-                                  select new { profesores.ID, bloqueXPlanXCurso.Curso.Name, bloqueXPlanXCurso.Curso.Code }; //Revisar
+                                  select new { profesores.ID, bloqueXPlanXCurso.Course.Name, bloqueXPlanXCurso.Course.Code }; //Revisar
 
                 var json = JsonConvert.SerializeObject(listaCursos);
                 return Content(json);
@@ -263,6 +263,28 @@ namespace SACAAE.Controllers
         /// Get a groups associated a determinated course 
         /// </summary>
         /// <autor>Esteban Segura Benavides</autor>
+        /// <changes>
+        /// Esteban Segura Benavides 8/28/2015
+        ///   
+        ///   Script Old:
+        ///   from curso in db.Courses
+///           join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+///           join bloque_planes in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
+///           join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
+///           join profesor in db.Professors on grupo.ProfessorID equals profesor.ID
+///           join plan_estudio in db.StudyPlans on bloque_planes.PlanID equals plan_estudio.ID
+//////        join plan_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_sede.StudyPlanID
+///           join sede in db.Sedes on plan_sede.SedeID equals sede.ID
+///           join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+///           join aula in db.Classrooms on grupo_aula.ClassroomID equals aula.ID
+///           join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
+///           where curso.ID == pIDCurso && sede.Name == "Cartago"
+ ///           select new { grupo.ID, grupo.Number, profesor.Name, aula.Code, horario.StartHour, horario.EndHour, horario.Day });
+///           Script New:
+///           
+        ///
+        ///                           select new { grupo.ID, grupo.Number, profesor.Name, aula.Code, horario.StartHour, horario.EndHour, horario.Day });
+        /// </changes>
         /// <param name="pIDCurso">ID Course in database</param>
         /// <returns>ID, Number of Group, Name of Profesor, Code of Aula and StartHour, EndHour and Day of Schedule</returns>
         [Route("CursoProfesor/Cursos/{pIDCurso:int}")]
@@ -270,17 +292,17 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var vListGroupCourse = (from curso in db.Cursos
-                                   join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
-                                   join bloque_planes in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
-                                   join grupo in db.Grupos on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
-                                   join profesor in db.Profesores on grupo.ProfessorID equals profesor.ID
-                                   join plan_estudio in db.PlanesDeEstudio on bloque_planes.PlanID equals plan_estudio.ID
-                                   join plan_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_sede.StudyPlanID
+                var vListGroupCourse = (from curso in db.Courses
+                                   join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                   join bloque_planes in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
+                                   join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
+                                   join profesor in db.Professors on grupo.ProfessorID equals profesor.ID
+                                   join plan_estudio in db.StudyPlans on bloque_planes.PlanID equals plan_estudio.ID
+                                   join plan_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_sede.StudyPlanID
                                    join sede in db.Sedes on plan_sede.SedeID equals sede.ID
-                                   join grupo_aula in db.GrupoAula on grupo.ID equals grupo_aula.GroupID
-                                   join aula in db.Aulas on grupo_aula.ClassroomID equals aula.ID
-                                   join horario in db.Horarios on grupo_aula.ScheduleID equals horario.ID
+                                   join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+                                   join aula in db.Classrooms on grupo_aula.ClassroomID equals aula.ID
+                                   join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
                                    where curso.ID == pIDCurso && sede.Name == "Cartago"
 
                                    select new { grupo.ID, grupo.Number, profesor.Name, aula.Code, horario.StartHour, horario.EndHour, horario.Day });
@@ -303,11 +325,11 @@ namespace SACAAE.Controllers
             if (HttpContext.Request.IsAjaxRequest())
             {
                 var vListaSedesForCourse = (
-                                        from curso in db.Cursos
-                                        join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
-                                        join bloque_plan in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
-                                        join plan_estudio in db.PlanesDeEstudio on bloque_plan.PlanID equals plan_estudio.ID
-                                        join plan_estudio_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
+                                        from curso in db.Courses
+                                        join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                        join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
+                                        join plan_estudio in db.StudyPlans on bloque_plan.PlanID equals plan_estudio.ID
+                                        join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
                                         join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
                                         where curso.ID == pIDCurso
                                         select new { sede.ID,sede.Name }).Distinct();
@@ -330,13 +352,13 @@ namespace SACAAE.Controllers
             if (HttpContext.Request.IsAjaxRequest())
             { 
                  var vListaModalidades = (
-                                        from curso in db.Cursos
-                                        join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
-                                        join bloque_plan in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
-                                        join plan_estudio in db.PlanesDeEstudio on bloque_plan.PlanID equals plan_estudio.ID
-                                        join plan_estudio_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
+                                        from curso in db.Courses
+                                        join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                        join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
+                                        join plan_estudio in db.StudyPlans on bloque_plan.PlanID equals plan_estudio.ID
+                                        join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
                                         join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
-                                        join modalidad in db.Modalidades on plan_estudio.ModeID equals modalidad.ID
+                                        join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
                                         where curso.ID == pIDCurso  && sede.ID == pIDSede
                                         select new { modalidad.ID,modalidad.Name }).Distinct();
                 var json = JsonConvert.SerializeObject(vListaModalidades);
@@ -358,13 +380,13 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var vListaPlan = (from curso in db.Cursos
-                                                          join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
-                                                          join bloque_plan in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
-                                                          join plan_estudio in db.PlanesDeEstudio on bloque_plan.PlanID equals plan_estudio.ID
-                                                          join plan_estudio_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
+                var vListaPlan = (from curso in db.Courses
+                                                          join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                                          join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
+                                                          join plan_estudio in db.StudyPlans on bloque_plan.PlanID equals plan_estudio.ID
+                                                          join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
                                                           join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
-                                                          join modalidad in db.Modalidades on plan_estudio.ModeID equals modalidad.ID
+                                                          join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
                                                           where curso.ID == pIDCurso && sede.ID == pIDSede&& modalidad.ID==pIDModalidad
                                                           select new { plan_estudio.ID, plan_estudio.Name}).Distinct();
 
@@ -388,14 +410,14 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var vListaBlocks = (from curso in db.Cursos
-                                        join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
-                                        join bloque_plan in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
-                                        join bloque in db.BloquesAcademicos on bloque_plan.BlockID equals bloque.ID
-                                        join plan_estudio in db.PlanesDeEstudio on bloque_plan.PlanID equals plan_estudio.ID
-                                        join plan_estudio_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
+                var vListaBlocks = (from curso in db.Courses
+                                        join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                        join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID
+                                        join bloque in db.AcademicBlocks on bloque_plan.BlockID equals bloque.ID
+                                        join plan_estudio in db.StudyPlans on bloque_plan.PlanID equals plan_estudio.ID
+                                        join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
                                         join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
-                                        join modalidad in db.Modalidades on plan_estudio.ModeID equals modalidad.ID
+                                        join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
                                         where curso.ID == pIDCurso && sede.ID == pIDSede && modalidad.ID == pIDModalidad && plan_estudio.ID == pIDPlan
                                         select new { bloque.ID, bloque.Description }).Distinct();
 
@@ -425,17 +447,17 @@ namespace SACAAE.Controllers
 
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var vListaSchedule = from curso in db.Cursos
-                                        join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
-                                        join bloque_plan in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID     
-                                        join plan_estudio in db.PlanesDeEstudio on bloque_plan.PlanID equals plan_estudio.ID
-                                        join plan_estudio_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
+                var vListaSchedule = from curso in db.Courses
+                                        join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                        join bloque_plan in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_plan.ID     
+                                        join plan_estudio in db.StudyPlans on bloque_plan.PlanID equals plan_estudio.ID
+                                        join plan_estudio_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_estudio_sede.StudyPlanID
                                         join sede in db.Sedes on plan_estudio_sede.SedeID equals sede.ID
-                                        join modalidad in db.Modalidades on plan_estudio.ModeID equals modalidad.ID
-                                        join grupo in db.Grupos on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
-                                        join grupo_aula in db.GrupoAula on grupo.ID equals grupo_aula.GroupID
-                                        join horario in db.Horarios on grupo_aula.ScheduleID equals horario.ID
-                                        join aula in db.Aulas on grupo_aula.ClassroomID equals aula.ID 
+                                        join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
+                                        join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
+                                        join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+                                        join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
+                                        join aula in db.Classrooms on grupo_aula.ClassroomID equals aula.ID 
                                         where curso.ID == pIDCurso && sede.ID == pIDSede && modalidad.ID == pIDModalidad && plan_estudio.ID == pIDPlan &&
                                         grupo.ID == pIDGrupo
                                                                   select new { horario.Day, horario.StartHour, horario.EndHour,aula.Code };
@@ -457,9 +479,9 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var grupo = db.Grupos.Find(pIDGroup);
+                var grupo = db.Groups.Find(pIDGroup);
                 grupo.ProfessorID = null;
-                grupo.AssignProfessorTypeID = null;
+                grupo.HourAllocatedTypeID = null;
                 db.SaveChanges();
                 var respuesta = new { respuesta = "success" };
                 var json = JsonConvert.SerializeObject(respuesta);
