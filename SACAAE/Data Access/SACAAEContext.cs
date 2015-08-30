@@ -3,6 +3,8 @@ using SACAAE.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Web;
@@ -53,6 +55,15 @@ namespace SACAAE.Data_Access
         public DbSet<EntityType> EntityTypes { get; set; }
         public DbSet<HourAllocatedType> HourAllocatedTypes { get; set; }
         public DbSet<GroupClassroom> GroupClassrooms { get; set; }
+
+        public virtual ObjectResult<Nullable<int>> SP_CreateGroupsinNewSemester(Nullable<int> pIdPeriod)
+        {
+            var pIdPeriodParameter = pIdPeriod.HasValue ?
+                new ObjectParameter("pIdPeriod", pIdPeriod) :
+                new ObjectParameter("pIdPeriod", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("SP_CreateGroupsinNewSemester", pIdPeriodParameter);
+        }
     }
 }
 /*

@@ -183,6 +183,21 @@
     <Compile Include="Controllers\SedesController.cs" />
     <Compile Include="Data Access\DBInitializer.cs" />
     <Compile Include="Data Access\SACAAEContext.cs" />
+    <Compile Include="Data Access\SACAAE_SP.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SACAAE_SP.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data Access\SACAAE_SP.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SACAAE_SP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data Access\SACAAE_SP.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SACAAE_SP.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -297,6 +312,23 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\DataTables\dataTables.responsive.scss" />
     <Content Include="Content\DataTables\Spanish.json" />
+    <EntityDeploy Include="Data Access\SACAAE_SP.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SACAAE_SP.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Data Access\SACAAE_SP.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SACAAE_SP.edmx</DependentUpon>
+      <LastGenOutput>SACAAE_SP.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Data Access\SACAAE_SP.edmx.diagram">
+      <DependentUpon>SACAAE_SP.edmx</DependentUpon>
+    </Content>
+    <Content Include="Data Access\SACAAE_SP.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SACAAE_SP.edmx</DependentUpon>
+      <LastGenOutput>SACAAE_SP.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -400,7 +432,9 @@
     <Content Include="Views\Profesor\Index.cshtml" />
     <Content Include="Views\Profesor\Schedule.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />

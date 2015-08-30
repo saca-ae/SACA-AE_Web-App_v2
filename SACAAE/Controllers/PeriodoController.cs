@@ -17,6 +17,7 @@ namespace SACAAE.Controllers
     public class PeriodoController : Controller
     {
         private SACAAEContext gvDatabase = new SACAAEContext();
+        private SACAAE_SP gvStoredProcedure = new SACAAE_SP();
         private Period gPeriod = new Period();
 
         // GET: Periodo
@@ -25,8 +26,9 @@ namespace SACAAE.Controllers
             gPeriod = gPeriod.AddNewSemester();
             
             int vIdPeriod = gPeriod.getIDPeriod(gPeriod.Year, gPeriod.NumberID);
-            int vIdEntity = getEntityID(Request.Cookies["Entidad"].Value);
-            IQueryable<GroupsCreatedViewModel> vGroupsList = getGroupsList(vIdPeriod, vIdEntity);
+            gvStoredProcedure.SP_CreateGroupsinNewSemester(vIdPeriod);
+
+            IQueryable<GroupsCreatedViewModel> vGroupsList = getGroupsList(vIdPeriod);
 
             ViewBag.Period = "" + gPeriod.Year + " - " + gPeriod.NumberID + " Semestre";
             ViewBag.IdPeriod = vIdPeriod;
@@ -41,7 +43,7 @@ namespace SACAAE.Controllers
         /// <param name=pIdPeriod> </param>
         /// <param name=pIdEntity> </param>
         /// <returns> IQueryable<GroupsCreated> object, that contents the group's details (Group number, course name, study plan and headquarter) in the given period. </returns>
-        private IQueryable<GroupsCreatedViewModel> getGroupsList(int pIdPeriod, int pIdEntity)
+        private IQueryable<GroupsCreatedViewModel> getGroupsList(int pIdPeriod)
         {
             IQueryable<GroupsCreatedViewModel> vGroupsList = 
                 from Group Gru in gvDatabase.Groups
@@ -50,7 +52,7 @@ namespace SACAAE.Controllers
                 join StudyPlan P in gvDatabase.StudyPlans on BP.PlanID equals P.ID
                 join Course C in gvDatabase.Courses on BPC.CourseID equals C.ID
                 join Sede S in gvDatabase.Sedes on BPC.SedeID equals S.ID
-                where Gru.PeriodID == pIdPeriod && P.EntityTypeID == pIdEntity
+                where Gru.PeriodID == pIdPeriod
                 select new GroupsCreatedViewModel
                 {
                     Grupo = Gru.Number,
