@@ -3,37 +3,44 @@
 @{
     ViewBag.Title = "Iniciar Sesión";
 }
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            savePeriod();
+            document.querySelector('#ComboPeriodos [value="' + 1 + '"]').selected = true;
+        });
 
-<script>
-    function setCookie(cname, cvalue, exdays) {
-        document.cookie = cname + "=" + cvalue;
-    }
-
-    function savePeriod() {
-        var period = document.getElementById("ComboPeriodos").value;
-        setCookie("Periodo", period, 1);
-    }
-
-    function checkNewPeriod(form) {
-        var period = document.getElementById("ComboPeriodos").value;
-        if ((parseInt(period)) == 0) {
-            return confirm("Está seguro que desea crear el nuevo periodo");
+        function setCookie(cname, cvalue, exdays) {
+            document.cookie = cname + "=" + cvalue;
         }
-        return true
-    }
 
-    function getCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i].trim();
-            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        function savePeriod() {
+            var period = document.getElementById("ComboPeriodos").value;
+            setCookie("Periodo", period, 1);
         }
-        return "";
-    }
-</script>
 
-<body onload="savePeriod()">
+        function checkNewPeriod(form) {
+            var period = document.getElementById("ComboPeriodos").value;
+            if ((parseInt(period)) == 0) {
+                return confirm("Está seguro que desea crear el nuevo periodo");
+            }
+            return true
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i].trim();
+                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            }
+            return "";
+        }
+    </script>
+}
+
+<body>
     <div>
         <div id="loginForm">
             <h2 class="form-signin-heading">Iniciar Sesión</h2>
@@ -79,7 +86,3 @@
 
 
 </body>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

@@ -23,21 +23,21 @@ namespace SACAAE.Controllers
         {
             String entity = Request.Cookies["Entidad"].Value;
             var entityID = getEntityID(entity);
-            IQueryable<BloqueAcademico> result;
+            IQueryable<AcademicBlock> result;
             if (entity == "TEC")
             {
-                result = from bloque in db.BloquesAcademicos
-                         join BloquesXPlan in db.BloquesAcademicosXPlanesDeEstudio on bloque.ID equals BloquesXPlan.BlockID
-                         join planDeEstudio in db.PlanesDeEstudio on BloquesXPlan.PlanID equals planDeEstudio.ID
+                result = from bloque in db.AcademicBlocks
+                         join BloquesXPlan in db.AcademicBlocksXStudyPlans on bloque.ID equals BloquesXPlan.BlockID
+                         join planDeEstudio in db.StudyPlans on BloquesXPlan.PlanID equals planDeEstudio.ID
                          where planDeEstudio.EntityTypeID == 1 || planDeEstudio.EntityTypeID == 2 ||
                          planDeEstudio.EntityTypeID == 3 || planDeEstudio.EntityTypeID == 4 || planDeEstudio.EntityTypeID == 10
                          select bloque;
             }
             else
             {
-                result = from bloque in db.BloquesAcademicos
-                         join BloquesXPlan in db.BloquesAcademicosXPlanesDeEstudio on bloque.ID equals BloquesXPlan.BlockID
-                         join planDeEstudio in db.PlanesDeEstudio on BloquesXPlan.PlanID equals planDeEstudio.ID
+                result = from bloque in db.AcademicBlocks
+                         join BloquesXPlan in db.AcademicBlocksXStudyPlans on bloque.ID equals BloquesXPlan.BlockID
+                         join planDeEstudio in db.StudyPlans on BloquesXPlan.PlanID equals planDeEstudio.ID
                          where planDeEstudio.EntityTypeID == entityID
                          select bloque;
             }
@@ -52,7 +52,7 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BloqueAcademico bloqueAcademico = db.BloquesAcademicos.Find(id);
+            AcademicBlock bloqueAcademico = db.AcademicBlocks.Find(id);
             if (bloqueAcademico == null)
             {
                 return HttpNotFound();
@@ -69,11 +69,11 @@ namespace SACAAE.Controllers
         // POST: Bloque/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Description,Level")] BloqueAcademico bloqueAcademico)
+        public ActionResult Create([Bind(Include = "ID,Description,Level")] AcademicBlock bloqueAcademico)
         {
             if (ModelState.IsValid)
             {
-                db.BloquesAcademicos.Add(bloqueAcademico);
+                db.AcademicBlocks.Add(bloqueAcademico);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -88,7 +88,7 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BloqueAcademico bloqueAcademico = db.BloquesAcademicos.Find(id);
+            AcademicBlock bloqueAcademico = db.AcademicBlocks.Find(id);
             if (bloqueAcademico == null)
             {
                 return HttpNotFound();
@@ -99,7 +99,7 @@ namespace SACAAE.Controllers
         // POST: Bloque/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Description,Level")] BloqueAcademico bloqueAcademico)
+        public ActionResult Edit([Bind(Include = "ID,Description,Level")] AcademicBlock bloqueAcademico)
         {
             if (ModelState.IsValid)
             {
@@ -117,7 +117,7 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BloqueAcademico bloqueAcademico = db.BloquesAcademicos.Find(id);
+            AcademicBlock bloqueAcademico = db.AcademicBlocks.Find(id);
             if (bloqueAcademico == null)
             {
                 return HttpNotFound();
@@ -130,8 +130,8 @@ namespace SACAAE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            BloqueAcademico bloqueAcademico = db.BloquesAcademicos.Find(id);
-            db.BloquesAcademicos.Remove(bloqueAcademico);
+            AcademicBlock bloqueAcademico = db.AcademicBlocks.Find(id);
+            db.AcademicBlocks.Remove(bloqueAcademico);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -148,44 +148,44 @@ namespace SACAAE.Controllers
         #region Helpers
         private int getEntityID(string entityName)
         {
-            TipoEntidad entity;
+            EntityType entity;
             switch (entityName)
             {
                 case "TEC":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "TEC");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "TEC");
                     break;
                 case "CIADEG":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "CIADEG");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "CIADEG");
                     break;
                 case "TAE":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-TAE");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-TAE");
                     break;
                 case "MAE":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MAE");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MAE");
                     break;
                 case "MDE":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MDE");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MDE");
                     break;
                 case "MGP":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MGP");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MGP");
                     break;
                 case "DDE":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Doctorado");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Doctorado");
                     break;
                 case "Emprendedores":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Emprendedores");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Emprendedores");
                     break;
                 case "CIE":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-CIE");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-CIE");
                     break;
                 case "Actualizacion_Cartago":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion Cartago");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion Cartago");
                     break;
                 case "Actualizacion_San_Carlos":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion San Carlos");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion San Carlos");
                     break;
                 default:
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == entityName);
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == entityName);
                     break;
             }
 

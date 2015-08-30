@@ -1,11 +1,72 @@
-﻿
+﻿@model IEnumerable<SACAAE.Models.ViewModels.GroupsCreatedViewModel>
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
 
-<h1 class="page-header">Periodo</h1>
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#indexTable').DataTable({
+                "language": {
+                    url: "/Content/DataTables/Spanish.json",
+                },
+                responsive: true
+            });
+        });
+    </script>
+}
 
-<p> Periodo: @ViewBag.Period </p>
+<h1 class="page-header">Nuevo Período</h1>
 
-<p> IDPeriodo: @ViewBag.IdPeriod </p>
+@if (TempData.ContainsKey("MessageError"))
+{
+    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+}
+@if (TempData.ContainsKey("MessageSuccess"))
+{
+    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+}
+
+<p> Periodo Creado : @ViewBag.Period </p>
+
+<div class="dataTables_wrapper">
+    <table class="table  table-hover" id="indexTable">
+        <thead>
+            <tr>
+                <th>
+                    Grupo
+                </th>
+                <th>
+                    Curso
+                </th>
+                <th>
+                    Plan de Estudios
+                </th>
+                <th> 
+                    Sede
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Grupo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Curso)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PlandeEstudios)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sede)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

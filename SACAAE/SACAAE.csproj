@@ -222,38 +222,47 @@
     <Compile Include="Migrations\201508272109401_fix-grupo.Designer.cs">
       <DependentUpon>201508272109401_fix-grupo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508290538219_names.cs" />
+    <Compile Include="Migrations\201508290538219_names.Designer.cs">
+      <DependentUpon>201508290538219_names.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508290623285_sede-fix.cs" />
+    <Compile Include="Migrations\201508290623285_sede-fix.Designer.cs">
+      <DependentUpon>201508290623285_sede-fix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Aula.cs" />
-    <Compile Include="Models\BloqueAcademico.cs" />
-    <Compile Include="Models\BloqueAcademicoXPlanDeEstudio.cs" />
-    <Compile Include="Models\BloqueXPlanXCurso.cs" />
-    <Compile Include="Models\Comision.cs" />
-    <Compile Include="Models\ComisionXProfesor.cs" />
-    <Compile Include="Models\Curso.cs" />
+    <Compile Include="Models\Classroom.cs" />
+    <Compile Include="Models\AcademicBlock.cs" />
+    <Compile Include="Models\AcademicBlockXStudyPlan.cs" />
+    <Compile Include="Models\BlockXPlanXCourse.cs" />
+    <Compile Include="Models\Commission.cs" />
+    <Compile Include="Models\CommissionXProfessor.cs" />
+    <Compile Include="Models\Course.cs" />
     <Compile Include="Models\DataCSV.cs" />
-    <Compile Include="Models\Estado.cs" />
-    <Compile Include="Models\Grupo.cs" />
-    <Compile Include="Models\GrupoAula.cs" />
-    <Compile Include="Models\Horario.cs" />
+    <Compile Include="Models\State.cs" />
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\GroupClassroom.cs" />
+    <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Modalidad.cs" />
-    <Compile Include="Models\Periodo.cs" />
-    <Compile Include="Models\NumeroPeriodo.cs" />
-    <Compile Include="Models\PlanDeEstudio.cs" />
-    <Compile Include="Models\PlanDeEstudioXSede.cs" />
+    <Compile Include="Models\Modality.cs" />
+    <Compile Include="Models\Period.cs" />
+    <Compile Include="Models\PeriodNumber.cs" />
+    <Compile Include="Models\StudyPlan.cs" />
+    <Compile Include="Models\StudyPlanXSede.cs" />
     <Compile Include="Models\Plaza.cs" />
-    <Compile Include="Models\PlazaXProfesor.cs" />
-    <Compile Include="Models\Profesor.cs" />
-    <Compile Include="Models\Proyecto.cs" />
-    <Compile Include="Models\ProyectoXProfesor.cs" />
+    <Compile Include="Models\PlazaXProfessor.cs" />
+    <Compile Include="Models\Professor.cs" />
+    <Compile Include="Models\Project.cs" />
+    <Compile Include="Models\ProjectXProfessor.cs" />
     <Compile Include="Models\Sede.cs" />
-    <Compile Include="Models\TipoAsignacionProfesor.cs" />
-    <Compile Include="Models\TipoEntidad.cs" />
-    <Compile Include="Models\TipoPeriodo.cs" />
+    <Compile Include="Models\HourAllocatedType.cs" />
+    <Compile Include="Models\EntityType.cs" />
+    <Compile Include="Models\PeriodType.cs" />
     <Compile Include="Models\ViewModels\AsignacionCursoProfesorViewModel.cs" />
     <Compile Include="Models\ViewModels\CursoViewModel.cs" />
+    <Compile Include="Models\ViewModels\GroupsCreatedViewModel.cs" />
     <Compile Include="Models\ViewModels\PlazaViewModel.cs" />
     <Compile Include="Models\ViewModels\ProfesorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -425,6 +434,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508272109401_fix-grupo.resx">
       <DependentUpon>201508272109401_fix-grupo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508290538219_names.resx">
+      <DependentUpon>201508290538219_names.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508290623285_sede-fix.resx">
+      <DependentUpon>201508290623285_sede-fix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

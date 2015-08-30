@@ -9,8 +9,9 @@ namespace SACAAE.Models
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public int GroupEnum { get; set; }
 
-        public virtual ICollection<Aula> Aulas { get; set; }
-        public virtual ICollection<PlanDeEstudioXSede> PlanesDeEstudioXSedes { get; set; }
+        public virtual ICollection<Classroom> Classrooms { get; set; }
+        public virtual ICollection<StudyPlanXSede> StudyPlansXSedes { get; set; }
     }
 }

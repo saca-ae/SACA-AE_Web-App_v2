@@ -130,7 +130,7 @@ namespace SACAAE.Migrations
                 .PrimaryKey(t => t.ID);
             
             CreateTable(
-                "dbo.PlanDeEstudioXSede",
+                "dbo.StudyPlanXSede",
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
@@ -449,8 +449,8 @@ namespace SACAAE.Migrations
             DropForeignKey("dbo.ProyectoXProfesor", "Period", "dbo.Periodo");
             DropForeignKey("dbo.ProyectoXProfesor", "Schedule", "dbo.Horario");
             DropForeignKey("dbo.ComisionXProfesor", "Commission", "dbo.Comision");
-            DropForeignKey("dbo.PlanDeEstudioXSede", "SedeID", "dbo.Sede");
-            DropForeignKey("dbo.PlanDeEstudioXSede", "StudyPlan", "dbo.PlanDeEstudio");
+            DropForeignKey("dbo.StudyPlanXSede", "SedeID", "dbo.Sede");
+            DropForeignKey("dbo.StudyPlanXSede", "StudyPlan", "dbo.PlanDeEstudio");
             DropForeignKey("dbo.PlanDeEstudio", "Mode", "dbo.Modalidad");
             DropForeignKey("dbo.BloqueAcademicoXPlanDeEstudio", "BlockID", "dbo.BloqueAcademico");
             DropForeignKey("dbo.GrupoAula", "Classroom", "dbo.Aula");
@@ -477,8 +477,8 @@ namespace SACAAE.Migrations
             DropIndex("dbo.ComisionXProfesor", new[] { "Commission" });
             DropIndex("dbo.Comision", new[] { "EntityType" });
             DropIndex("dbo.Comision", new[] { "State" });
-            DropIndex("dbo.PlanDeEstudioXSede", new[] { "StudyPlan" });
-            DropIndex("dbo.PlanDeEstudioXSede", new[] { "SedeID" });
+            DropIndex("dbo.StudyPlanXSede", new[] { "StudyPlan" });
+            DropIndex("dbo.StudyPlanXSede", new[] { "SedeID" });
             DropIndex("dbo.PlanDeEstudio", new[] { "EntityType" });
             DropIndex("dbo.PlanDeEstudio", new[] { "Mode" });
             DropIndex("dbo.BloqueAcademicoXPlanDeEstudio", new[] { "BlockID" });
@@ -512,7 +512,7 @@ namespace SACAAE.Migrations
             DropTable("dbo.Comision");
             DropTable("dbo.TipoEntidad");
             DropTable("dbo.Sede");
-            DropTable("dbo.PlanDeEstudioXSede");
+            DropTable("dbo.StudyPlanXSede");
             DropTable("dbo.Modalidad");
             DropTable("dbo.PlanDeEstudio");
             DropTable("dbo.BloqueAcademico");

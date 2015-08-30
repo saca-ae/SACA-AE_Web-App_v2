@@ -24,38 +24,35 @@ namespace SACAAE.Data_Access
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            //modelBuilder.Entity<BillingDetail>().HasKey(h => new { h.BillingDetailID, h.BillingID });
-            //modelBuilder.Entity<TicketMessage>().HasKey(h => new { h.TicketMessageID, h.TicketID });
-
             base.OnModelCreating(modelBuilder);
         }
 
         //Tables
-        public DbSet<Aula> Aulas { get; set; }
-        public DbSet<BloqueAcademico> BloquesAcademicos { get; set; }
-        public DbSet<BloqueAcademicoXPlanDeEstudio> BloquesAcademicosXPlanesDeEstudio { get; set; }
-        public DbSet<BloqueXPlanXCurso> BloquesXPlanesXCursos { get; set; }
-        public DbSet<Comision> Comisiones { get; set; }
-        public DbSet<ComisionXProfesor> ComisionesXProfesores { get; set; }
-        public DbSet<Curso> Cursos { get; set; }
-        public DbSet<Estado> Estados { get; set; }
-        public DbSet<Grupo> Grupos { get; set; }
-        public DbSet<Horario> Horarios { get; set; }
-        public DbSet<Modalidad> Modalidades { get; set; }
-        public DbSet<Periodo> Periodos { get; set; }
-        public DbSet<TipoPeriodo> TiposPeriodo { get; set; }
-        public DbSet<NumeroPeriodo> PeriodoAño { get; set; }
-        public DbSet<PlanDeEstudio> PlanesDeEstudio { get; set; }
-        public DbSet<PlanDeEstudioXSede> PlanesDeEstudioXSedes { get; set; }
-        public DbSet<Proyecto> Proyectos { get; set; }
-        public DbSet<ProyectoXProfesor> ProyectosXProfesores { get; set; }
+        public DbSet<Classroom> Classrooms { get; set; }
+        public DbSet<AcademicBlock> AcademicBlocks { get; set; }
+        public DbSet<AcademicBlockXStudyPlan> AcademicBlocksXStudyPlans { get; set; }
+        public DbSet<BlockXPlanXCourse> BlocksXPlansXCourses { get; set; }
+        public DbSet<Commission> Commissions { get; set; }
+        public DbSet<CommissionXProfessor> CommissionsXProfessors { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<State> States { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<Modality> Modalities { get; set; }
+        public DbSet<Period> Periods { get; set; }
+        public DbSet<PeriodType> PeriodTypes { get; set; }
+        public DbSet<PeriodNumber> PeriodNumbers { get; set; }
+        public DbSet<StudyPlan> StudyPlans { get; set; }
+        public DbSet<StudyPlanXSede> StudyPlansXSedes { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectXProfessor> ProjectsXProfessors { get; set; }
         public DbSet<Sede> Sedes { get; set; }
         public DbSet<Plaza> Plazas { get; set; }
-        public DbSet<PlazaXProfesor> PlazasXProfesores { get; set; }
-        public DbSet<Profesor> Profesores { get; set; }
-        public DbSet<TipoEntidad> TipoEntidades { get; set; }
-        public DbSet<TipoAsignacionProfesor> TipoAsignacionesProfesores { get; set; }
-        public DbSet<GrupoAula> GrupoAula { get; set; }
+        public DbSet<PlazaXProfessor> PlazasXProfessors { get; set; }
+        public DbSet<Professor> Professors { get; set; }
+        public DbSet<EntityType> EntityTypes { get; set; }
+        public DbSet<HourAllocatedType> HourAllocatedTypes { get; set; }
+        public DbSet<GroupClassroom> GroupClassrooms { get; set; }
     }
 }
 /*
