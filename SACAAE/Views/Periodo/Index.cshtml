@@ -7,66 +7,77 @@
 
 @section scripts {
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('#indexTable').DataTable({
-                "language": {
-                    url: "/Content/DataTables/Spanish.json",
-                },
-                responsive: true
-            });
+    $(document).ready(function () {
+        $('#indexTable').DataTable({
+            "language": {
+                url: "/Content/DataTables/Spanish.json",
+            },
+            responsive: true
         });
+    });
+
+    function setCookie(cname, cvalue, exdays) {
+        document.cookie = cname + "=" + cvalue + "; path=/";
+    }
+
+    function savePeriod() {
+        setCookie("Periodo", '@ViewBag.IdPeriod', { path: '/' });
+        }
+
     </script>
 }
 
-<h1 class="page-header">Nuevo Período</h1>
+<body onload="savePeriod()">
+    <h1 class="page-header">Nuevo Período</h1>
 
-@if (TempData.ContainsKey("MessageError"))
-{
-    <p class="text-danger">@TempData["MessageError"].ToString()</p>
-}
-@if (TempData.ContainsKey("MessageSuccess"))
-{
-    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
-}
+    @if (TempData.ContainsKey("MessageError"))
+    {
+        <p class="text-danger">@TempData["MessageError"].ToString()</p>
+    }
+    @if (TempData.ContainsKey("MessageSuccess"))
+    {
+        <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+    }
 
-<p> Periodo Creado : @ViewBag.Period </p>
+    <p> Periodo Creado : @ViewBag.Period </p>
 
-<div class="dataTables_wrapper">
-    <table class="table  table-hover" id="indexTable">
-        <thead>
-            <tr>
-                <th>
-                    Grupo
-                </th>
-                <th>
-                    Curso
-                </th>
-                <th>
-                    Plan de Estudios
-                </th>
-                <th> 
-                    Sede
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="dataTables_wrapper">
+        <table class="table  table-hover" id="indexTable">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Grupo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Curso)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PlandeEstudios)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Sede)
-                    </td>
+                    <th>
+                        Grupo
+                    </th>
+                    <th>
+                        Curso
+                    </th>
+                    <th>
+                        Plan de Estudios
+                    </th>
+                    <th>
+                        Sede
+                    </th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Grupo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Curso)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PlandeEstudios)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Sede)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
