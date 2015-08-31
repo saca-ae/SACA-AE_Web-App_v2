@@ -33,22 +33,22 @@ namespace SACAAE.Controllers
         /// <summary>
         /// Details from a specific plaza and allocation of professors
         /// </summary>
-        /// <param name="id">Plaza's id</param>
+        /// <param name="pID">Plaza's id</param>
         /// <returns></returns>
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? pID)
         {
-            if (id == null)
+            if (pID == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plaza plaza = db.Plazas.Find(id);
-            if (plaza == null)
+            Plaza vPlaza = db.Plazas.Find(pID);
+            if (vPlaza == null)
             {
                 return HttpNotFound();
             }
-            var PPList = plaza.PlazasXProfessors.ToList();
-            var professors = new List<PlazaAllocateProfessor>();
-            PPList.ForEach(p => professors.Add(new PlazaAllocateProfessor()
+            var vPlazaProfessorList = vPlaza.PlazasXProfessors.ToList();
+            var vProfessors = new List<PlazaAllocateProfessor>();
+            vPlazaProfessorList.ForEach(p => vProfessors.Add(new PlazaAllocateProfessor()
             {
                 ID = p.ProfessorID,
                 Name = p.Professor.Name,
@@ -57,14 +57,14 @@ namespace SACAAE.Controllers
 
             var viewModel = new PlazaDetailViewModel()
             {
-                ID = plaza.ID,
-                Code = plaza.Code,
-                PlazaType = plaza.PlazaType,
-                TimeType = plaza.TimeType,
-                TotalHours = plaza.TotalHours.GetValueOrDefault(),
-                EffectiveTime = plaza.EffectiveTime.GetValueOrDefault(),
-                TotalAllocate = sumAllocate(professors),
-                Professors = professors
+                ID = vPlaza.ID,
+                Code = vPlaza.Code,
+                PlazaType = vPlaza.PlazaType,
+                TimeType = vPlaza.TimeType,
+                TotalHours = vPlaza.TotalHours.GetValueOrDefault(),
+                EffectiveTime = vPlaza.EffectiveTime.GetValueOrDefault(),
+                TotalAllocate = sumAllocate(vProfessors),
+                Professors = vProfessors
             };
 
             return View(viewModel);
@@ -100,7 +100,7 @@ namespace SACAAE.Controllers
         {
             if (ModelState.IsValid)
             {
-                var plaza = new Plaza()
+                var vPlaza = new Plaza()
                 {
                     Code = viewModel.Code,
                     PlazaType = viewModel.PlazaType,
@@ -109,7 +109,7 @@ namespace SACAAE.Controllers
                     EffectiveTime = viewModel.EffectiveTime
                 };
 
-                db.Plazas.Add(plaza);
+                db.Plazas.Add(vPlaza);
                 db.SaveChanges();
 
                 TempData[TempDataMessageKeySuccess] = "Plaza creada exitosamente";
@@ -124,29 +124,29 @@ namespace SACAAE.Controllers
         /// <summary>
         /// Initialize the view to edit a plaza
         /// </summary>
-        /// <param name="id">Plaza's id</param>
+        /// <param name="pID">Plaza's id</param>
         /// <returns></returns>
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? pID)
         {
-            if (id == null)
+            if (pID == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plaza plaza = db.Plazas.Find(id);
-            if (plaza == null)
+            Plaza vPlaza = db.Plazas.Find(pID);
+            if (vPlaza == null)
             {
                 return HttpNotFound();
             }
             var viewModel = new PlazaEditViewModel()
             {
-                ID = plaza.ID,
-                Code = plaza.Code,
-                PlazaType = plaza.PlazaType,
+                ID = vPlaza.ID,
+                Code = vPlaza.Code,
+                PlazaType = vPlaza.PlazaType,
                 PlazaTypeList = new SelectList(new List<string>() { "Interna", "Externa" }),
-                TimeType = plaza.TimeType,
+                TimeType = vPlaza.TimeType,
                 TimeTypeList = new SelectList(new List<string>() { "Completo", "Parcial" }),
-                TotalHours = plaza.TotalHours.GetValueOrDefault(),
-                EffectiveTime = plaza.EffectiveTime.GetValueOrDefault()
+                TotalHours = vPlaza.TotalHours.GetValueOrDefault(),
+                EffectiveTime = vPlaza.EffectiveTime.GetValueOrDefault()
             };
 
             return View(viewModel);
@@ -165,14 +165,14 @@ namespace SACAAE.Controllers
         {
             if (ModelState.IsValid)
             {
-                var plaza = db.Plazas.Find(viewModel.ID);
-                plaza.Code = viewModel.Code;
-                plaza.PlazaType = viewModel.PlazaType;
-                plaza.TimeType = viewModel.TimeType;
-                plaza.TotalHours = viewModel.TotalHours;
-                plaza.EffectiveTime = viewModel.EffectiveTime;
+                var vPlaza = db.Plazas.Find(viewModel.ID);
+                vPlaza.Code = viewModel.Code;
+                vPlaza.PlazaType = viewModel.PlazaType;
+                vPlaza.TimeType = viewModel.TimeType;
+                vPlaza.TotalHours = viewModel.TotalHours;
+                vPlaza.EffectiveTime = viewModel.EffectiveTime;
 
-                db.Entry(plaza).State = EntityState.Modified;
+                db.Entry(vPlaza).State = EntityState.Modified;
                 db.SaveChanges();
 
                 TempData[TempDataMessageKeySuccess] = "Plaza editada exitosamente";
@@ -186,14 +186,14 @@ namespace SACAAE.Controllers
         /// <summary>
         /// Delete a plaza from the system
         /// </summary>
-        /// <param name="id">Plaza's id</param>
+        /// <param name="pID">Plaza's id</param>
         /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int pID)
         {
-            Plaza plaza = db.Plazas.Find(id);
-            db.Plazas.Remove(plaza);
+            Plaza vPlaza = db.Plazas.Find(pID);
+            db.Plazas.Remove(vPlaza);
             db.SaveChanges();
 
             TempData[TempDataMessageKeySuccess] = "Plaza eliminada exitosamente";
@@ -205,22 +205,22 @@ namespace SACAAE.Controllers
         /// <summary>
         /// Initialize the view to allocate professors to a plaza
         /// </summary>
-        /// <param name="id">Plaza's id</param>
+        /// <param name="pID">Plaza's id</param>
         /// <returns></returns>
-        public ActionResult Allocate(int? id)
+        public ActionResult Allocate(int? pID)
         {
-            if (id == null)
+            if (pID == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plaza plaza = db.Plazas.Find(id);
-            if (plaza == null)
+            Plaza vPlaza = db.Plazas.Find(pID);
+            if (vPlaza == null)
             {
                 return HttpNotFound();
             }
-            var PPList = plaza.PlazasXProfessors.ToList();
-            var professors = new List<PlazaAllocateProfessor>();
-            PPList.ForEach(p => professors.Add(new PlazaAllocateProfessor()
+            var vPlazaProfesorList = vPlaza.PlazasXProfessors.ToList();
+            var vProfessors = new List<PlazaAllocateProfessor>();
+            vPlazaProfesorList.ForEach(p => vProfessors.Add(new PlazaAllocateProfessor()
             {
                 ID = p.ProfessorID,
                 Name = p.Professor.Name,
@@ -229,9 +229,9 @@ namespace SACAAE.Controllers
 
             var viewModel = new PlazaAllocateViewModel()
             {
-                ID = plaza.ID,
-                TotalAllocate = sumAllocate(professors),
-                Professors = professors
+                ID = vPlaza.ID,
+                TotalAllocate = sumAllocate(vProfessors),
+                Professors = vProfessors
             };
 
             return View(viewModel);
@@ -248,12 +248,12 @@ namespace SACAAE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Allocate(PlazaAllocateViewModel viewModel)
         {
-            var plaza = db.Plazas.Find(viewModel.ID);
-            var newProfe = viewModel.Professors.Last();
-            plaza.PlazasXProfessors.Add(new PlazaXProfessor()
+            var vPlaza = db.Plazas.Find(viewModel.ID);
+            var vNewProfe = viewModel.Professors.Last();
+            vPlaza.PlazasXProfessors.Add(new PlazaXProfessor()
             {
-                ProfessorID = newProfe.ID,
-                PercentHours = newProfe.Allocate
+                ProfessorID = vNewProfe.ID,
+                PercentHours = vNewProfe.Allocate
             });
             db.SaveChanges();
             
@@ -271,12 +271,12 @@ namespace SACAAE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditAllocate(PlazaAllocateViewModel viewModel)
         {
-            var plazaID = viewModel.ID;
-            var profeID = viewModel.Professors[0].ID;
-            var PxP = db.PlazasXProfessors.Where(p => p.PlazaID == plazaID && p.ProfessorID == profeID).Single();
-            PxP.PercentHours = viewModel.Professors[0].Allocate;
+            var vPlazaID = viewModel.ID;
+            var vProfeID = viewModel.Professors[0].ID;
+            var vPlazaProfessor = db.PlazasXProfessors.Where(p => p.PlazaID == vPlazaID && p.ProfessorID == vProfeID).Single();
+            vPlazaProfessor.PercentHours = viewModel.Professors[0].Allocate;
 
-            db.Entry(PxP).State = EntityState.Modified;
+            db.Entry(vPlazaProfessor).State = EntityState.Modified;
             db.SaveChanges();
 
             return RedirectToAction("Allocate", new { id = viewModel.ID });
@@ -293,11 +293,11 @@ namespace SACAAE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteAllocate(PlazaAllocateViewModel viewModel)
         {
-            var plazaID = viewModel.ID;
-            var profeID = viewModel.Professors[0].ID;
-            var PxP = db.PlazasXProfessors.Where(p => p.PlazaID == plazaID && p.ProfessorID == profeID).Single();
+            var vPlazaID = viewModel.ID;
+            var vProfeID = viewModel.Professors[0].ID;
+            var vPlazaProfessor = db.PlazasXProfessors.Where(p => p.PlazaID == vPlazaID && p.ProfessorID == vProfeID).Single();
 
-            db.PlazasXProfessors.Remove(PxP);
+            db.PlazasXProfessors.Remove(vPlazaProfessor);
             db.SaveChanges();
 
             return RedirectToAction("Allocate", new { id = viewModel.ID });
@@ -324,9 +324,9 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var plazaProfes = db.Plazas.Find(pPlaza).PlazasXProfessors.Select(p => p.Professor).ToList();
-                var listaProfes = db.Professors.ToList();
-                var json = listaProfes.Except(plazaProfes).Select(p => new { p.ID, p.Name });
+                var vPlazaProfes = db.Plazas.Find(pPlaza).PlazasXProfessors.Select(p => p.Professor).ToList();
+                var vProfesList = db.Professors.ToList();
+                var json = vProfesList.Except(vPlazaProfes).Select(p => new { p.ID, p.Name });
 
                 return Json(json, JsonRequestBehavior.AllowGet);
             }
@@ -343,12 +343,12 @@ namespace SACAAE.Controllers
         /// <returns></returns>
         private int sumAllocate(List<PlazaAllocateProfessor> pPlazaProfessorList)
         {
-            var result = 0;
+            var vResult = 0;
             for (var i = 0; i < pPlazaProfessorList.Count; i++)
             {
-                result += pPlazaProfessorList[i].Allocate;
+                vResult += pPlazaProfessorList[i].Allocate;
             }
-            return result;
+            return vResult;
         }
         #endregion 
     }
