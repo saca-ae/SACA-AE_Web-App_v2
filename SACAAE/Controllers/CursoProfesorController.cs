@@ -294,6 +294,8 @@ namespace SACAAE.Controllers
             if (HttpContext.Request.IsAjaxRequest())
             {
                 var json="";
+                var vPeriod = Request.Cookies["Periodo"].Value;
+                var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
                 var vListGroupCourseLeft = (from course in db.Courses
                                    join block_plan_course in db.BlocksXPlansXCourses on course.ID equals block_plan_course.CourseID
                                    join groups in db.Groups on block_plan_course.ID equals groups.BlockXPlanXCourseID
@@ -303,7 +305,7 @@ namespace SACAAE.Controllers
                                    join group_classroom in db.GroupClassrooms on groups.ID equals group_classroom.GroupID
                                    join schedule in db.Schedules on group_classroom.ScheduleID equals schedule.ID
                                    join classroom in db.Classrooms on group_classroom.ClassroomID equals classroom.ID
-                                   where course.ID == pIDCurso && sede.ID == pSede
+                                   where course.ID == pIDCurso && sede.ID == pSede&&period.ID==vIDPeriod
                                             select new { groups.ID, groups.Number, sede_name = sede.Name, Name = "", classroom.Code, schedule.StartHour, schedule.EndHour, schedule.Day }).ToList();
                 
                 var vListGroupCourseRight = (from course in db.Courses
@@ -312,7 +314,7 @@ namespace SACAAE.Controllers
                                            join period in db.Periods on groups.PeriodID equals period.ID
                                            join sede in db.Sedes on block_plan_course.SedeID equals sede.ID
                                            join professor in db.Professors on groups.ProfessorID equals professor.ID
-                                           where course.ID == pIDCurso && sede.ID == pSede
+                                             where course.ID == pIDCurso && sede.ID == pSede && period.ID == vIDPeriod
                                              select new { groups.ID, groups.Number, sede_name = sede.Name, professor.Name, Code="", StartHour="", EndHour="", Day =""}).ToList();
                 /*
                 if (vListGroupCourseLeft.Count != 0 && vListGroupCourseRight.Count != 0)
