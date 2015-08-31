@@ -157,105 +157,117 @@ function obtener_dias(data) {
 
 
         //1 Lunes
-        if (lunes == 0) {
-            if (data[posicion_datos][0] == 1 && data[posicion_datos][1] == i) {
-                info_temp = info_temp + "<td  id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\">" + data[posicion_datos][3] + "</br> Grupo: " +
-                                                                                             data[posicion_datos][4] + "</td >";
-                if (data[posicion_datos][2] > 1)
-                    lunes = data[posicion_datos][2];
+        if (cantidad_datos != 0)
+        {
+            if (lunes == 0) {
+                if (data[posicion_datos][0] == 1 && data[posicion_datos][1] == i) {
+                    info_temp = info_temp + "<td  id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\">" + data[posicion_datos][3] + "</br> Grupo: " +
+                                                                                                 data[posicion_datos][4] + "</td >";
+                    if (data[posicion_datos][2] > 1)
+                        lunes = data[posicion_datos][2];
 
-                if (posicion_datos < (cantidad_datos - 1))
-                    posicion_datos = posicion_datos + 1;
+                    if (posicion_datos < (cantidad_datos - 1))
+                        posicion_datos = posicion_datos + 1;
+                }
+                else {
+                    info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
+                    "</td >";
+                }
             }
-            else {
-                info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
-                "</td >";
+            //2 Martes
+            if (martes == 0) {
+                if (data[posicion_datos][0] == 2 && data[posicion_datos][1] == i) {
+                    info_temp = info_temp + "<td id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\">" + data[posicion_datos][3] + "</br> Grupo: " +
+                                                                                                 data[posicion_datos][4] + "</td >";
+                    "</td >";
+                    if (data[posicion_datos][2] > 1)
+                        martes = data[posicion_datos][2];
+
+                    if (posicion_datos < (cantidad_datos - 1))
+                        posicion_datos = posicion_datos + 1;
+                }
+                else {
+                    info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
+                    "</td >";
+                }
+            }
+            //3 Miercoles
+            if (miercoles == 0) {
+                if (data[posicion_datos][0] == 3 && data[posicion_datos][1] == i) {
+                    info_temp = info_temp + "<td  id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\" >" + data[posicion_datos][3] + "</br> Grupo: " +
+                                                                                                 data[posicion_datos][4] + "</td >";
+                    "</td >";
+                    if (data[posicion_datos][2] > 1)
+                        miercoles = data[posicion_datos][2];
+
+                    if (posicion_datos < (cantidad_datos - 1))
+                        posicion_datos = posicion_datos + 1;
+                }
+                else {
+                    info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
+                    "</td >";
+                }
+            }
+            //4 Jueves
+            if (jueves == 0) {
+                if (data[posicion_datos][0] == 4 && data[posicion_datos][1] == i) {
+                    info_temp = info_temp + "<td  id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\">" + data[posicion_datos][3] + "</br> Grupo: " +
+                                                                                                 data[posicion_datos][4] + "</td >";
+                    "</td >";
+                    if (data[posicion_datos][2] > 1)
+                        jueves = data[posicion_datos][2];
+
+                    if (posicion_datos < (cantidad_datos - 1))
+                        posicion_datos = posicion_datos + 1;
+                }
+                else {
+                    info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
+                     "</td >";
+                }
+            }
+            //5 Viernes
+            if (viernes == 0) {
+                if (data[posicion_datos][0] == 5 && data[posicion_datos][1] == i) {
+                    info_temp = info_temp + "<td id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\">" + data[posicion_datos][3] + "</br> Grupo: " +
+                                                                                                 data[posicion_datos][4] + "</td >";
+                    "</td >";
+                    if (data[posicion_datos][2] > 1)
+                        viernes = data[posicion_datos][2];
+
+                    if (posicion_datos < (cantidad_datos - 1))
+                        posicion_datos = posicion_datos + 1;
+                }
+                else {
+                    info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
+                    "</td >";
+                }
+            }
+            //6 Sabado
+            if (sabado == 0) {
+                if (data[posicion_datos][0] == 6 && data[posicion_datos][1] == i) {
+                    info_temp = info_temp + "<td id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\" >" + data[posicion_datos][3] + "</br> Grupo: " +
+                                                                                                 data[posicion_datos][4] + "</td >";
+                    "</td >";
+                    if (data[posicion_datos][2] > 1)
+                        sabado = data[posicion_datos][2];
+
+                    if (posicion_datos < (cantidad_datos - 1))
+                        posicion_datos = posicion_datos + 1;
+                }
+                else {
+                    info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
+                    "</td >";
+                }
             }
         }
-        //2 Martes
-        if (martes == 0) {
-            if (data[posicion_datos][0] == 2 && data[posicion_datos][1] == i) {
-                info_temp = info_temp + "<td id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\">" + data[posicion_datos][3] + "</br> Grupo: " +
-                                                                                             data[posicion_datos][4] + "</td >";
-                "</td >";
-                if (data[posicion_datos][2] > 1)
-                    martes = data[posicion_datos][2];
-
-                if (posicion_datos < (cantidad_datos - 1))
-                    posicion_datos = posicion_datos + 1;
-            }
-            else {
-                info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
-                "</td >";
-            }
-        }
-        //3 Miercoles
-        if (miercoles == 0) {
-            if (data[posicion_datos][0] == 3 && data[posicion_datos][1] == i) {
-                info_temp = info_temp + "<td  id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\" >" + data[posicion_datos][3] + "</br> Grupo: " +
-                                                                                             data[posicion_datos][4] + "</td >";
-                "</td >";
-                if (data[posicion_datos][2] > 1)
-                    miercoles = data[posicion_datos][2];
-
-                if (posicion_datos < (cantidad_datos - 1))
-                    posicion_datos = posicion_datos + 1;
-            }
-            else {
-                info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
-                "</td >";
-            }
-        }
-        //4 Jueves
-        if (jueves == 0) {
-            if (data[posicion_datos][0] == 4 && data[posicion_datos][1] == i) {
-                info_temp = info_temp + "<td  id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\">" + data[posicion_datos][3] + "</br> Grupo: " +
-                                                                                             data[posicion_datos][4] + "</td >";
-                "</td >";
-                if (data[posicion_datos][2] > 1)
-                    jueves = data[posicion_datos][2];
-
-                if (posicion_datos < (cantidad_datos - 1))
-                    posicion_datos = posicion_datos + 1;
-            }
-            else {
-                info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
-                 "</td >";
-            }
-        }
-        //5 Viernes
-        if (viernes == 0) {
-            if (data[posicion_datos][0] == 5 && data[posicion_datos][1] == i) {
-                info_temp = info_temp + "<td id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\">" + data[posicion_datos][3] + "</br> Grupo: " +
-                                                                                             data[posicion_datos][4] + "</td >";
-                "</td >";
-                if (data[posicion_datos][2] > 1)
-                    viernes = data[posicion_datos][2];
-
-                if (posicion_datos < (cantidad_datos - 1))
-                    posicion_datos = posicion_datos + 1;
-            }
-            else {
-                info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
-                "</td >";
-            }
-        }
-        //6 Sabado
-        if (sabado == 0) {
-            if (data[posicion_datos][0] == 6 && data[posicion_datos][1] == i) {
-                info_temp = info_temp + "<td id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\" >" + data[posicion_datos][3] + "</br> Grupo: " +
-                                                                                             data[posicion_datos][4] + "</td >";
-                "</td >";
-                if (data[posicion_datos][2] > 1)
-                    sabado = data[posicion_datos][2];
-
-                if (posicion_datos < (cantidad_datos - 1))
-                    posicion_datos = posicion_datos + 1;
-            }
-            else {
-                info_temp = info_temp + "<td class=\"tabla_horario_td\" >" +
-                "</td >";
-            }
+        else
+        {
+            info_temp = info_temp + "<td class=\"tabla_horario_td\" ></td >";
+            info_temp = info_temp + "<td class=\"tabla_horario_td\" ></td >";
+            info_temp = info_temp + "<td class=\"tabla_horario_td\" ></td >";
+            info_temp = info_temp + "<td class=\"tabla_horario_td\" ></td >";
+            info_temp = info_temp + "<td class=\"tabla_horario_td\" ></td >";
+            info_temp = info_temp + "<td class=\"tabla_horario_td\" ></td >";
         }
         info_temp = info_temp + "</tr>";
         body_table = body_table + info_temp;

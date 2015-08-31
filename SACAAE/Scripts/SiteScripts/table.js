@@ -11,6 +11,7 @@ function generate_table(route)
         "<thead>" +
             "<th>Grupo</th>" +
             "<th>Nombre Profesor</th>" +
+            "<th>Sede</th>"+
             "<th>Inicio</th>" +
             "<th>Fin</th>" +
             "<th>Aula</th>" +
@@ -26,6 +27,7 @@ function generate_table(route)
                         tabla = tabla + "<tr>" +
                         "<td rowspan=\"2\">" + data[i].Number + "</td>" +
                         "<td rowspan=\"2\">" + data[i].Name + "</td>" +
+                      "<td rowspan=\"2\">"+data[i].sede_name+"</td>"+
                         "<td>" + data[i].StartHour + "</td>" +
                         "<td>" + data[i].EndHour + "</td>" +
                         "<td>" + data[i].Code + "</td>" +
@@ -40,6 +42,7 @@ function generate_table(route)
                                 "</tr>" +
 
                                 "<tr>" +
+                                    "<td>"+ data[i+1].sede_name+"</td>"+
                                     "<td>" + data[i + 1].StartHour + "</td>" +
                                     "<td>" + data[i + 1].EndHour + "</td>" +
                                     "<td>" + data[i + 1].Code + "</td>" +
@@ -53,14 +56,16 @@ function generate_table(route)
                         tabla = tabla + "<tr>" +
                         "<td>" + data[i].Number + "</td>" +
                         "<td>" + data[i].Name + "</td>" +
+                        "<td>" + data[i].sede_name + "</td>" +
                         "<td>" + data[i].StartHour + "</td>" +
                         "<td>" + data[i].EndHour + "</td>" +
                         "<td>" + data[i].Code + "</td>" +
                         "<td>" + data[i].Day + "</td>" +
                         "<td>" +
-                            "<a onclick=ver_detalle_grupo(" + data[i].ID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                "<a title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                " <a title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                             "<a onclick=ver_detalle_grupo(" + data[i].ID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                "<a onclick=editar_asignacion_grupo(" + data[i].ID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                    "<a href=\"\"  onclick = init_delete(" + data[i].ID + ") data-toggle=\"modal\" data-target=\"#deleteModal\" title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                                // "<a onclick=eliminar_asignacion_grupo(" + data[i].ID + ") title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
                             "</td> " +
                         "</tr>";
 
@@ -71,15 +76,16 @@ function generate_table(route)
                     tabla = tabla + "<tr>" +
                     "<td>" + data[i].Number + "</td>" +
                     "<td>" + data[i].Name + "</td>" +
+                    "<td>" + data[i].sede_name + "</td>" +
                     "<td>" + data[i].StartHour + "</td>" +
                     "<td>" + data[i].EndHour + "</td>" +
                     "<td>" + data[i].Code + "</td>" +
                     "<td>" + data[i].Day + "</td>" +
                     "<td>" +
-                            "<a onclick= ver_detalle_grupo(" + data[i].ID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
-                            "<a title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
-
-                            " <a title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                             "<a onclick=ver_detalle_grupo(" + data[i].ID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                "<a onclick=editar_asignacion_grupo(" + data[i].ID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                    "<a href=\"\"  onclick = init_delete(" + data[i].ID + ") data-toggle=\"modal\" data-target=\"#deleteModal\" title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                                // "<a onclick=eliminar_asignacion_grupo(" + data[i].ID + ") title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
                         "</td> " +
                     "</tr>";
 
@@ -99,9 +105,11 @@ function generate_table(route)
                         "<td></td>" +
                         "<td></td>" +
                         "<td></td>" +
+                        "<td></td>" +
                         "<td></td> " +
                     "</tr>" +
                 "<tr>" +
+                        "<td></td>" +
                         "<td></td>" +
                         "<td></td>" +
                         "<td></td>" +
@@ -152,13 +160,27 @@ function generate_table_schedule_group(route2) {
             document.getElementById('table_schedule_group').innerHTML = tabla;
         }
         else {
-
-
+            var tabla = "<table id=\"profesores_asignados_a_curso\" >" +
+               "<thead>" +
+                   "<th>Dia</th>" +
+                   "<th>Hora Inicio</th>" +
+                   "<th>Hora Fin</th>" +
+                   "<th>Aula</th>" +
+               "</thead> " +
+               "<tr>" +
+              "<td>-</td>" +
+                "<td>-</td>" +
+               "<td>-</td>" +
+                "<td>-</td>" +
+                "</tr>"+
+                "<tr>" +
+              "<td>-</td>" +
+                "<td>-</td>" +
+               "<td>-</td>" +
+                "<td>-</td>" +
+                "</tr>";;
+            tabla = tabla + "</tbody> </table>";
+            document.getElementById('table_schedule_group').innerHTML = tabla;
         }
     });
-}
-
-generate_graphic_schedule(route)
-{
-
 }
