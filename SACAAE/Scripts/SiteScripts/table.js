@@ -27,7 +27,7 @@ function generate_table(route)
                         tabla = tabla + "<tr>" +
                         "<td rowspan=\"2\">" + data[i].Number + "</td>" +
                         "<td rowspan=\"2\">" + data[i].Name + "</td>" +
-                      "<td rowspan=\"2\">"+data[i].sede_name+"</td>"+
+                      "<td>"+data[i].sede_name+"</td>"+
                         "<td>" + data[i].StartHour + "</td>" +
                         "<td>" + data[i].EndHour + "</td>" +
                         "<td>" + data[i].Code + "</td>" +
@@ -132,8 +132,8 @@ function generate_table(route)
 /// <param name="route"> Ruta donde buscar la informacion</param>
 /// <returns>None</returns>
 function generate_table_schedule_group(route2) {
-
-    var tabla = "<table id=\"profesores_asignados_a_curso\" >" +
+    var tabla = "";
+    var tabla_head = "<table id=\"profesores_asignados_a_curso\" >" +
    "<thead>" +
        "<th>Dia</th>" +
        "<th>Hora Inicio</th>" +
@@ -157,7 +157,7 @@ function generate_table_schedule_group(route2) {
 
             tabla = tabla + "</tbody> </table>";
 
-            document.getElementById('table_schedule_group').innerHTML = tabla;
+            document.getElementById('table_schedule_group').innerHTML = tabla_head+tabla;
         }
         else {
             var tabla = "<table id=\"profesores_asignados_a_curso\" >" +
