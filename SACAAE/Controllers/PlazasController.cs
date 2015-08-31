@@ -1,4 +1,5 @@
-﻿using SACAAE.Data_Access;
+﻿using Newtonsoft.Json;
+using SACAAE.Data_Access;
 using SACAAE.Models;
 using SACAAE.Models.ViewModels;
 using System.Collections.Generic;
@@ -33,15 +34,15 @@ namespace SACAAE.Controllers
         /// <summary>
         /// Details from a specific plaza and allocation of professors
         /// </summary>
-        /// <param name="pID">Plaza's id</param>
+        /// <param name="id">Plaza's id</param>
         /// <returns></returns>
-        public ActionResult Details(int? pID)
+        public ActionResult Details(int? id)
         {
-            if (pID == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plaza vPlaza = db.Plazas.Find(pID);
+            Plaza vPlaza = db.Plazas.Find(id);
             if (vPlaza == null)
             {
                 return HttpNotFound();
@@ -124,15 +125,15 @@ namespace SACAAE.Controllers
         /// <summary>
         /// Initialize the view to edit a plaza
         /// </summary>
-        /// <param name="pID">Plaza's id</param>
+        /// <param name="id">Plaza's id</param>
         /// <returns></returns>
-        public ActionResult Edit(int? pID)
+        public ActionResult Edit(int? id)
         {
-            if (pID == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plaza vPlaza = db.Plazas.Find(pID);
+            Plaza vPlaza = db.Plazas.Find(id);
             if (vPlaza == null)
             {
                 return HttpNotFound();
@@ -186,13 +187,13 @@ namespace SACAAE.Controllers
         /// <summary>
         /// Delete a plaza from the system
         /// </summary>
-        /// <param name="pID">Plaza's id</param>
+        /// <param name="id">Plaza's id</param>
         /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int pID)
+        public ActionResult DeleteConfirmed(int id)
         {
-            Plaza vPlaza = db.Plazas.Find(pID);
+            Plaza vPlaza = db.Plazas.Find(id);
             db.Plazas.Remove(vPlaza);
             db.SaveChanges();
 
@@ -205,15 +206,15 @@ namespace SACAAE.Controllers
         /// <summary>
         /// Initialize the view to allocate professors to a plaza
         /// </summary>
-        /// <param name="pID">Plaza's id</param>
+        /// <param name="id">Plaza's id</param>
         /// <returns></returns>
-        public ActionResult Allocate(int? pID)
+        public ActionResult Allocate(int? id)
         {
-            if (pID == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plaza vPlaza = db.Plazas.Find(pID);
+            Plaza vPlaza = db.Plazas.Find(id);
             if (vPlaza == null)
             {
                 return HttpNotFound();
@@ -319,7 +320,7 @@ namespace SACAAE.Controllers
         /// </summary>
         /// <param name="pPlaza">Plaza's id</param>
         /// <returns></returns>
-        [Route("Plazas/Professors/List/{plaza:int}")]
+        [Route("Plazas/Professors/List/{pPlaza:int}")]
         public ActionResult getProfessors(int pPlaza)
         {
             if (HttpContext.Request.IsAjaxRequest())

@@ -264,6 +264,7 @@
     <Compile Include="Models\Modality.cs" />
     <Compile Include="Models\Period.cs" />
     <Compile Include="Models\PeriodNumber.cs" />
+    <Compile Include="Models\StoredProcedures\ejemplo.cs" />
     <Compile Include="Models\StudyPlan.cs" />
     <Compile Include="Models\StudyPlanXSede.cs" />
     <Compile Include="Models\Plaza.cs" />
