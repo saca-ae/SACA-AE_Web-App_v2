@@ -293,31 +293,52 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var vListGroupCourse = (from course in db.Courses
+                var json="";
+                var vPeriod = Request.Cookies["Periodo"].Value;
+                var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
+                var vListGroupCourseLeft = (from course in db.Courses
                                    join block_plan_course in db.BlocksXPlansXCourses on course.ID equals block_plan_course.CourseID
                                    join groups in db.Groups on block_plan_course.ID equals groups.BlockXPlanXCourseID
                                    join period in db.Periods on groups.PeriodID equals period.ID
                                    join sede in db.Sedes on block_plan_course.SedeID equals sede.ID
-                                   join professor in db.Professors on groups.ProfessorID equals professor.ID
+                                   //join professor in db.Professors on groups.ProfessorID equals professor.ID
                                    join group_classroom in db.GroupClassrooms on groups.ID equals group_classroom.GroupID
                                    join schedule in db.Schedules on group_classroom.ScheduleID equals schedule.ID
                                    join classroom in db.Classrooms on group_classroom.ClassroomID equals classroom.ID
-                                   select new { groups.ID, groups.Number, sede_name = sede.Name,professor.Name, classroom.Code, schedule.StartHour, schedule.EndHour, schedule.Day });
-                var lista = vListGroupCourse.ToList();
-
-                /*If dont exist classroom related with a course*/
-                if(lista.Count == 0)
-                {
-                    vListGroupCourse = (from course in db.Courses
+                                   where course.ID == pIDCurso && sede.ID == pSede&&period.ID==vIDPeriod
+                                            select new { groups.ID, groups.Number, sede_name = sede.Name, Name = "", classroom.Code, schedule.StartHour, schedule.EndHour, schedule.Day }).ToList();
+                
+                var vListGroupCourseRight = (from course in db.Courses
                                            join block_plan_course in db.BlocksXPlansXCourses on course.ID equals block_plan_course.CourseID
                                            join groups in db.Groups on block_plan_course.ID equals groups.BlockXPlanXCourseID
                                            join period in db.Periods on groups.PeriodID equals period.ID
                                            join sede in db.Sedes on block_plan_course.SedeID equals sede.ID
                                            join professor in db.Professors on groups.ProfessorID equals professor.ID
-                                        select new { groups.ID, groups.Number, sede_name = sede.Name, professor.Name, Code = "-", StartHour = "-", EndHour = "-", Day = "-" });
+                                             where course.ID == pIDCurso && sede.ID == pSede && period.ID == vIDPeriod
+                                             select new { groups.ID, groups.Number, sede_name = sede.Name, professor.Name, Code="", StartHour="", EndHour="", Day =""}).ToList();
+                /*
+                if (vListGroupCourseLeft.Count != 0 && vListGroupCourseRight.Count != 0)
+                {
+                    var vInnerJoin = (from course in db.Courses
+                                    join block_plan_course in db.BlocksXPlansXCourses on course.ID equals block_plan_course.CourseID
+                                    join groups in db.Groups on block_plan_course.ID equals groups.BlockXPlanXCourseID
+                                    join period in db.Periods on groups.PeriodID equals period.ID
+                                    join sede in db.Sedes on block_plan_course.SedeID equals sede.ID
+                                    join professor in db.Professors on groups.ProfessorID equals professor.ID
+                                    join group_classroom in db.GroupClassrooms on groups.ID equals group_classroom.GroupID
+                                    join schedule in db.Schedules on group_classroom.ScheduleID equals schedule.ID
+                                    join classroom in db.Classrooms on group_classroom.ClassroomID equals classroom.ID
+                                    where course.ID == pIDCurso && sede.ID == pSede
+                                    select new { groups.ID, groups.Number, sede_name = sede.Name, professor.Name, classroom.Code, schedule.StartHour, schedule.EndHour, schedule.Day }).ToList();
+                    json = JsonConvert.SerializeObject(vInnerJoin);
+                    return Content(json);
                 }
-                var json = JsonConvert.SerializeObject(vListGroupCourse);
+                */
+               // var fullouterjoin = vListGroupCourseLeft.Union(vListGroupCourseRight).Where(p=>p.ID.Equals(p.ID)) ;
+                json = JsonConvert.SerializeObject(vListGroupCourseRight);
                 return Content(json);
+
+            
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
