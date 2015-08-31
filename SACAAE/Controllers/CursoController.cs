@@ -133,7 +133,7 @@ namespace SACAAE.Controllers
         }
 
         /// <summary>
-        ///  Show the view for assign Profesor to a Course
+        ///  Show the view for assigning Profesor to a Course
         /// </summary>
         /// <autor> Esteban Segura Benavides </autor>
         /// <param name="id"> ID of Course in database</param>
@@ -159,7 +159,7 @@ namespace SACAAE.Controllers
         }
 
         /// <summary>
-        ///  Save the assign Profesor to a Course if don't have problems with the profesor scheduler
+        ///  Saves the assign Profesor to a Course if it doesn't have problems with the profesor scheduler
         /// </summary>
         /// <autor> Esteban Segura Benavides </autor>
         /// <param name="id"> ID of Course in database</param>
@@ -172,7 +172,7 @@ namespace SACAAE.Controllers
             if (ModelState.IsValid)
             {
                 //Verify if profesor have other assign in the same day and start hour, if don't have conflict with other group in the same hour and day return true, else
-                //if found problem with other group in the same day and start hour return false and the assign is cancelled and the user recive information
+                //if found problem with other group in the same day and start hour return false and the assign is cancelled and the user receive information
                 Boolean vChoqueHorario = isScheduleProfesorValidate(Grupos_Disponibles, Profesores);
 
                 //If doesn't exist problems in the profesor schedule

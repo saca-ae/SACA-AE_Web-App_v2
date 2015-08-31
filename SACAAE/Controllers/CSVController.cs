@@ -94,7 +94,7 @@ namespace SACAAE.Controllers
 
                     }
 
-                    // Create de Object of ViewModel to show in the view.
+                    // Creates the Object of ViewModel to show in the view.
                     GroupAssignmentCSVViewModel vGA = new GroupAssignmentCSVViewModel();
                     vGA.Grupo = Convert.ToInt32(group.Grupo);
                     vGA.Profesor = group.Profesor;
@@ -132,7 +132,7 @@ namespace SACAAE.Controllers
         }
 
         /// <summary>
-        /// This function validate schedule conflict between the schedule to be assigned to group 
+        /// This function validates schedule conflict between the schedule to be assigned to group 
         /// and the schedule of the professor.
         /// </summary>
         /// <author> Cristian Araya Fuentes </author> 
@@ -170,12 +170,12 @@ namespace SACAAE.Controllers
                  where Sc.Day == vDay
                  select Sc);
 
-            // If there are schedule of the proffesor in that given day, make a list of them,
+            // If there are schedule of the professor in that given day, make a list of them,
             // In other case return correct validation (1)
             if (vConsult != null) ScheduleList = vConsult.ToList<Schedule>();
             else return 1;
 
-            // Check if there schedules conflicts
+            // Check if there are schedules conflicts
             foreach (Schedule group in ScheduleList)
             {
                 int vStart = Convert.ToInt32(group.StartHour);

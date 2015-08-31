@@ -238,7 +238,7 @@ namespace SACAAE.Controllers
             return (entity != null) ? entity.ID : 0;
         }
         
-        // Revisar desde aca
+        // Revisar desde acá
         public IQueryable<Classroom> ListarAulas()
         {
             
@@ -382,7 +382,7 @@ namespace SACAAE.Controllers
                                                                                                                 0};
                 //listaPlanes.Where(p => p.Day == "lunes").OrderBy().ToList();
                 listaPlanes = listaPlanes.OrderBy(c => c.StartHour.Length).ThenBy(c => c.StartHour).ThenBy(c=>c.Day);
-                /*Es necesario remover elementos de la lista que los horarios no son correctos*/
+                /*Es necesario remover elementos de la lista cuando los horarios no son correctos*/
                
                 var json = JsonConvert.SerializeObject(listaPlanes);
                 return Content(json);
