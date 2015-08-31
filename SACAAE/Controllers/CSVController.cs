@@ -78,8 +78,9 @@ namespace SACAAE.Controllers
                         GroupClassroom vGroupClassroom = new GroupClassroom();
 
                         if (vIdClassroom != 0 && (vValidateClassroomSchedule == 0)) //Classroom ok but Conflict with schedule
-                        { vGroupClassroom.ScheduleID = vIdSchedule; }
+                        { vIdSchedule = 0; }
 
+                        vGroupClassroom.ScheduleID = vIdSchedule;
                         vGroupClassroom.GroupID = vIDGroup;
                         vGroupClassroom.ClassroomID = vIdClassroom;
 
