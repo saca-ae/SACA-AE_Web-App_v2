@@ -4,6 +4,9 @@
     ViewBag.Title = "Agregar Plaza";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/SiteScripts/plazaCreate.js")"></script>
+}
 
 <h2 class="page-header">Agregar Plaza</h2>
 
@@ -44,7 +47,7 @@
     </div>
 
     <div class="form-group">
-        <input type="submit" value="Crear" class="btn" /> |
+        <input type="submit" value="Crear" class="btn" id="createBtn" /> |
         @Html.ActionLink("Regresar", "Index")
     </div>
 }
