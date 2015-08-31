@@ -319,7 +319,7 @@ namespace SACAAE.Controllers
         /// </summary>
         /// <param name="pPlaza">Plaza's id</param>
         /// <returns></returns>
-        [Route("Plazas/Professors/List/{plaza:int}")]
+        [Route("Plazas/Professors/List/{pPlaza:int}")]
         public ActionResult getProfessors(int pPlaza)
         {
             if (HttpContext.Request.IsAjaxRequest())
