@@ -178,10 +178,26 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PeriodoController.cs" />
     <Compile Include="Controllers\PlazasController.cs" />
+    <Compile Include="Controllers\ProfesorController.cs" />
     <Compile Include="Controllers\ProyectoProfesorController.cs" />
     <Compile Include="Controllers\SedesController.cs" />
     <Compile Include="Data Access\DBInitializer.cs" />
     <Compile Include="Data Access\SACAAEContext.cs" />
+    <Compile Include="Data Access\SACAAE_SP.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SACAAE_SP.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data Access\SACAAE_SP.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SACAAE_SP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data Access\SACAAE_SP.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SACAAE_SP.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -221,39 +237,50 @@
     <Compile Include="Migrations\201508272109401_fix-grupo.Designer.cs">
       <DependentUpon>201508272109401_fix-grupo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508290538219_names.cs" />
+    <Compile Include="Migrations\201508290538219_names.Designer.cs">
+      <DependentUpon>201508290538219_names.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508290623285_sede-fix.cs" />
+    <Compile Include="Migrations\201508290623285_sede-fix.Designer.cs">
+      <DependentUpon>201508290623285_sede-fix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Aula.cs" />
-    <Compile Include="Models\BloqueAcademico.cs" />
-    <Compile Include="Models\BloqueAcademicoXPlanDeEstudio.cs" />
-    <Compile Include="Models\BloqueXPlanXCurso.cs" />
-    <Compile Include="Models\Comision.cs" />
-    <Compile Include="Models\ComisionXProfesor.cs" />
-    <Compile Include="Models\Curso.cs" />
+    <Compile Include="Models\Classroom.cs" />
+    <Compile Include="Models\AcademicBlock.cs" />
+    <Compile Include="Models\AcademicBlockXStudyPlan.cs" />
+    <Compile Include="Models\BlockXPlanXCourse.cs" />
+    <Compile Include="Models\Commission.cs" />
+    <Compile Include="Models\CommissionXProfessor.cs" />
+    <Compile Include="Models\Course.cs" />
     <Compile Include="Models\DataCSV.cs" />
-    <Compile Include="Models\Estado.cs" />
-    <Compile Include="Models\Grupo.cs" />
-    <Compile Include="Models\GrupoAula.cs" />
-    <Compile Include="Models\Horario.cs" />
+    <Compile Include="Models\State.cs" />
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\GroupClassroom.cs" />
+    <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Modalidad.cs" />
-    <Compile Include="Models\Periodo.cs" />
-    <Compile Include="Models\NumeroPeriodo.cs" />
-    <Compile Include="Models\PlanDeEstudio.cs" />
-    <Compile Include="Models\PlanDeEstudioXSede.cs" />
+    <Compile Include="Models\Modality.cs" />
+    <Compile Include="Models\Period.cs" />
+    <Compile Include="Models\PeriodNumber.cs" />
+    <Compile Include="Models\StudyPlan.cs" />
+    <Compile Include="Models\StudyPlanXSede.cs" />
     <Compile Include="Models\Plaza.cs" />
-    <Compile Include="Models\PlazaXProfesor.cs" />
-    <Compile Include="Models\Profesor.cs" />
-    <Compile Include="Models\Proyecto.cs" />
-    <Compile Include="Models\ProyectoXProfesor.cs" />
+    <Compile Include="Models\PlazaXProfessor.cs" />
+    <Compile Include="Models\Professor.cs" />
+    <Compile Include="Models\Project.cs" />
+    <Compile Include="Models\ProjectXProfessor.cs" />
     <Compile Include="Models\Sede.cs" />
-    <Compile Include="Models\TipoAsignacionProfesor.cs" />
-    <Compile Include="Models\TipoEntidad.cs" />
-    <Compile Include="Models\TipoPeriodo.cs" />
+    <Compile Include="Models\HourAllocatedType.cs" />
+    <Compile Include="Models\EntityType.cs" />
+    <Compile Include="Models\PeriodType.cs" />
     <Compile Include="Models\ViewModels\AsignacionCursoProfesorViewModel.cs" />
     <Compile Include="Models\ViewModels\CursoViewModel.cs" />
+    <Compile Include="Models\ViewModels\GroupAssignmentCSVViewModel.cs" />
+    <Compile Include="Models\ViewModels\GroupsCreatedViewModel.cs" />
     <Compile Include="Models\ViewModels\PlazaViewModel.cs" />
+    <Compile Include="Models\ViewModels\ProfesorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -286,9 +313,28 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\DataTables\dataTables.responsive.scss" />
     <Content Include="Content\DataTables\Spanish.json" />
+    <EntityDeploy Include="Data Access\SACAAE_SP.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SACAAE_SP.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Data Access\SACAAE_SP.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SACAAE_SP.edmx</DependentUpon>
+      <LastGenOutput>SACAAE_SP.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Data Access\SACAAE_SP.edmx.diagram">
+      <DependentUpon>SACAAE_SP.edmx</DependentUpon>
+    </Content>
+    <Content Include="Data Access\SACAAE_SP.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SACAAE_SP.edmx</DependentUpon>
+      <LastGenOutput>SACAAE_SP.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\SiteScripts\CSVFile.js" />
+    <Content Include="Scripts\SiteScripts\assignProfesorCourse.js" />
     <Content Include="Scripts\SiteScripts\CursoProfesor.js" />
     <Content Include="Scripts\SiteScripts\entidades.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
@@ -307,10 +353,13 @@
     <Content Include="Scripts\SiteScripts\GuardarDias.js" />
     <Content Include="Scripts\SiteScripts\horarioAula.js" />
     <Content Include="Scripts\SiteScripts\plazaAllocate.js" />
+    <Content Include="Scripts\SiteScripts\plazaCreate.js" />
     <Content Include="Scripts\SiteScripts\plazaIndex.js" />
     <Content Include="Scripts\SiteScripts\RevocarComisionProfesor.js" />
     <Content Include="Scripts\SiteScripts\RevocarCursoProfesor.js" />
     <Content Include="Scripts\SiteScripts\RevocarProyectoProfesor.js" />
+    <Content Include="Scripts\SiteScripts\scheduleChart.js" />
+    <Content Include="Scripts\SiteScripts\table.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -382,8 +431,17 @@
     <Content Include="Views\Curso\AsignarProfesoraCurso.cshtml" />
     <Content Include="Views\Curso\EditarAsignacion.cshtml" />
     <Content Include="Views\Curso\DetalleAsignacion.cshtml" />
+    <Content Include="Views\Profesor\Create.cshtml" />
+    <Content Include="Views\Profesor\Delete.cshtml" />
+    <Content Include="Views\Profesor\Details.cshtml" />
+    <Content Include="Views\Profesor\Edit.cshtml" />
+    <Content Include="Views\Profesor\Index.cshtml" />
+    <Content Include="Views\Profesor\Schedule.cshtml" />
+    <Content Include="Views\CSV\ResumenAsignacionCSV.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
@@ -415,6 +473,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508272109401_fix-grupo.resx">
       <DependentUpon>201508272109401_fix-grupo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508290538219_names.resx">
+      <DependentUpon>201508290538219_names.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508290623285_sede-fix.resx">
+      <DependentUpon>201508290623285_sede-fix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

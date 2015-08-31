@@ -59,9 +59,9 @@ namespace SACAAE.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl) //Test
         {
-            var periodos = db.Periodos.Select(p => new {
+            var periodos = db.Periods.Select(p => new {
                                                 ID = p.ID,
-                                                Name = (p.Year + " - " + p.Numero.Tipo.Name + " " + p.Numero.Number)
+                                                Name = (p.Year + " - " + p.Number.Type.Name + " " + p.Number.Number)
                                             }).ToList();
             periodos.Add(new { ID = 0, Name = "Nuevo Periodo" });
             var viewModel = new LoginViewModel()
@@ -91,7 +91,7 @@ namespace SACAAE.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return (returnUrl == "") ? RedirectToLocal(returnUrl) : loginSelect();
+                    return loginSelect();
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -414,7 +414,7 @@ namespace SACAAE.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login");
         }
 
         //

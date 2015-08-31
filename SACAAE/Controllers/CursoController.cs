@@ -17,10 +17,11 @@ namespace SACAAE.Controllers
     {
         private SACAAEContext db = new SACAAEContext();
         private const string TempDataMessageKeySuccess = "MessageSuccess";
+        private const string TempDataMessageKey = "MessageError";
         // GET: Curso
         public ActionResult Index()
         {
-            var cursos = db.Cursos.ToList();
+            var cursos = db.Courses.ToList();
             var viewModel = new List<CursoIndexViewModel>();
 
             cursos.ForEach(p => viewModel.Add(
@@ -46,12 +47,12 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Curso curso = db.Cursos.Find(id);
+            Course curso = db.Courses.Find(id);
             if (curso == null)
             {
                 return HttpNotFound();
             }
-
+            ViewBag.Sedes = new SelectList(db.Sedes, "ID", "Name");
             return View(curso);
         }
 
@@ -64,11 +65,11 @@ namespace SACAAE.Controllers
         // POST: Curso/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Curso curso)
+        public ActionResult Create([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Course curso)
         {
             if (ModelState.IsValid)
             {
-                db.Cursos.Add(curso);
+                db.Courses.Add(curso);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -83,7 +84,7 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Curso curso = db.Cursos.Find(id);
+            Course curso = db.Courses.Find(id);
             if (curso == null)
             {
                 return HttpNotFound();
@@ -94,7 +95,7 @@ namespace SACAAE.Controllers
         // POST: Curso/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Curso curso)
+        public ActionResult Edit([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Course curso)
         {
             if (ModelState.IsValid)
             {
@@ -112,7 +113,7 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Curso curso = db.Cursos.Find(id);
+            Course curso = db.Courses.Find(id);
             if (curso == null)
             {
                 return HttpNotFound();
@@ -125,113 +126,19 @@ namespace SACAAE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Curso curso = db.Cursos.Find(id);
-            db.Cursos.Remove(curso);
+            Course curso = db.Courses.Find(id);
+            db.Courses.Remove(curso);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        // POST: CursoProfesor/Asignar
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AsignarProfesoraCurso(int Profesores, int Grupos_Disponibles)
-        {
-            if (ModelState.IsValid)
-            {
+        /// <summary>
+        ///  Show the view for assign Profesor to a Course
+        /// </summary>
+        /// <autor> Esteban Segura Benavides </autor>
+        /// <param name="id"> ID of Course in database</param>
+        /// <returns>View for assign profesor to a course with the information of the course</returns>
 
-                Grupo grupo = db.Grupos.Find(Grupos_Disponibles);
-                grupo.ProfessorID = Profesores;
-                db.SaveChanges();
-
-                TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
-                return RedirectToAction( "Index");
-            }
-            return View();
-            //var creado = 0;
-            //var idProfesorXCurso = 0;
-            //var idDetalleGrupo = vRepositorioGrupos.obtenerUnDetalleGrupo(sltGrupo);
-            //idProfesorXCurso = repositorioCursoProfesor.asignarProfesor(sltProfesor, txtHoras + txtHorasEstimadas);
-            //if (idProfesorXCurso != 0)
-            //{
-            //    creado = repositorioCursoProfesor.actualizarDetalleGrupo(idProfesorXCurso, idDetalleGrupo.Id);
-
-            //    if (creado != 0)
-            //    {
-            //        TempData[TempDataMessageKey] = "Profesor asignado correctamente.";
-            //    }
-            //    else
-            //    {
-            //        TempData[TempDataMessageKey] = "Ocurrió un error al asignar el profesor.";
-            //    }
-            //}
-            //else
-            //{
-            //    TempData[TempDataMessageKey] = "No se pudo obtener el id de profesor x curso.";
-        }
-
-        // GET: Curso/DetalleAsignacion/5
-        public ActionResult DetalleAsignacion(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Grupo grupo = db.Grupos.Find(id);
-            if (grupo == null)
-            {
-                return HttpNotFound();
-            }
-            
-            return View(grupo);
-        }
-
-        // GET: Curso/EditarAsignacion/5
-        public ActionResult EditarAsignacion(int? id)
-        {
-            
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Grupo grupo = db.Grupos.Find(id);
-            if (grupo == null)
-            {
-                return HttpNotFound();
-            }
-           
-
-            /* Se obtiene la lista de profesores */
-            ViewBag.Profesores = new SelectList(db.Profesores, "ID", "Name");
-            return View(grupo);
-        }
-
-
-        // POST Curso/EditarAsignacion/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditarAsignacion(String ID, int Profesores)
-        {
-            int idGrupo = Convert.ToInt32(ID);
-            if (ModelState.IsValid)
-            {
-
-                Grupo grupo = db.Grupos.Find(idGrupo);
-                grupo.ProfessorID = Profesores;
-                db.SaveChanges();
-
-                TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
-                return RedirectToAction("Index");
-            }
-            return View();
-        }
-
-        /*-----------------------------------------------------------------*/
-        /*
-         * Esteban Segura Benavides
-         * Metodo que llama a la vista para asignar un profesor a un curso definido seleccionado de 'Ver Detalle Curso'
-         * */
-        
-        
         // GET: Curso/AsignarProfesoraCurso/{id:int}
         public ActionResult AsignarProfesoraCurso(int id)
         {
@@ -246,11 +153,161 @@ namespace SACAAE.Controllers
 
 
             /* Se obtiene la lista de profesores */
-            ViewBag.Profesores = new SelectList(db.Profesores, "ID", "Name");
-            Curso curso = db.Cursos.Find(id);
-            return View(curso);
+            ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
+            Course vCurso = db.Courses.Find(id);
+            return View(vCurso);
         }
-        /*-------------------------------------------------------------------*/
+
+        /// <summary>
+        ///  Save the assign Profesor to a Course if don't have problems with the profesor scheduler
+        /// </summary>
+        /// <autor> Esteban Segura Benavides </autor>
+        /// <param name="id"> ID of Course in database</param>
+        /// <returns>View for assign profesor to a course with the information of the course</returns>
+        // POST: CursoProfesor/Asignar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AsignarProfesoraCurso(int ID, int Profesores, int Grupos_Disponibles, int HourCharge)
+        {
+            if (ModelState.IsValid)
+            {
+                //Verify if profesor have other assign in the same day and start hour, if don't have conflict with other group in the same hour and day return true, else
+                //if found problem with other group in the same day and start hour return false and the assign is cancelled and the user recive information
+                Boolean vChoqueHorario = isScheduleProfesorValidate(Grupos_Disponibles, Profesores);
+
+                //If doesn't exist problems in the profesor schedule
+                if (!vChoqueHorario)
+                {
+                    var grupo = db.Groups.Find(Grupos_Disponibles);
+                    grupo.ProfessorID = Profesores;
+                    if (HourCharge == 1)
+                    {
+                        
+                        grupo.HourAllocatedTypeID = 1;
+                    }
+                   db.SaveChanges();
+
+                    TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
+                    return RedirectToAction("Details", new { id = ID });
+                }
+                // Exist problems in profesor schedule, so the assign is cancelled and the user recive the information of the problem
+                else
+                {
+                    TempData[TempDataMessageKey] = "No se puede asignar al profesor al curso\n porque existe choque de horario";
+
+                    /* Se obtiene la lista de profesores */
+                    ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
+                    /*get the assign type list*/
+                    ViewBag.AssignType = new SelectList(db.HourAllocatedTypes, "ID", "Name");
+                    Course vCurso = db.Courses.Find(ID);
+                    return View(vCurso);
+                }
+
+
+               
+            }
+            return View();
+        }
+
+       
+        // GET: Curso/DetalleAsignacion/5
+        public ActionResult DetalleAsignacion(int? id)
+        {
+            if (Request.UrlReferrer != null)
+            {
+                ViewBag.returnUrl = Request.UrlReferrer.ToString();
+            }
+            else
+            {
+                ViewBag.returnUrl = null;
+            }
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Group grupo = db.Groups.Find(id);
+            if (grupo == null)
+            {
+                return HttpNotFound();
+            }
+            
+            return View(grupo);
+        }
+
+        // GET: Curso/EditarAsignacion/5
+        public ActionResult EditarAsignacion(int? id)
+        {
+            if (Request.UrlReferrer != null)
+            {
+                ViewBag.returnUrl = Request.UrlReferrer.ToString();
+            }
+            else
+            {
+                ViewBag.returnUrl = null;
+            }
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Group grupo = db.Groups.Find(id);
+            if (grupo == null)
+            {
+                return HttpNotFound();
+            }
+           
+
+            /* Se obtiene la lista de profesores */
+            ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
+            return View(grupo);
+        }
+
+
+        // POST Curso/EditarAsignacion/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditarAsignacion(String ID, int Profesores, String editHourCharge)
+        {
+            int idGrupo = Convert.ToInt32(ID);
+            int vHourChange = Convert.ToInt32(editHourCharge);
+            if (ModelState.IsValid)
+            {
+                //Verify if profesor have other assign in the same day and start hour, if don't have conflict with other group in the same hour and day return true, else
+                //if found problem with other group in the same day and start hour return false and the assign is cancelled and the user recive information
+                Boolean vChoqueHorario = isScheduleProfesorValidate(idGrupo, Profesores);
+                if (!vChoqueHorario)
+                {
+                    Group grupo = db.Groups.Find(idGrupo);
+                    grupo.ProfessorID = Profesores;
+                    if (vHourChange == 1)
+                    {
+                        grupo.HourAllocatedTypeID = 1;
+                    }
+                    else
+                    {
+                        grupo.HourAllocatedTypeID = null;
+                    }
+                    db.SaveChanges();
+
+                    TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
+                    return RedirectToAction("Details", new { id = grupo.BlockXPlanXCourse.CourseID });
+                }
+                else
+                {
+                    /*The user recive the information about the problem*/
+                    TempData[TempDataMessageKey] = "No se puede asignar al profesor al curso\n porque existe choque de horario";
+
+                    /* Se obtiene la lista de profesores */
+                    Group grupo = db.Groups.Find(idGrupo);
+                    ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
+                    return View(grupo);
+                }
+            }
+            return View();
+        }
+
+
+        
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -260,60 +317,113 @@ namespace SACAAE.Controllers
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// Verify if profesor have other assign in the same day and start hour, if don't have conflict with other group in the same hour and day return
+        /// if found problem with other group in the same day and start hour return false and the assign is cancelled and the user recive information
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDGrupo"></param>
+        /// <param name="pIDProfesor"></param>
+        /// <returns>true if don't have conflicts with the schedule else return false if exist other grupo in the same start hour and day</returns>
+        private Boolean isScheduleProfesorValidate(int pIDGrupo, int pIDProfesor)
+        {
+            /*Get Group from database accordin to idGrupo*/
+            var vListScheduleGroup = (from grupo in db.Groups
+                                      join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+                                      join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
+                                      where (grupo.ID == pIDGrupo)
+                                      select new { horario.StartHour, horario.EndHour, horario.Day }).ToList();
+
+
+            /*Get all profesor schedules*/
+            var vListScheduleProfesors = (from profesor in db.Professors
+                                          join grupo in db.Groups on profesor.ID equals grupo.ProfessorID
+                                          join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+                                          join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
+                                          where (profesor.ID == pIDProfesor)
+                                          select new { horario.StartHour, horario.EndHour, horario.Day }).ToList();
+            //Bandera que determina si el horario esta repetido o no
+            Boolean vChoqueHoraio = false;
+            foreach (var vHorarioProfesor in vListScheduleProfesors)
+            {
+                foreach (var vScheduleGroup in vListScheduleGroup)
+                {
+                    //If the schedule of profesor is equals to group schedule this is a problem because is assign a group but with the same schedule
+                    if (vHorarioProfesor.StartHour.Equals(vScheduleGroup.StartHour) && vHorarioProfesor.Day.Equals(vScheduleGroup.Day))
+                    {
+                        vChoqueHoraio = true;
+                    }
+                }
+            }
+
+            return vChoqueHoraio;
+        }
         /*----------------------------------------------------------------------------*/
-        /* Esteban Segura Benavides Creacion funciones ajax
-         * Obtener informacion ajax*/
+
+        
         #region Ajax
-        /*Obtener infomracion completa de un grupo de acuerdo a su id*/
-        [Route("Cursos/Grupo/{idGrupo:int}")]
-        public ActionResult getInformationGroup(int idGrupo)
+        
+        /// <summary>
+        ///  Get information of a group
+        /// </summary>
+        /// <autor> Esteban Segura Benavides </autor>
+        /// <param name="pIDGrupo"> ID of group in database</param>
+        /// <returns>Information related with the group like course, profesor, scheduler, classroom, block, modality</returns>
+        [Route("Cursos/Group/{pIDGrupo:int}")]
+        public ActionResult getInformationGroup(int pIDGrupo)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaCursos = (from curso in db.Cursos
-                                   join bloque_planes_curso in db.BloquesXPlanesXCursos on curso.ID equals bloque_planes_curso.CourseID
-                                   join bloque_planes in db.BloquesAcademicosXPlanesDeEstudio on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
-                                   join bloque_academico in db.BloquesAcademicos on bloque_planes.BlockID equals bloque_academico.ID
-                                   join grupo in db.Grupos on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
-                                   join profesor in db.Profesores on grupo.ProfessorID equals profesor.ID
-                                   join plan_estudio in db.PlanesDeEstudio on bloque_planes.PlanID equals plan_estudio.ID
-                                   join modalidad in db.Modalidades on plan_estudio.ModeID equals modalidad.ID
-                                   join plan_sede in db.PlanesDeEstudioXSedes on plan_estudio.ID equals plan_sede.StudyPlanID
-                                   join sede in db.Sedes on plan_sede.SedeID equals sede.ID
-                                   join grupo_aula in db.GrupoAula on grupo.ID equals grupo_aula.GroupID
-                                   join aula in db.Aulas on grupo_aula.ClassroomID equals aula.ID
-                                   join horario in db.Horarios on grupo_aula.ScheduleID equals horario.ID
-                                   where grupo.ID == idGrupo
+                var vInformationGroup = (from curso in db.Courses
+                                   join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                   join bloque_planes in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
+                                   join bloque_academico in db.AcademicBlocks on bloque_planes.BlockID equals bloque_academico.ID
+                                   join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
+                                  
+                                   join profesor in db.Professors on grupo.ProfessorID equals profesor.ID
+                                   join plan_estudio in db.StudyPlans on bloque_planes.PlanID equals plan_estudio.ID
+                                   join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
+                                   join sede in db.Sedes on bloque_planes_curso.SedeID equals sede.ID
+                                   join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+                                   join aula in db.Classrooms on grupo_aula.ClassroomID equals aula.ID
+                                   join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
+                                   where grupo.ID == pIDGrupo 
 
                                    select new
-                                   {curso_id = curso.ID,curso_name = curso.Name,grupo.Number,profesor_name = profesor.Name,horario.StartHour,horario.EndHour,horario.Day,
+                                   {curso_id = curso.ID,curso_name = curso.Name,curso.TheoreticalHours,grupo.Number,profesor_name = profesor.Name,horario.StartHour,horario.EndHour,horario.Day,
                                        aula.Code,aula.Capacity,sede_id = sede.ID,sede_name = sede.Name,plan_id = plan_estudio.ID,plan_name = plan_estudio.Name,bloque_id = bloque_academico.ID,
-                                       descripcion_bloque = bloque_academico.Description, modalidad_id=modalidad.ID,modalidad_name = modalidad.Name
+                                       descripcion_bloque = bloque_academico.Description, modalidad_id=modalidad.ID,modalidad_name = modalidad.Name, asignacion_id=grupo.HourAllocatedTypeID
                                    });
-               
-                var json = JsonConvert.SerializeObject(listaCursos);
+
+                var lista = vInformationGroup.ToList();
+                /*If dont exist classroom related with a course*/
+                if (lista.Count == 0)
+                {
+                   var vInformationGroup2 = (from curso in db.Courses
+                                         join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                         join bloque_planes in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
+                                         join bloque_academico in db.AcademicBlocks on bloque_planes.BlockID equals bloque_academico.ID
+                                         join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
+                                         join profesor in db.Professors on grupo.ProfessorID equals profesor.ID
+                                         join plan_estudio in db.StudyPlans on bloque_planes.PlanID equals plan_estudio.ID
+                                         join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
+                                         join sede in db.Sedes on bloque_planes_curso.SedeID equals sede.ID
+                                         select new {curso_id = curso.ID,curso_name = curso.Name,curso.TheoreticalHours,grupo.Number, profesor_name = profesor.Name,
+                                             StartHour = "No asignado",EndHour = "No asignado",Day="No asignado",Code="No asignado",Capacity="?",
+                                             sede_id = sede.ID,plan_id = plan_estudio.ID, plan_name = plan_estudio.Name, bloque_id = bloque_academico.ID, descripcion_bloque = bloque_academico.Description,
+                                             modalidad_id = modalidad.ID, modalidad_name = modalidad.Name, asignacion_id = grupo.HourAllocatedTypeID
+                                         });
+                   var json2 = JsonConvert.SerializeObject(vInformationGroup2);
+                   return Content(json2);
+                }
+
+                var json = JsonConvert.SerializeObject(vInformationGroup);
                 return Content(json);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        /*Obtener infomracion completa de un grupo de acuerdo a su id*/
-        [Route("Cursos/Grupo/EliminarGrupo/{idGrupo:int}")]
-        public ActionResult removeGrupo(int idGrupo)
-        {
-            if (HttpContext.Request.IsAjaxRequest())
-            {
-                Grupo grupo = db.Grupos.Find(idGrupo);
-                grupo.ProfessorID = null;
-                db.SaveChanges();
-                var respuesta =  new{respuesta = "success"};
-                var json = JsonConvert.SerializeObject(respuesta);
-                return Content(json);
-            }
-            var respuesta_error = new { respuesta = "error" };
-            var json_error = JsonConvert.SerializeObject(respuesta_error);
-            return Content(json_error);
-        }
+        
         #endregion
 
     }

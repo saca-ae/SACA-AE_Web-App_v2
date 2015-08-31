@@ -23,7 +23,6 @@ namespace SACAAE.Models
             this.Aula = pClassroom;
             this.PlandeEstudio = pStudyPlan;
             this.Modalidad = pModality;
-
         }
         public String Grupo { get; set; }
         public String Nombre { get; set; }

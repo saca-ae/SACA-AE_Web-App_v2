@@ -14,6 +14,6 @@ namespace SACAAE.Models
         public int? TotalHours { get; set; }
         public int? EffectiveTime { get; set; }
 
-        public virtual ICollection<PlazaXProfesor> PlazasXProfesores { get; set; }
+        public virtual ICollection<PlazaXProfessor> PlazasXProfessors { get; set; }
     }
 }

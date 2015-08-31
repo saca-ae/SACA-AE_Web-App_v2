@@ -56,11 +56,11 @@ namespace SACAAE.Controllers
             String entidad = Request.Cookies["Entidad"].Value;
             var entidadID = getEntityID(entidad);
 
-            ViewBag.profesores = new SelectList(db.Profesores, "ID", "Name"); ;
+            ViewBag.profesores = new SelectList(db.Professors, "ID", "Name"); ;
 
             if (entidadID == 1)
             {
-                var proyectos = db.Proyectos.Where(p => p.StateID == 1 && (p.EntityTypeID == 1 ||      //TEC
+                var proyectos = db.Projects.Where(p => p.StateID == 1 && (p.EntityTypeID == 1 ||      //TEC
                                                          p.EntityTypeID == 2 || p.EntityTypeID == 3 || //TEC-VIC TEC-REC
                                                          p.EntityTypeID == 4 || p.EntityTypeID == 10)) //TEC-MIXTO TEC-Académico
                                              .OrderBy(p => p.Name);
@@ -68,7 +68,7 @@ namespace SACAAE.Controllers
             }
             else
             {
-                var proyectos = db.Proyectos.Where(p => p.EntityTypeID == entidadID).OrderBy(p => p.Name);
+                var proyectos = db.Projects.Where(p => p.EntityTypeID == entidadID).OrderBy(p => p.Name);
                 ViewBag.proyectos = new SelectList(proyectos, "ID", "Name");
             }
             return View();
@@ -92,7 +92,7 @@ namespace SACAAE.Controllers
             }
 
             var periodo = Request.Cookies["Periodo"].Value;
-            var IdPeriodo = db.Periodos.Find(int.Parse(periodo)).ID;
+            var IdPeriodo = db.Periods.Find(int.Parse(periodo)).ID;
 
             for (int i = 1; i < Cantidad; i++)
             {
@@ -135,7 +135,7 @@ namespace SACAAE.Controllers
             }
 
             /* Se obtiene la lista de profesores */
-            ViewBag.profesores = new SelectList(db.Profesores, "ID", "Name");
+            ViewBag.profesores = new SelectList(db.Professors, "ID", "Name");
 
             return View();
         }
@@ -147,11 +147,11 @@ namespace SACAAE.Controllers
         {
             var revocado = false;
 
-            var proyecto = db.ProyectosXProfesores.Find(sltProyectos);
+            var proyecto = db.ProjectsXProfessors.Find(sltProyectos);
 
             if (proyecto != null)
             {
-                db.ProyectosXProfesores.Remove(proyecto);
+                db.ProjectsXProfessors.Remove(proyecto);
                 db.SaveChanges();
                 revocado = true;
             }
@@ -174,9 +174,9 @@ namespace SACAAE.Controllers
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaProyectos = db.Profesores.Find(idProfesor)
-                                                  .ProyectosXProfesores
-                                                  .Select(p => new { p.Proyecto.ID, p.Proyecto.Name });
+                var listaProyectos = db.Professors.Find(idProfesor)
+                                                  .ProjectsXProfessors
+                                                  .Select(p => new { p.Project.ID, p.Project.Name });
 
                 return Json(listaProyectos, JsonRequestBehavior.AllowGet);
             }
@@ -187,44 +187,44 @@ namespace SACAAE.Controllers
         #region Helpers
         private int getEntityID(string entityName)
         {
-            TipoEntidad entity;
+            EntityType entity;
             switch (entityName)
             {
                 case "TEC":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "TEC");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "TEC");
                     break;
                 case "CIADEG":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "CIADEG");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "CIADEG");
                     break;
                 case "TAE":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-TAE");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-TAE");
                     break;
                 case "MAE":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MAE");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MAE");
                     break;
                 case "MDE":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MDE");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MDE");
                     break;
                 case "MGP":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-MGP");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MGP");
                     break;
                 case "DDE":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Doctorado");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Doctorado");
                     break;
                 case "Emprendedores":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Emprendedores");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Emprendedores");
                     break;
                 case "CIE":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-CIE");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-CIE");
                     break;
                 case "Actualizacion_Cartago":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion Cartago");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion Cartago");
                     break;
                 case "Actualizacion_San_Carlos":
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion San Carlos");
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion San Carlos");
                     break;
                 default:
-                    entity = db.TipoEntidades.SingleOrDefault(p => p.Name == entityName);
+                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == entityName);
                     break;
             }
 

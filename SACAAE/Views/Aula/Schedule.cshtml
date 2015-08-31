@@ -1,62 +1,13 @@
-﻿@model SACAAE.Models.Aula
+﻿@model SACAAE.Models.Classroom
 
 @{
     ViewBag.Title = "Horario Aula";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
-
-<style type="text/css">
-    div.col-lg-8 table {
-        border-collapse: collapse;
-        width: 100%;
-        table-layout: fixed;
-    }
-
-    div.col-lg-8 tr {
-        border: none;
-    }
-
-    div.col-lg-8 td {
-        border-right: solid 1px #000;
-        border-left: solid 1px #000;
-        text-align: center;
-    }
-
-    .Horas {
-        border-bottom: solid 1px #000;
-        border-top: solid 1px #000;
-        font-size: medium;
-        width: 100px;
-        height: 30px;
-    }
-
-    .ComboCursosSeleccionados {
-        width: 25%;
-    }
-
-    .guia {
-        width: 0px;
-        border-right: none;
-    }
-
-    .mitabla {
-        font-size: x-small;
-        color: #000;
-    }
-
-    .encabezado {
-        border-bottom: solid 1px #000;
-        border-top: solid 1px #000;
-        font-size: medium;
-    }
-
-    .alineacion-div > div {
-        display: inline-block;
-        width: 30%;
-        margin: 0;
-    }
-</style>
-<body @*onload="Load('@(Model.Code)')"*@>
+<head>
+        @Styles.Render("~/Content/custom")
+</head>
+<body onload="load_window('@(Model.ID)')">
 
     <h2> Horario de Aula </h2>
     <h4>
@@ -65,116 +16,8 @@
             @Html.DisplayFor(model => model.Code)
         </span>
     </h4>
-    <div class="col-lg-8">
-        <div class="span12">
-            <table class="mitabla" id="Resultado">
-                <tr>
-                    <td class="Horas" id="vacio">Hora</td>
-                    <td class="encabezado" id="Lunes">Lunes</td>
-                    <td class="encabezado" id="Martes">Martes</td>
-                    <td class="encabezado" id="Miercoles">Miércoles</td>
-                    <td class="encabezado" id="Jueves">Jueves</td>
-                    <td class="encabezado" id="Viernes">Viernes</td>
-                    <td class="encabezado" id="Sabado">Sábado</td>
-                    <td class="encabezado" id="Domingo">Domingo</td>
-                    <td class="Guia" id="Guia"></td>
-                </tr>
-                @for (int hr = 7; hr < 22; hr++)
-                {
-                    for (int min = 0; min < 6; min = min + 1)
-                    {
-                        String Hora = "";
-
-
-                        if (hr >= 7 & hr <= 12)
-                        {
-                            switch (min)
-                            {
-                                case 0: Hora = hr.ToString() + "30"; break;
-                                case 1: Hora = hr.ToString() + "40"; break;
-                                case 2: Hora = hr.ToString() + "50"; if (hr == 12) { min = 5; } break;
-                                case 3: Hora = (hr + 1).ToString() + "00"; break;
-                                case 4: Hora = (hr + 1).ToString() + "10"; break;
-                                case 5: Hora = (hr + 1).ToString() + "20"; break;
-                            }
-                        }
-
-                        else
-                        {
-                            switch (min)
-                            {
-                                case 0: Hora = hr.ToString() + "00"; break;
-                                case 1: Hora = hr.ToString() + "10"; break;
-                                case 2: Hora = hr.ToString() + "20"; break;
-                                case 3: Hora = hr.ToString() + "30"; break;
-                                case 4: Hora = hr.ToString() + "40"; break;
-                                case 5: Hora = hr.ToString() + "50"; break;
-                            }
-                        }
-
-
-                        String Lateral = "";
-                        switch (hr)
-                        {
-                            case 7: Lateral = "7:30-8:20"; break;
-                            case 8: Lateral = "8:30-9:20 "; break;
-                            case 9: Lateral = "9:30-10:20"; break;
-                            case 10: Lateral = "10:30-11:20"; break;
-                            case 11: Lateral = "11:30-12:20"; break;
-                            case 12: Lateral = "12:30-13:00"; break;
-                            case 13: Lateral = "13:00-13:50"; break;
-                            case 14: Lateral = "14:00-14:50"; break;
-                            case 15: Lateral = "15:00-15:50"; break;
-                            case 16: Lateral = "16:00-16:50"; break;
-                            case 17: Lateral = "17:00-17:50"; break;
-                            case 18: Lateral = "18:00-18:50"; break;
-                            case 19: Lateral = "19:00-19:50"; break;
-                            case 20: Lateral = "20:00-20:50"; break;
-                            case 21: Lateral = "21:00-21:50"; break;
-                        }
-
-
-                        <tr>
-                            @if (min == 0)
-                            {
-                                if (hr == 12)
-                                {
-                                <td class="Horas" id="@Hora" rowspan="3"> @Lateral</td>}
-                                else
-                                {
-                                <td class="Horas" id="@Hora" rowspan="6"> @Lateral</td>}
-                            }
-                            @if (hr == 12)
-                            {
-                                <td id="Lunes @Hora" style="background-color:lightgrey"></td>
-                                <td id="Martes @Hora" style="background-color:lightgrey"></td>
-                                <td id="Miercoles @Hora" style="background-color:lightgrey"></td>
-                                <td id="Jueves @Hora" style="background-color:lightgrey"></td>
-                                <td id="Viernes @Hora" style="background-color:lightgrey"></td>
-                                <td id="Sabado @Hora" style="background-color:lightgrey"></td>
-                                <td id="Domingo @Hora" style="background-color:lightgrey"></td>
-                                <td class="Guia" id="Guia @Hora"></td>
-
-                            }
-                            else
-                            {
-                                <td id="Lunes @Hora"></td>
-                                <td id="Martes @Hora"></td>
-                                <td id="Miercoles @Hora"></td>
-                                <td id="Jueves @Hora"></td>
-                                <td id="Viernes @Hora"></td>
-                                <td id="Sabado @Hora"></td>
-                                <td id="Domingo @Hora"></td>
-                                <td class="Guia" id="Guia @Hora"></td>
-                            }
-                        </tr>
-
-                    }
-                }
-            </table>
-        </div>
-        <div class="editor-field">
-        </div>
+    <div id="div_tabla">
+        
         <div>
             <p>
                 <br />
@@ -190,5 +33,21 @@
 </body>
 
 @section Scripts {
-    <script src="@Url.Content("~/Scripts/horarioAula.js")"></script>
+    <script src="@Url.Content("~/Scripts/SiteScripts/scheduleChart.js")"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var entidadid = "#" + getCookie("Entidad");
+            if (entidadid == "#") { Load('TEC'); }
+            $(entidadid).addClass('active');
+
+
+            var route = "/Aula/Schedules/" + get_id(3);
+            $.getJSON(route, function (data) {
+                datos = datos_matriz(data);
+                obtener_dias(datos);
+
+            });
+
+        });
+    </script>
 }

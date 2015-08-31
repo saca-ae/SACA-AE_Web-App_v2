@@ -70,7 +70,11 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="@Url.Action("Logoff", "Account")"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Log Out</a>
+                            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { @id = "logoutForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+                            }          
+                            <a href="javascript:document.getElementById('logoutForm').submit()"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Log Out</a>                 
                         </li>
                     </ul>
                 </li>
