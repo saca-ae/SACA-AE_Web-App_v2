@@ -277,6 +277,7 @@
     <Compile Include="Models\PeriodType.cs" />
     <Compile Include="Models\ViewModels\AsignacionCursoProfesorViewModel.cs" />
     <Compile Include="Models\ViewModels\CursoViewModel.cs" />
+    <Compile Include="Models\ViewModels\GroupAssignmentCSVViewModel.cs" />
     <Compile Include="Models\ViewModels\GroupsCreatedViewModel.cs" />
     <Compile Include="Models\ViewModels\PlazaViewModel.cs" />
     <Compile Include="Models\ViewModels\ProfesorViewModel.cs" />
@@ -332,6 +333,7 @@
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\SiteScripts\CSVFile.js" />
     <Content Include="Scripts\SiteScripts\assignProfesorCourse.js" />
     <Content Include="Scripts\SiteScripts\CursoProfesor.js" />
     <Content Include="Scripts\SiteScripts\entidades.js" />
@@ -435,6 +437,7 @@
     <Content Include="Views\Profesor\Edit.cshtml" />
     <Content Include="Views\Profesor\Index.cshtml" />
     <Content Include="Views\Profesor\Schedule.cshtml" />
+    <Content Include="Views\CSV\ResumenAsignacionCSV.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
