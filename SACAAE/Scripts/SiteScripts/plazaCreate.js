@@ -2,6 +2,7 @@
 // Disable submit button for default
 document.getElementById("createBtn").disabled = true;
 // Add events to validate inputs
+document.getElementById("Code").oninput = function () { validate() };
 document.getElementById("TotalHours").oninput = function () { validate() };
 document.getElementById("EffectiveTime").oninput = function () { validate() };
 
