@@ -180,7 +180,7 @@ function generate_table_schedule_group(route2) {
                 "<td>-</td>" +
                 "</tr>";;
             tabla = tabla + "</tbody> </table>";
-            document.getElementById('table_schedule_group').innerHTML = tabla;
+            document.getElementById('table_schedule_group').innerHTML = table_head+tabla;
         }
     });
 }

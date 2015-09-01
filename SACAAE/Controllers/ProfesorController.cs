@@ -175,7 +175,8 @@ namespace SACAAE.Controllers
                                   join curso in db.Courses on plan_bloque_curso.CourseID equals curso.ID
                                   join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
                                  join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
-                                 where (profesor.ID==idProfesor) && (horario.StartHour != "700" && horario.StartHour != "900")
+                                  join period in db.Periods on grupo.PeriodID equals period.ID
+                                 where (profesor.ID==idProfesor) && (horario.StartHour != "700" && horario.StartHour != "900")&&(period.ID==periodo_actual)
                                 select new{curso.Name,grupo.Number,horario.StartHour,horario.EndHour,Day = horario.Day == "Lunes" ? 1 :horario.Day == "Martes" ? 2 :
                                           horario.Day == "Miércoles" ? 3 : horario.Day == "Jueves" ? 4 :horario.Day == "Viernes" ? 5 :horario.Day == "Sábado" ? 6 :0
                                   };
