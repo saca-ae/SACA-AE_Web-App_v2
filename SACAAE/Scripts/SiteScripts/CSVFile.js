@@ -1,10 +1,13 @@
-﻿$("#btnLoadCSV").click(function () {
+﻿/* Created by: Cristian Araya*/
+
+// 
+$("#btnLoadCSV").click(function () {
     var fileUpload = document.getElementById("fileInput");
     if (fileUpload.value != null) {
         var uploadFile = new FormData();
         var files = $("#fileInput").get(0).files;
         
-        // Add the uploaded file content to the form data collection
+        // Add the uploaded file content
         if (files.length > 0) {
             uploadFile.append("CsvDoc", files[0]);
             $.ajax({
@@ -14,7 +17,6 @@
                 data: uploadFile,
                 type: 'POST',
                 success: function (data) {
-                    console && console.log(data);
                     drawTable(data);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
