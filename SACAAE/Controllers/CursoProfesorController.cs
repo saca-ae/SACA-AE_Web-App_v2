@@ -305,7 +305,7 @@ namespace SACAAE.Controllers
                                    join group_classroom in db.GroupClassrooms on groups.ID equals group_classroom.GroupID
                                    join schedule in db.Schedules on group_classroom.ScheduleID equals schedule.ID
                                    join classroom in db.Classrooms on group_classroom.ClassroomID equals classroom.ID
-                                            where course.ID == pIDCurso && period.ID == vIDPeriod // && sede.ID == pSede
+                                   where course.ID == pIDCurso && sede.ID == pSede&&period.ID==vIDPeriod
                                             select new { groups.ID, groups.Number, sede_name = sede.Name, Name = "", classroom.Code, schedule.StartHour, schedule.EndHour, schedule.Day }).ToList();
                 
                 var vListGroupCourseRight = (from course in db.Courses
@@ -316,6 +316,8 @@ namespace SACAAE.Controllers
                                            join professor in db.Professors on groups.ProfessorID equals professor.ID
                                              where course.ID == pIDCurso && period.ID == vIDPeriod // && sede.ID == pSede
                                              select new { groups.ID, groups.Number, sede_name = sede.Name, professor.Name, Code="", StartHour="", EndHour="", Day =""}).ToList();
+                
+                
                 /*
                 if (vListGroupCourseLeft.Count != 0 && vListGroupCourseRight.Count != 0)
                 {
