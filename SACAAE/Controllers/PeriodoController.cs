@@ -17,7 +17,7 @@ namespace SACAAE.Controllers
     public class PeriodoController : Controller
     {
         private SACAAEContext gvDatabase = new SACAAEContext();
-        private SACAAE_SP gvStoredProcedure = new SACAAE_SP();
+        //private SACAAE_SP gvStoredProcedure = new SACAAE_SP();
         private Period gPeriod = new Period();
 
         // GET: Periodo
@@ -26,7 +26,7 @@ namespace SACAAE.Controllers
             gPeriod = gPeriod.AddNewSemester();
             
             int vIdPeriod = gPeriod.getIDPeriod(gPeriod.Year, gPeriod.NumberID);
-            gvStoredProcedure.SP_CreateGroupsinNewSemester(vIdPeriod);
+            //gvStoredProcedure.SP_CreateGroupsinNewSemester(vIdPeriod);
 
             IQueryable<GroupsCreatedViewModel> vGroupsList = getGroupsList(vIdPeriod);
 
