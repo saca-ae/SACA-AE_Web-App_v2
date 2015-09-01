@@ -82,6 +82,9 @@ namespace SACAAE.Controllers
                         if (vIdClassroom != 0 && (vValidateClassroomSchedule == 0)) //Classroom ok but Conflict with schedule
                         { vIdSchedule = 0; }
 
+                        if (vValidateClassroomSchedule == 0) //Classroom ok but Conflict with schedule
+                        { vIdSchedule = 0; }
+
                         vGroupClassroom.ScheduleID = vIdSchedule;
                         vGroupClassroom.GroupID = vIDGroup;
                         vGroupClassroom.ClassroomID = vIdClassroom;
@@ -89,6 +92,7 @@ namespace SACAAE.Controllers
                         if (vIdClassroom != 0 || vIdSchedule != 0 ) // There is a classroom or schedule to assign
                         {
                             if (vIdClassroom == 0) { vGroupClassroom.ClassroomID = null; }
+                            if (vIdSchedule == 0) { vGroupClassroom.ScheduleID = null; }
                             AddGroupClassroom(vGroupClassroom);
                             vState = "Completo";
                         }
@@ -240,6 +244,7 @@ namespace SACAAE.Controllers
             else return 1;
 
             // Check if there schedules conflicts
+            /////////////////////////////////// Aqui esta el erro!
             foreach (Schedule group in ScheduleList)
             {
                 int vStart = Convert.ToInt32(group.StartHour);

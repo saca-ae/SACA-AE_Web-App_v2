@@ -314,8 +314,10 @@ namespace SACAAE.Controllers
                                            join period in db.Periods on groups.PeriodID equals period.ID
                                            join sede in db.Sedes on block_plan_course.SedeID equals sede.ID
                                            join professor in db.Professors on groups.ProfessorID equals professor.ID
-                                             where course.ID == pIDCurso && sede.ID == pSede && period.ID == vIDPeriod
+                                             where course.ID == pIDCurso && period.ID == vIDPeriod // && sede.ID == pSede
                                              select new { groups.ID, groups.Number, sede_name = sede.Name, professor.Name, Code="", StartHour="", EndHour="", Day =""}).ToList();
+                
+                
                 /*
                 if (vListGroupCourseLeft.Count != 0 && vListGroupCourseRight.Count != 0)
                 {
