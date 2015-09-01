@@ -15,7 +15,6 @@
                 type: 'POST',
             });
         }
-        $("#divTabla").removeAttr("hidden")
         alert("Se han realizado las asignaciones");
     }
 });
