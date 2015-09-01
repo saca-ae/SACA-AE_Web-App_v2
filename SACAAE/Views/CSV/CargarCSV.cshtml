@@ -1,11 +1,27 @@
-﻿
+﻿@model IEnumerable<SACAAE.Models.ViewModels.GroupAssignmentCSVViewModel>
+
 @{
     ViewBag.Title = "CargarCSV";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
 
-<h1 class="page-header">Cargar Archivo CSV</h1>
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/SiteScripts/CSVFile.js")"></script>
+}
 
-<button type="button" class="btn btn-default" id="btnDownloadCSV"> @Html.ActionLink("Descargar Plantilla CSV", "DownloadCSVTemplate") </button>
+<body>
+    <h1 class="page-header">Cargar Archivo CSV</h1>
 
-<button type="button" class="btn btn-default" id="btnLoadCSV" >Cargar Asignaciones </button>
+    <div>
+        <h4 style="float:left">  Plantilla CSV:  </h4> 
+        <button type="button" class="btn btn-default" id="btnDownloadCSV"> @Html.ActionLink("Descargar", "DownloadCSVTemplate") </button>
+    </div>
+
+    <br> 
+
+    <div>
+        <h4 style="float:left">   Subir Asignaciones CSV:   </h4>
+        <button type="submit" class="btn btn-default" id="btnLoadCSV" disabled style="float:left">  Cargar Asignaciones </button>
+        <input type='file' title="Seleccione el archivo CSV" id="fileInput" >
+    </div>
+ </body>

@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using SACAAE.Models;
+using SACAAE.Models.StoredProcedures;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
@@ -63,6 +65,22 @@ namespace SACAAE.Data_Access
                 new ObjectParameter("pIdPeriod", typeof(int));
 
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("SP_CreateGroupsinNewSemester", pIdPeriodParameter);
+        }
+
+        //Ejemplo SP
+        public virtual ObjectResult<ejemplo> SP_Ejemplo(Nullable<int> pCourseID, Nullable<int> pSedeID, Nullable<int> pPeriodID)
+        {
+            var vCourseParameter = pCourseID.HasValue ?
+                new SqlParameter("courseID", pCourseID) :
+                new SqlParameter("courseID", typeof(int));
+            var vSedeParameter = pSedeID.HasValue ?
+                new SqlParameter("sedeID", pSedeID) :
+                new SqlParameter("sedeID", typeof(int));
+            var vPeriodParameter = pPeriodID.HasValue ?
+                new SqlParameter("periodID", pPeriodID) :
+                new SqlParameter("periodID", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ejemplo>("SP_Ejemplo @courseID, @sedeID, @periodID", vCourseParameter, vSedeParameter, vPeriodParameter);
         }
     }
 }

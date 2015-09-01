@@ -13,13 +13,38 @@
 }
 <script type="text/javascript">
     var tempIndex = 0;
+    
     window.onload = function () {
-        //the function get_id(number) is in the JS file assignProfesorCourse.js
-        var route = "/CursoProfesor/Cursos/" + get_id(3);
+        //the function get_id(number) is in the JS file assignProfesorCourse.js, value of sede default = 1 (Cartago)
+        var route = "/CursoProfesor/Cursos/" + get_id(3)+"/1";
         //the function generate_table(route) is in the JS file table.js
         generate_table(route);
 
+        route = "/CursoProfesor/Cursos/" + get_id(3) + "/Sedes/";
+        $.getJSON(route, function (data) {
+            var items = "";
+
+            $.each(data, function (i, sede) {
+                if(sede.ID==1)
+                    items += "<option selected='selected' value='" + sede.ID + "'>" + sede.Name + "</option>";
+                else
+                    items += "<option  value='" + sede.ID + "'>" + sede.Name + "</option>";
+            });
+
+
+            if (items != "") {
+                $("#sedes").html(items);
+
+            }
+            else {
+                $("#sedes").html("<option>No hay sedes relacionadas al grupo.</option>")
+
+            }
+        });
+
     };
+
+
 </script>
 
 <head>
@@ -93,6 +118,12 @@
     </div>
     <br /><br /><br /><br /><br /><br />
     <h3>Grupos</h3>
+
+    <div id="columna_1">
+        <label>Sede</label>
+        <select id="sedes" name="sedes" class="form-control"></select>
+    </div>
+    <br/><br /><br/><br />
     <p>
         <a href="@Url.Action("AsignarProfesoraCurso", new { id = Model.ID })"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Asignar Profesor</a>
     </p>

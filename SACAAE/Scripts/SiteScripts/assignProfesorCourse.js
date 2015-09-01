@@ -37,7 +37,7 @@ function eliminar_asignacion_grupo() {
     $.getJSON(route_temporal, function (data) {
         if (data.respuesta = 'success') {
             var route = "/CursoProfesor/Cursos/" + get_id(3);
-            document.getElementById('tabla_grupos').innerHTML = "";
+            document.getElementById('table_information_group').innerHTML = "";
             generate_table(route);
             location.reload();
         }
@@ -216,8 +216,31 @@ $("#Grupos_Disponibles").change(function () {
                 document.getElementById('table_schedule_group').innerHTML = tabla;
             }
             else {
-                /*Sin Profesores asignados*/
-                document.getElementById('table_schedule_group').innerHTML = "<p> Sin profesores asignados</p>";
+                /*Sin Horario Asignado*/
+                document.getElementById('table_schedule_group').innerHTML =
+                    "<table>" +
+                "<thead>"+
+                "<th class=\"table_custom\">Dia</th>"+
+                "<th class=\"table_custom\">Hora Inicio</th>"+
+                "<th class=\"table_custom\">Hora Fin</th>"+
+                "<th class=\"table_custom\">Aula</th>"+
+                "</thead>"+
+                "<tbody>"+
+                    "<tr>"+
+                        "<td class=\"table_custom\">-</td>"+
+                        "<td class=\"table_custom\">-</td>"+
+                        "<td class=\"table_custom\">-</td>"+
+                        "<td class=\"table_custom\">-</td>"+
+                "</tr>"+
+                    "<tr>"+
+                        "<td class=\"table_custom\">-</td>"+
+                        "<td class=\"table_custom\">-</td>"+
+                        "<td class=\"table_custom\">-</td>"+
+                        "<td class=\"table_custom\">-</td>"+
+                    "</tr>"+
+                "</tbody>"+
+                "</table>"+
+        "</div>";
             }
         });
     });
@@ -258,4 +281,16 @@ function changeHourCharge() {
 function get_id(number) {
     var url = window.location.pathname.split('/');
     return url[number];
+}
+
+function adjust_hour(hour)
+{
+    
+    if (hour > '1000')
+    {
+ 
+    }
+    else
+    {
+    }
 }

@@ -52,7 +52,7 @@ namespace SACAAE.Controllers
             {
                 return HttpNotFound();
             }
-
+            ViewBag.Sedes = new SelectList(db.Sedes, "ID", "Name");
             return View(curso);
         }
 
@@ -133,7 +133,7 @@ namespace SACAAE.Controllers
         }
 
         /// <summary>
-        ///  Show the view for assign Profesor to a Course
+        ///  Show the view for assigning Profesor to a Course
         /// </summary>
         /// <autor> Esteban Segura Benavides </autor>
         /// <param name="id"> ID of Course in database</param>
@@ -159,7 +159,7 @@ namespace SACAAE.Controllers
         }
 
         /// <summary>
-        ///  Save the assign Profesor to a Course if don't have problems with the profesor scheduler
+        ///  Saves the assign Profesor to a Course if it doesn't have problems with the profesor scheduler
         /// </summary>
         /// <autor> Esteban Segura Benavides </autor>
         /// <param name="id"> ID of Course in database</param>
@@ -172,7 +172,7 @@ namespace SACAAE.Controllers
             if (ModelState.IsValid)
             {
                 //Verify if profesor have other assign in the same day and start hour, if don't have conflict with other group in the same hour and day return true, else
-                //if found problem with other group in the same day and start hour return false and the assign is cancelled and the user recive information
+                //if found problem with other group in the same day and start hour return false and the assign is cancelled and the user receive information
                 Boolean vChoqueHorario = isScheduleProfesorValidate(Grupos_Disponibles, Profesores);
 
                 //If doesn't exist problems in the profesor schedule
@@ -383,8 +383,7 @@ namespace SACAAE.Controllers
                                    join profesor in db.Professors on grupo.ProfessorID equals profesor.ID
                                    join plan_estudio in db.StudyPlans on bloque_planes.PlanID equals plan_estudio.ID
                                    join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
-                                   join plan_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_sede.StudyPlanID
-                                   join sede in db.Sedes on plan_sede.SedeID equals sede.ID
+                                   join sede in db.Sedes on bloque_planes_curso.SedeID equals sede.ID
                                    join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
                                    join aula in db.Classrooms on grupo_aula.ClassroomID equals aula.ID
                                    join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
@@ -395,7 +394,29 @@ namespace SACAAE.Controllers
                                        aula.Code,aula.Capacity,sede_id = sede.ID,sede_name = sede.Name,plan_id = plan_estudio.ID,plan_name = plan_estudio.Name,bloque_id = bloque_academico.ID,
                                        descripcion_bloque = bloque_academico.Description, modalidad_id=modalidad.ID,modalidad_name = modalidad.Name, asignacion_id=grupo.HourAllocatedTypeID
                                    });
-               
+
+                var lista = vInformationGroup.ToList();
+                /*If dont exist classroom related with a course*/
+                if (lista.Count == 0)
+                {
+                   var vInformationGroup2 = (from curso in db.Courses
+                                         join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
+                                         join bloque_planes in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
+                                         join bloque_academico in db.AcademicBlocks on bloque_planes.BlockID equals bloque_academico.ID
+                                         join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
+                                         join profesor in db.Professors on grupo.ProfessorID equals profesor.ID
+                                         join plan_estudio in db.StudyPlans on bloque_planes.PlanID equals plan_estudio.ID
+                                         join modalidad in db.Modalities on plan_estudio.ModeID equals modalidad.ID
+                                         join sede in db.Sedes on bloque_planes_curso.SedeID equals sede.ID
+                                         select new {curso_id = curso.ID,curso_name = curso.Name,curso.TheoreticalHours,grupo.Number, profesor_name = profesor.Name,
+                                             StartHour = "No asignado",EndHour = "No asignado",Day="No asignado",Code="No asignado",Capacity="?",
+                                             sede_id = sede.ID,plan_id = plan_estudio.ID, plan_name = plan_estudio.Name, bloque_id = bloque_academico.ID, descripcion_bloque = bloque_academico.Description,
+                                             modalidad_id = modalidad.ID, modalidad_name = modalidad.Name, asignacion_id = grupo.HourAllocatedTypeID
+                                         });
+                   var json2 = JsonConvert.SerializeObject(vInformationGroup2);
+                   return Content(json2);
+                }
+
                 var json = JsonConvert.SerializeObject(vInformationGroup);
                 return Content(json);
             }
