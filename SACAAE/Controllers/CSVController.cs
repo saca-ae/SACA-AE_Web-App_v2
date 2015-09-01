@@ -87,7 +87,8 @@ namespace SACAAE.Controllers
                         vGroupClassroom.ClassroomID = vIdClassroom;
 
                         if (vIdClassroom != 0 || vIdSchedule != 0 ) // There is a classroom or schedule to assign
-                        { 
+                        {
+                            if (vIdClassroom == 0) { vGroupClassroom.ClassroomID = null; }
                             AddGroupClassroom(vGroupClassroom);
                             vState = "Completo";
                         }
