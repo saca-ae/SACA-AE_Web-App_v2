@@ -24,4 +24,37 @@
         <button type="submit" class="btn btn-default" id="btnLoadCSV" disabled style="float:left">  Cargar Asignaciones </button>
         <input type='file' title="Seleccione el archivo CSV" id="fileInput" >
     </div>
- </body>
+
+    <table class="table" id="results">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Grupo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Curso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Profesor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HFinal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Aula)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstadoAsignacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DetalleAsignacion)
+            </th>
+        </tr>
+    </table>
+</body>
+

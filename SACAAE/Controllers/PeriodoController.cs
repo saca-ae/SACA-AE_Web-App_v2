@@ -26,7 +26,7 @@ namespace SACAAE.Controllers
             gPeriod = gPeriod.AddNewSemester();
             
             int vIdPeriod = gPeriod.getIDPeriod(gPeriod.Year, gPeriod.NumberID);
-            gvStoredProcedure.SP_CreateGroupsinNewSemester(vIdPeriod);
+            gvStoredProcedure.SP_CreateGroupsNewSemester(vIdPeriod);
 
             IQueryable<GroupsCreatedViewModel> vGroupsList = getGroupsList(vIdPeriod);
 
