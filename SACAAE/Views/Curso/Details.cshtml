@@ -24,13 +24,13 @@
         $.getJSON(route, function (data) {
             var items = "";
 
-            /*
+            
             $.each(data, function (i, sede) {
                 if(sede.ID==1)
                     items += "<option selected='selected' value='" + sede.ID + "'>" + sede.Name + "</option>";
                 else
                     items += "<option  value='" + sede.ID + "'>" + sede.Name + "</option>";
-            });  */
+            });  
 
 
             if (items != "") {
@@ -45,6 +45,8 @@
 
     };
 
+    
+
 
 </script>
 
@@ -54,6 +56,7 @@
 
 @using (Html.BeginForm("Details", "Detalle", FormMethod.Post, new { id = "detailsForm" }))
 {
+    <p>@ViewBag.InfoGrupo</p>
     <div class="header">
         @if (TempData.ContainsKey("MessageSuccess"))
         {

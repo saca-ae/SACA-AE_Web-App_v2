@@ -10,6 +10,7 @@ using SACAAE.Data_Access;
 using SACAAE.Models;
 using SACAAE.Models.ViewModels;
 using Newtonsoft.Json;
+using SACAAE.Models.StoredProcedures;
 
 namespace SACAAE.Controllers
 {
@@ -43,6 +44,8 @@ namespace SACAAE.Controllers
         // GET: Curso/Details/5
         public ActionResult Details(int? id)
         {
+            var vPeriod = Request.Cookies["Periodo"].Value;
+            var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -52,6 +55,9 @@ namespace SACAAE.Controllers
             {
                 return HttpNotFound();
             }
+
+            
+
             ViewBag.Sedes = new SelectList(db.Sedes, "ID", "Name");
             return View(curso);
         }

@@ -23,29 +23,29 @@ function generate_table(route)
         if (data.length != 0) {
             for (i = 0; i < data.length; i++) {
                 if (data[i + 1] != undefined) {
-                    if (data[i].ID == data[i + 1].ID) {
+                    if (data[i].GroupID == data[i + 1].GroupID) {
                         tabla = tabla + "<tr>" +
-                        "<td rowspan=\"2\">" + data[i].Number + "</td>" +
-                        "<td rowspan=\"2\">" + data[i].Name + "</td>" +
-                      "<td>"+data[i].sede_name+"</td>"+
+                        "<td rowspan=\"2\">" + data[i].GroupNumber + "</td>" +
+                        "<td rowspan=\"2\">" + data[i].ProfessorName + "</td>" +
+                      "<td>"+data[i].SedeName+"</td>"+
                         "<td>" + data[i].StartHour + "</td>" +
                         "<td>" + data[i].EndHour + "</td>" +
-                        "<td>" + data[i].Code + "</td>" +
+                        "<td>" + data[i].ClassroomCode + "</td>" +
                         "<td>" + data[i].Day + "</td>" +
                         "<td rowspan=\"2\">" +
 
-                                "<a onclick=ver_detalle_grupo(" + data[i].ID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                "<a onclick=editar_asignacion_grupo(" + data[i].ID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                    "<a href=\"\"  onclick = init_delete(" + data[i].ID + ") data-toggle=\"modal\" data-target=\"#deleteModal\" title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                                "<a onclick=ver_detalle_grupo(" + data[i].GroupID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                "<a onclick=editar_asignacion_grupo(" + data[i].GroupID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                    "<a href=\"\"  onclick = init_delete(" + data[i].GroupID + ") data-toggle=\"modal\" data-target=\"#deleteModal\" title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
                                 // "<a onclick=eliminar_asignacion_grupo(" + data[i].ID + ") title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
                             "</td> " +
                                 "</tr>" +
 
                                 "<tr>" +
-                                    "<td>"+ data[i+1].sede_name+"</td>"+
+                                    "<td>"+ data[i+1].SedeName+"</td>"+
                                     "<td>" + data[i + 1].StartHour + "</td>" +
                                     "<td>" + data[i + 1].EndHour + "</td>" +
-                                    "<td>" + data[i + 1].Code + "</td>" +
+                                    "<td>" + data[i + 1].ClassroomCode + "</td>" +
                                     "<td>" + data[i + 1].Day + "</td>" +
 
                                 "</tr>";
@@ -54,17 +54,26 @@ function generate_table(route)
                     else {
 
                         tabla = tabla + "<tr>" +
-                        "<td>" + data[i].Number + "</td>" +
-                        "<td>" + data[i].Name + "</td>" +
-                        "<td>" + data[i].sede_name + "</td>" +
-                        "<td>" + data[i].StartHour + "</td>" +
-                        "<td>" + data[i].EndHour + "</td>" +
-                        "<td>" + data[i].Code + "</td>" +
-                        "<td>" + data[i].Day + "</td>" +
-                        "<td>" +
-                             "<a onclick=ver_detalle_grupo(" + data[i].ID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                "<a onclick=editar_asignacion_grupo(" + data[i].ID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                    "<a href=\"\"  onclick = init_delete(" + data[i].ID + ") data-toggle=\"modal\" data-target=\"#deleteModal\" title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                        "<td>" + data[i].GroupNumber + "</td>" +
+                        "<td>" + data[i].ProfessorName + "</td>" +
+                        "<td>" + data[i].SedeName + "</td>";
+                        if (data[i].StartHour != null) {
+                            tabla = tabla +"<td>" + data[i].StartHour + "</td>" +
+                            "<td>" + data[i].EndHour + "</td>" +
+                            "<td>" + data[i].ClassroomCode + "</td>" +
+                            "<td>" + data[i].Day + "</td>";
+                        }
+                        else
+                        {
+                            tabla = tabla + "<td>-</td>" +
+                            "<td>-</td>" +
+                            "<td>-</td>" +
+                            "<td>-</td>";
+                        }
+                        tabla = tabla + "<td>" +
+                             "<a onclick=ver_detalle_grupo(" + data[i].GroupID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                "<a onclick=editar_asignacion_grupo(" + data[i].GroupID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                    "<a href=\"\"  onclick = init_delete(" + data[i].GroupID + ") data-toggle=\"modal\" data-target=\"#deleteModal\" title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
                                 // "<a onclick=eliminar_asignacion_grupo(" + data[i].ID + ") title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
                             "</td> " +
                         "</tr>";
@@ -74,17 +83,26 @@ function generate_table(route)
                 else {
 
                     tabla = tabla + "<tr>" +
-                    "<td>" + data[i].Number + "</td>" +
-                    "<td>" + data[i].Name + "</td>" +
-                    "<td>" + data[i].sede_name + "</td>" +
-                    "<td>" + data[i].StartHour + "</td>" +
-                    "<td>" + data[i].EndHour + "</td>" +
-                    "<td>" + data[i].Code + "</td>" +
-                    "<td>" + data[i].Day + "</td>" +
-                    "<td>" +
-                             "<a onclick=ver_detalle_grupo(" + data[i].ID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                "<a onclick=editar_asignacion_grupo(" + data[i].ID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                    "<a href=\"\"  onclick = init_delete(" + data[i].ID + ") data-toggle=\"modal\" data-target=\"#deleteModal\" title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                    "<td>" + data[i].GroupNumber + "</td>" +
+                    "<td>" + data[i].ProfessorName + "</td>" +
+                    "<td>" + data[i].SedeName + "</td>";
+                    if (data[i].StartHour != null) {
+                        tabla = tabla + "<td>" + data[i].StartHour + "</td>" +
+                       "<td>" + data[i].EndHour + "</td>" +
+                       "<td>" + data[i].ClassroomCode + "</td>" +
+                       "<td>" + data[i].Day + "</td>";
+                    }
+                    else
+                    {
+                        tabla = tabla + "<td>-</td>" +
+                                "<td>-</td>" +
+                                "<td>-</td>" +
+                                "<td>-</td>";
+                    }
+                    tabla = tabla + "<td>" +
+                             "<a onclick=ver_detalle_grupo(" + data[i].GroupID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                "<a onclick=editar_asignacion_grupo(" + data[i].GroupID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
+                                    "<a href=\"\"  onclick = init_delete(" + data[i].GroupID + ") data-toggle=\"modal\" data-target=\"#deleteModal\" title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
                                 // "<a onclick=eliminar_asignacion_grupo(" + data[i].ID + ") title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
                         "</td> " +
                     "</tr>";
@@ -132,7 +150,7 @@ function generate_table(route)
 /// <param name="route"> Ruta donde buscar la informacion</param>
 /// <returns>None</returns>
 function generate_table_schedule_group(route2) {
-    var tabla = "";
+    
     var tabla_head = "<table id=\"profesores_asignados_a_curso\" >" +
    "<thead>" +
        "<th>Dia</th>" +
@@ -142,7 +160,7 @@ function generate_table_schedule_group(route2) {
    "</thead>" +
    "<tbody>";
     $.getJSON(route2, function (data) {
-
+        var tabla = "";
         if (data.length != 0) {
             for (i = 0; i < data.length; i++) {
                 tabla = tabla + "<tr>" +
