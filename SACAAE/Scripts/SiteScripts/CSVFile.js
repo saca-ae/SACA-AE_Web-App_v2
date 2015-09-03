@@ -26,6 +26,7 @@ $("#btnLoadCSV").click(function () {
         }
        
     }
+    $("#csvResults").removeAttr("hidden")
 });
 
 function drawTable(data) {
@@ -52,12 +53,12 @@ $("#fileInput").change(function () {
     var selectedText = $("#fileInput").val();
     var extension = selectedText.split('.');
     if (extension[1] != "csv") {
-        $("#msjFile").focus();
+        $("#inputText").focus();
         $("#btnLoadCSV").attr("disabled", "disabled")
         alert("Por favor seleecione un archivo .csv");
         return;
     }
-    $("#msjFile").val(selectedText);
+    $("#inputText").val(selectedText);
     $("#btnLoadCSV").removeAttr("disabled")
 
 });

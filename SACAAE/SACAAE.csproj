@@ -308,6 +308,7 @@
     <Content Include="Content\DataTables\dataTables.responsive.min.js" />
     <Content Include="Content\DataTables\jquery.dataTables.min.css" />
     <Content Include="Content\DataTables\jquery.dataTables.min.js" />
+    <Content Include="Content\jasny-bootstrap.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -336,6 +337,7 @@
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jasny-bootstrap.js" />
     <Content Include="Scripts\SiteScripts\CSVFile.js" />
     <Content Include="Scripts\SiteScripts\assignProfesorCourse.js" />
     <Content Include="Scripts\SiteScripts\CursoProfesor.js" />
