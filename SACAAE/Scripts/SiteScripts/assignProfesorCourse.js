@@ -17,6 +17,13 @@ function ver_detalle_grupo(vIDGroup) {
     window.location = route_temporal;
 }
 
+$('#sedes').change(function () {
+    var vSede = document.getElementById('sedes').value
+    var vRoute = "/CursoProfesor/Cursos/" + get_id(3) + "/"+vSede;
+    //the function generate_table(route) is in the JS file table.js
+    generate_table(vRoute);
+});
+
 /// <summary>
 ///  Get the element select for delete
 /// </summary>

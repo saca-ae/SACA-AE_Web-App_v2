@@ -28,7 +28,7 @@ namespace SACAAE.Data_Access
         }
     
     
-        public virtual int SP_CreateGroupsinNewSemester(Nullable<int> pIdPeriod)
+        public virtual int SP_CreateGroupsNewSemester(Nullable<int> pIdPeriod)
         {
             var pIdPeriodParameter = pIdPeriod.HasValue ?
                 new ObjectParameter("pIdPeriod", pIdPeriod) :

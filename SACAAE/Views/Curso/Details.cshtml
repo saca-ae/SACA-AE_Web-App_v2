@@ -24,12 +24,13 @@
         $.getJSON(route, function (data) {
             var items = "";
 
+            
             $.each(data, function (i, sede) {
                 if(sede.ID==1)
                     items += "<option selected='selected' value='" + sede.ID + "'>" + sede.Name + "</option>";
                 else
                     items += "<option  value='" + sede.ID + "'>" + sede.Name + "</option>";
-            });
+            });  
 
 
             if (items != "") {
@@ -44,6 +45,8 @@
 
     };
 
+    
+
 
 </script>
 
@@ -53,6 +56,7 @@
 
 @using (Html.BeginForm("Details", "Detalle", FormMethod.Post, new { id = "detailsForm" }))
 {
+    <p>@ViewBag.InfoGrupo</p>
     <div class="header">
         @if (TempData.ContainsKey("MessageSuccess"))
         {
@@ -119,10 +123,13 @@
     <br /><br /><br /><br /><br /><br />
     <h3>Grupos</h3>
 
+    
     <div id="columna_1">
         <label>Sede</label>
         <select id="sedes" name="sedes" class="form-control"></select>
     </div>
+     
+    
     <br/><br /><br/><br />
     <p>
         <a href="@Url.Action("AsignarProfesoraCurso", new { id = Model.ID })"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Asignar Profesor</a>

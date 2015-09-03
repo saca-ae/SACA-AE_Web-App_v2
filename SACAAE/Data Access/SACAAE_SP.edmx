@@ -8,6 +8,11 @@
         <Function Name="SP_CreateGroupsinNewSemester" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="pIdPeriod" Type="int" Mode="In" />
         </Function>
+        <Function Name="SP_Ejemplo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseID" Type="int" Mode="In" />
+          <Parameter Name="sedeID" Type="int" Mode="In" />
+          <Parameter Name="periodID" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="ModelSPStoreContainer" />
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -17,7 +22,22 @@
           <FunctionImport Name="SP_CreateGroupsinNewSemester">
           <Parameter Name="pIdPeriod" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="SP_Ejemplo" ReturnType="Collection(ModelSP.SP_Ejemplo_Result)">
+            <Parameter Name="courseID" Mode="In" Type="Int32" />
+            <Parameter Name="sedeID" Mode="In" Type="Int32" />
+            <Parameter Name="periodID" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="SP_Ejemplo_Result">
+          <Property Type="Int32" Name="GroupID" Nullable="true" />
+          <Property Type="Int32" Name="GroupNumber" Nullable="true" />
+          <Property Type="String" Name="SedeName" Nullable="true" />
+          <Property Type="String" Name="ProfessorName" Nullable="true" />
+          <Property Type="String" Name="ClassroomCode" Nullable="true" />
+          <Property Type="String" Name="StartHour" Nullable="true" />
+          <Property Type="String" Name="EndHour" Nullable="true" />
+          <Property Type="String" Name="Day" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -25,6 +45,20 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ModelSPStoreContainer" CdmEntityContainer="SACAAE_SP" >
           <FunctionImportMapping FunctionImportName="SP_CreateGroupsinNewSemester" FunctionName="ModelSP.Store.SP_CreateGroupsinNewSemester" />
+          <FunctionImportMapping FunctionImportName="SP_Ejemplo" FunctionName="ModelSP.Store.SP_Ejemplo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ModelSP.SP_Ejemplo_Result">
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="GroupNumber" ColumnName="GroupNumber" />
+                <ScalarProperty Name="SedeName" ColumnName="SedeName" />
+                <ScalarProperty Name="ProfessorName" ColumnName="ProfessorName" />
+                <ScalarProperty Name="ClassroomCode" ColumnName="ClassroomCode" />
+                <ScalarProperty Name="StartHour" ColumnName="StartHour" />
+                <ScalarProperty Name="EndHour" ColumnName="EndHour" />
+                <ScalarProperty Name="Day" ColumnName="Day" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

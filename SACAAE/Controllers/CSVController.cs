@@ -32,6 +32,7 @@ namespace SACAAE.Controllers
         /// </summary>
         /// <author> Cristian Araya Fuentes </author> 
         /// <returns></returns>
+        [HttpPost]
         public ActionResult UploadCsvFile()
         {
             List <GroupAssignmentCSVViewModel> vGroupsList = new List<GroupAssignmentCSVViewModel>();
@@ -39,7 +40,7 @@ namespace SACAAE.Controllers
             int vPeriod = int.Parse(Request.Cookies["Periodo"].Value);
 
             var attachedFile = System.Web.HttpContext.Current.Request.Files["CsvDoc"];
-            if (attachedFile == null || attachedFile.ContentLength <= 0) return View(vGroupsList);
+            if (attachedFile == null || attachedFile.ContentLength <= 0) return Json(null);
             var csvReader = new StreamReader(attachedFile.InputStream);
             
             using (csvReader)
@@ -71,6 +72,7 @@ namespace SACAAE.Controllers
                     if (vValidateProfessorSchedule == 0){ vDetails += " - Conflicto de Horario del Profesor";}
                     if (vIdClassroom == 0) { vDetails += " - Aula Incorrecta";}
                     if (vValidateClassroomSchedule == 0) { vDetails += " - Conflicto de Horario del Aula";}
+                    vState = "Incompleto";
 
                     if (vIDGroup != 0) // Group is ok
                     {
@@ -80,12 +82,20 @@ namespace SACAAE.Controllers
                         if (vIdClassroom != 0 && (vValidateClassroomSchedule == 0)) //Classroom ok but Conflict with schedule
                         { vIdSchedule = 0; }
 
+                        if (vValidateClassroomSchedule == 0) //Classroom ok but Conflict with schedule
+                        { vIdSchedule = 0; }
+
                         vGroupClassroom.ScheduleID = vIdSchedule;
                         vGroupClassroom.GroupID = vIDGroup;
                         vGroupClassroom.ClassroomID = vIdClassroom;
 
                         if (vIdClassroom != 0 || vIdSchedule != 0 ) // There is a classroom or schedule to assign
-                        { AddGroupClassroom(vGroupClassroom); }
+                        {
+                            if (vIdClassroom == 0) { vGroupClassroom.ClassroomID = null; }
+                            if (vIdSchedule == 0) { vGroupClassroom.ScheduleID = null; }
+                            AddGroupClassroom(vGroupClassroom);
+                            vState = "Completo";
+                        }
                         
                         if (vIdProfessor != 0 && (vValidateProfessorSchedule != 0)) //Professor ok
                         {
@@ -109,8 +119,7 @@ namespace SACAAE.Controllers
                 }    
             }
 
-            int cont = vGroupsList.Count;
-            return View(vGroupsList);               
+            return Json(vGroupsList, JsonRequestBehavior.AllowGet);             
         }
 
         public void AddGroupClassroom(GroupClassroom pGroupClassroom)
@@ -235,6 +244,7 @@ namespace SACAAE.Controllers
             else return 1;
 
             // Check if there schedules conflicts
+            /////////////////////////////////// Aqui esta el erro!
             foreach (Schedule group in ScheduleList)
             {
                 int vStart = Convert.ToInt32(group.StartHour);
