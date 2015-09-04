@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/SiteScripts/reporteProfeCurso.js")"></script>
+}
+<h2>Seleccionar Plan de Estudio</h2>
+@if (TempData.ContainsKey("MessageError"))
+{
+    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+}
+@if (TempData.ContainsKey("MessageSuccess"))
+{
+    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+}
+@using (Html.BeginForm())
+{
+    <div class="row-fluid">
+        <div class="col-lg-5">
+            <div class="span12">
+
+                <div>
+                    @Html.Label("Periodo")
+                    @Html.DropDownList("Periodos", null, "-- Seleccione el periodo --", htmlAttributes: new { @class = "form-control" })
+                </div>
+
+                <div>
+                    @Html.Label("Sede")
+                    @Html.DropDownList("Sedes", null, "-- Seleccione la sede --", htmlAttributes: new { @class = "form-control" })
+                </div>
+                
+                <div>
+                    @Html.Label("Modalidad")
+                    @Html.DropDownList("Modalidades", null, "-- Seleccione la modalidad --", htmlAttributes: new { @class = "form-control" })
+                </div>
+
+                <div>
+                    @Html.Label("Plan")
+                    <select id="Planes" name="Planes" class="form-control"></select>
+                </div>
+
+                <br />
+                <br />
+                <div class="row">
+                    <div class="span12">
+                        <div id="dvData">
+                            <table id="datosReporte" class="table"></table>
+                        </div>
+                    </div>
+                    <button class="btn" id="btnExport">Export</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}

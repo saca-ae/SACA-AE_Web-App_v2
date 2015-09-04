@@ -238,6 +238,31 @@ namespace SACAAE.Controllers
         }
 
         /// <summary>
+        /// Get schedule about a group
+        /// </summary>
+        /// <autor>Adonis Mora Angulo</autor>
+        /// <param name="cursoxgrupo"></param>
+        /// <returns></returns>
+        [Route("CursoProfesor/Horarios/Info/{pCursoGrupo:int}")]
+        public ActionResult getSchedule(int pCursoGrupo)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var grupo = db.Groups.Find(pCursoGrupo);
+                var info = db.GroupClassrooms.Where(p => p.GroupID == pCursoGrupo)
+                                             .Select(p => new
+                                             {
+                                                 Dia = p.Schedule.Day,
+                                                 Hora_Inicio = p.Schedule.StartHour,
+                                                 Hora_Fin = p.Schedule.EndHour
+                                             });
+
+                return Json(info, JsonRequestBehavior.AllowGet);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        /// <summary>
         /// ***************** NOT USED  ********************************* 
         /// </summary>
         /// <autor>Unkown</autor>
