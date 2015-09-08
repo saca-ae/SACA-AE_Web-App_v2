@@ -25,14 +25,14 @@ function generate_table(route)
                 if (data[i + 1] != undefined) {
                     if (data[i].GroupID == data[i + 1].GroupID) {
                         tabla = tabla + "<tr>" +
-                        "<td rowspan=\"2\">" + data[i].GroupNumber + "</td>" +
-                        "<td rowspan=\"2\">" + data[i].ProfessorName + "</td>" +
+                        "<td rowspan=\"2\" style=\"vertical-align:middle\">" + data[i].GroupNumber + "</td>" +
+                        "<td rowspan=\"2\"  style=\"vertical-align:middle\">" + data[i].ProfessorName + "</td>" +
                       "<td>"+data[i].SedeName+"</td>"+
                         "<td>" + data[i].StartHour + "</td>" +
                         "<td>" + data[i].EndHour + "</td>" +
                         "<td>" + data[i].ClassroomCode + "</td>" +
                         "<td>" + data[i].Day + "</td>" +
-                        "<td rowspan=\"2\">" +
+                        "<td rowspan=\"2\"  style=\"vertical-align:middle\">" +
 
                                 "<a onclick=ver_detalle_grupo(" + data[i].GroupID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
                                 "<a onclick=editar_asignacion_grupo(" + data[i].GroupID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
@@ -74,7 +74,7 @@ function generate_table(route)
                              "<a onclick=ver_detalle_grupo(" + data[i].GroupID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
                                 "<a onclick=editar_asignacion_grupo(" + data[i].GroupID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
                                     "<a href=\"\"  onclick = init_delete(" + data[i].GroupID + ") data-toggle=\"modal\" data-target=\"#deleteModal\" title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
-                                // "<a onclick=eliminar_asignacion_grupo(" + data[i].ID + ") title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                               
                             "</td> " +
                         "</tr>";
 
@@ -103,7 +103,7 @@ function generate_table(route)
                              "<a onclick=ver_detalle_grupo(" + data[i].GroupID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
                                 "<a onclick=editar_asignacion_grupo(" + data[i].GroupID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
                                     "<a href=\"\"  onclick = init_delete(" + data[i].GroupID + ") data-toggle=\"modal\" data-target=\"#deleteModal\" title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
-                                // "<a onclick=eliminar_asignacion_grupo(" + data[i].ID + ") title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>" +
+                                
                         "</td> " +
                     "</tr>";
 

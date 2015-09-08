@@ -201,16 +201,16 @@ namespace SACAAE.Controllers
             {
                 var vPeriod = Request.Cookies["Periodo"].Value;
                 var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
-                var vListGroup = db.Groups
-                                    .Where(p => (p.ProfessorID == null || p.ProfessorID == 3)
-                                             && p.PeriodID == vIDPeriod
-                                             && p.BlockXPlanXCourse.CourseID == pCurso
-                                             && p.BlockXPlanXCourse.AcademicBlockXStudyPlan.PlanID == pPlan
-                                             && p.BlockXPlanXCourse.AcademicBlockXStudyPlan.BlockID == pBloque
-                                             && p.BlockXPlanXCourse.SedeID == pSede
-                                            )
-                                    .Select(p => new{ p.ID, p.Number });
-
+                var vListGroup = 
+                                (from group_selected in db.Groups
+                                join groupsclassroom in db.GroupClassrooms on group_selected.ID equals groupsclassroom.GroupID
+                                where (group_selected.Professor == null || group_selected.ProfessorID == 3) 
+                                &&group_selected.PeriodID == vIDPeriod
+                                && group_selected.BlockXPlanXCourse.CourseID == pCurso
+                                && group_selected.BlockXPlanXCourse.AcademicBlockXStudyPlan.PlanID == pPlan
+                                && group_selected.BlockXPlanXCourse.AcademicBlockXStudyPlan.BlockID == pBloque
+                                && group_selected.BlockXPlanXCourse.SedeID == pSede
+                                select new { group_selected.ID, group_selected.Number }).Distinct();
                 return Json(vListGroup, JsonRequestBehavior.AllowGet);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
