@@ -1,0 +1,62 @@
+﻿@model IEnumerable<SACAAE.Models.Commission>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+    <h1 class="page-header">
+        Comisiones
+    </h1>
+
+    @if (TempData.ContainsKey("Message"))
+    {
+        <p class="text-success">@TempData["Message"].ToString()</p>
+    }
+    
+    <p>
+        <a href="@Url.Action("Create", "Comision")"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>  Agregar Comisión</a>
+    </p>
+
+    <table class="table  table-hover">
+        <thead>
+
+            <tr>
+                <th>
+                    @Html.Label("Nombre")
+                </th>
+                <th class="text-center">
+                    @Html.Label("Inicio")
+                </th>
+                <th class="text-center">
+                    @Html.Label("Fin")
+                </th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+                          
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td class="text-center">
+                        @item.Start.ToString("dd/MM/yyyy")
+                    </td>
+                    <td class="text-center">
+                        @item.End.ToString("dd/MM/yyyy")
+                    </td>
+                    <td class="text-center">
+                        <a href="@Url.Action("Details", new { id = item.ID })" title="Ver detalle"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                        <a href="@Url.Action("Edit", new { id = item.ID })" title="Editar"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                        <a href="@Url.Action("Delete", new { id = item.ID })" title="Eliminar"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a> 
+
+                       
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>

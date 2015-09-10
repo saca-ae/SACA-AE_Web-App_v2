@@ -65,16 +65,20 @@ namespace SACAAE.Controllers
         // GET: Curso/Create
         public ActionResult Create()
         {
-            return View();
+            var model = new Course();
+            return View(model);
         }
 
         // POST: Curso/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Course curso)
+        public ActionResult Create([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Course curso, int HorasPracticas, int HorasTeoricas, int Bloque)
         {
             if (ModelState.IsValid)
             {
+                curso.PracticeHours = HorasPracticas;
+                curso.TheoreticalHours = HorasTeoricas;
+                curso.Block = Bloque;
                 db.Courses.Add(curso);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -101,14 +105,32 @@ namespace SACAAE.Controllers
         // POST: Curso/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Course curso)
+        public ActionResult Edit([Bind(Include = "ID,Name,Code,TheoreticalHours,Block,External,PracticeHours,Credits")] Course curso, String Name, String  Code)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(curso).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            
+                if (curso.Name != Name)
+                {
+                    if (existeCursoPorNombre(curso.Name))
+                    {
+                        TempData[TempDataMessageKey] = "Es posible que exista un curso con el mismo nombre. Por Favor intente de nuevo.";
+                        return RedirectToAction("Edit");
+                    }
+                }
+                if (curso.Code != Code)
+                {
+                    if (existeCurso(curso.Code))
+                    {
+                        TempData[TempDataMessageKey] = "Es posible que exista un curso con el mismo codigo. Por Favor intente de nuevo.";
+                        return RedirectToAction("Edit");
+                    }
+                }
+                if (ModelState.IsValid)
+                {
+                    db.Entry(curso).State = EntityState.Modified;
+                    db.SaveChanges();
+                    TempData[TempDataMessageKey] = "El registro ha sido editado correctamente.";
+                    return RedirectToAction("Index");
+                }
             return View(curso);
         }
 
@@ -132,10 +154,37 @@ namespace SACAAE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Course curso = db.Courses.Find(id);
-            db.Courses.Remove(curso);
-            db.SaveChanges();
+            if (existeCurso(id))
+            {
+                var existeEnPlan = from vBlocksXPlansXCourses in db.BlocksXPlansXCourses
+                                   where vBlocksXPlansXCourses.CourseID == id
+                                   select vBlocksXPlansXCourses;
+                if (!existeEnPlan.Any())
+                {
+                    Course curso = db.Courses.Find(id);
+                    if (curso != null)
+                    {
+                        db.Courses.Remove(curso);
+                        db.SaveChanges();
+                        TempData[TempDataMessageKey] = "Curso removido satisfactoriamente";
+
+                    }
+                    else
+                    {
+                        TempData[TempDataMessageKey] = "El curso no existe";
+                    }
+                }
+                else
+                {
+                    TempData[TempDataMessageKey] = "Debe remover el curso de los planes a los que esta asignado";
+                }
+            }
+            else
+            {
+                TempData[TempDataMessageKey] = "El curso no existe";
+            }
             return RedirectToAction("Index");
+            
         }
 
         /// <summary>
@@ -366,9 +415,26 @@ namespace SACAAE.Controllers
         }
         /*----------------------------------------------------------------------------*/
 
-        
+        #region Helpers
+            public bool existeCurso(string Codigo)
+            {
+                return (db.Courses.SingleOrDefault(c => c.Code == Codigo) != null);
+
+            }
+
+            public bool existeCursoPorNombre(String Nombre)
+            {
+                return (db.Courses.SingleOrDefault(c => c.Name == Nombre) != null);
+            }
+
+            public bool existeCurso(int Curso)
+            {
+                return (db.Courses.SingleOrDefault(c => c.ID == Curso) != null);
+            }
+        #endregion
+
         #region Ajax
-        
+
         /// <summary>
         ///  Get information of a group
         /// </summary>

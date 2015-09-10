@@ -1,0 +1,42 @@
+﻿@model SACAAE.Models.Schedule
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Schedule</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Day)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Day)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartHour)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartHour)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EndHour)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EndHour)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

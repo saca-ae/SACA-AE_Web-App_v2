@@ -5,82 +5,103 @@
     Layout = "~/Views/Shared/Privado.cshtml";
 }
 
-<h2>Create</h2>
+<div class="col-lg-4">
+    <h2 class="page-header">Agregar Curso</h2>
+    @if (TempData.ContainsKey("MessageError"))
+    { 
+        <p class="text-danger">@TempData["MessageError"].ToString()</p>
+    }
+    @if (TempData.ContainsKey("MessageSuccess"))
+    { 
+        <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+    }
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Curso</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true);
+        
+        <div id="ventanaAgregar">
+
+            <div class="editor-label">
+                <label> Nombre </label>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Name, new
+               {
+                   @class = "form-control",
+                   @placeholder = "Nombre del Curso",
+                   @required = "true"
+               })
+                @Html.ValidationMessageFor(model => model.Name)
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TheoreticalHours, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TheoreticalHours, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TheoreticalHours, "", new { @class = "text-danger" })
+            <br/>
+            <div class="editor-label">
+                <label> Código </label>
             </div>
-        </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Code, new
+               {
+                   @class = "form-control",
+                   @placeholder = "Código del Curso",
+                   @required = "true"
+               })
+                @Html.ValidationMessageFor(model => model.Code)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Block, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Block, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Block, "", new { @class = "text-danger" })
             </div>
-        </div>
+            <br />
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.External, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.External)
-                    @Html.ValidationMessageFor(model => model.External, "", new { @class = "text-danger" })
-                </div>
+            <div class="editor-label">
+                <label> Horas Prácticas </label>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PracticeHours, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PracticeHours, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PracticeHours, "", new { @class = "text-danger" })
+            <div class="editor-field">
+                <input name="HorasPracticas" class="form-control" id="HorasPracticas" type="number" min="0" value="0" />
+                @Html.ValidationMessageFor(model => model.PracticeHours)
             </div>
-        </div>
+            <br />
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Credits, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Credits, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Credits, "", new { @class = "text-danger" })
+            <div class="editor-label">
+                <label> Horas Teóricas </label>
             </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+            <div class="editor-field">
+                <input name="HorasTeoricas" class="form-control" id="HorasTeoricas" type="number" min="0" value="0" />
+                @Html.ValidationMessageFor(model => model.TheoreticalHours)
             </div>
-        </div>
-    </div>
-}
+            <br />
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+
+            <div class="editor-label">
+                <label> Creditos </label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Credits, new
+               {
+                   @class = "form-control",
+                   @placeholder = "Creditos del Curso",
+                   @required = "true"
+               })
+                @Html.ValidationMessageFor(model => model.Credits)
+
+            </div>
+            <br />
+            <div class="editor-label">
+                <label> Bloque</label>
+            </div>
+            <div class="editor-field">
+                <input name="Bloque" class="form-control" id="Bloque" type="number" min="1" max="12" value="1" />
+            </div>
+            <br />
+            <div class="editor-label">
+                <label> Curso externo </label>
+                @Html.CheckBoxFor(model => model.External)
+            </div>
+            <br />
+            <p>
+                <input type="submit" value="Agregar Curso" class="btn" /> | @Html.ActionLink("Regresar", "Index", "Courses")
+            </p>
+
+
+
+        </div>
+    }
 </div>
