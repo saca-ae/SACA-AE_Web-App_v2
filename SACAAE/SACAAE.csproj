@@ -170,15 +170,18 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AulaController.cs" />
     <Compile Include="Controllers\BloqueController.cs" />
+    <Compile Include="Controllers\ComisionController.cs" />
     <Compile Include="Controllers\ComisionProfesorController.cs" />
     <Compile Include="Controllers\CSVController.cs" />
     <Compile Include="Controllers\CursoController.cs" />
     <Compile Include="Controllers\CursoProfesorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HorariosController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PeriodoController.cs" />
     <Compile Include="Controllers\PlazasController.cs" />
     <Compile Include="Controllers\ProfesorController.cs" />
+    <Compile Include="Controllers\ProyectoController.cs" />
     <Compile Include="Controllers\ProyectoProfesorController.cs" />
     <Compile Include="Controllers\ReporteProfeCursoPlanController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
@@ -359,6 +362,7 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\SiteScripts\GuardarDias.js" />
     <Content Include="Scripts\SiteScripts\horarioAula.js" />
+    <Content Include="Scripts\SiteScripts\indexHorario.js" />
     <Content Include="Scripts\SiteScripts\plazaAllocate.js" />
     <Content Include="Scripts\SiteScripts\plazaCreate.js" />
     <Content Include="Scripts\SiteScripts\plazaEdit.js" />
@@ -369,6 +373,7 @@
     <Content Include="Scripts\SiteScripts\RevocarProyectoProfesor.js" />
     <Content Include="Scripts\SiteScripts\scheduleChart.js" />
     <Content Include="Scripts\SiteScripts\table.js" />
+    <Content Include="Scripts\SiteScripts\validaciones.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -447,6 +452,21 @@
     <Content Include="Views\Profesor\Index.cshtml" />
     <Content Include="Views\Profesor\Schedule.cshtml" />
     <Content Include="Views\ReporteProfeCursoPlan\Index.cshtml" />
+    <Content Include="Views\Comision\Create.cshtml" />
+    <Content Include="Views\Comision\Delete.cshtml" />
+    <Content Include="Views\Comision\Details.cshtml" />
+    <Content Include="Views\Comision\Edit.cshtml" />
+    <Content Include="Views\Comision\Index.cshtml" />
+    <Content Include="Views\Proyecto\Create.cshtml" />
+    <Content Include="Views\Proyecto\Delete.cshtml" />
+    <Content Include="Views\Proyecto\Details.cshtml" />
+    <Content Include="Views\Proyecto\Edit.cshtml" />
+    <Content Include="Views\Proyecto\Index.cshtml" />
+    <Content Include="Views\Horarios\Create.cshtml" />
+    <Content Include="Views\Horarios\Delete.cshtml" />
+    <Content Include="Views\Horarios\Details.cshtml" />
+    <Content Include="Views\Horarios\Edit.cshtml" />
+    <Content Include="Views\Horarios\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

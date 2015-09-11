@@ -1,0 +1,43 @@
+﻿@model SACAAE.Models.Commission
+
+@{
+    ViewBag.Title = "Eliminar";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+<div class="col-lg-4">
+    <h2>Eliminar Comisi&oacute;n</h2>
+    <hr />
+    <div class="span12">
+        <h4><span class="label label-warning">¿Est&aacute; seguro de que desea eliminar la informaci&oacute;n de esa Comisi&oacute;n?</span></h4>
+        <br />
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Nombre")
+                @Html.DisplayFor(model => model.Name)
+            </span>
+        </h4>
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Inicio")
+                @Html.DisplayFor(model => model.Start)
+            </span>
+        </h4>
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Fin")
+                @Html.DisplayFor(model => model.End)
+            </span>
+        </h4>
+        <br />
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <p>
+                <input type="submit" value="Eliminar" class="btn" />
+                |
+                @Html.ActionLink("Regresar", "Index")
+            </p>
+        }
+    </div>
+</div>
+

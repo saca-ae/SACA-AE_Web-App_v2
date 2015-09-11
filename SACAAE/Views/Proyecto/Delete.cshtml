@@ -1,0 +1,53 @@
+﻿@model SACAAE.Models.Project
+@{
+    ViewBag.Title = "Eliminar";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<div class="col-lg-4">
+    <h2>Eliminar Proyecto</h2>
+    <hr />
+    <div class="span12">
+        <h4><span class="label label-warning">¿Est&aacute; seguro de que desea eliminar la informaci&oacute;n de ese proyecto?</span></h4>
+        <br />
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Nombre")
+
+                @Html.DisplayFor(model => model.Name)
+            </span>
+        </h4>
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Inicio")
+
+                @Html.DisplayFor(model => model.Start)
+            </span>
+        </h4>
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Fin")
+
+                @Html.DisplayFor(model => model.End)
+            </span>
+        </h4>
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Link")
+
+                @Html.DisplayFor(model => model.Link)
+            </span>
+        </h4>
+        <hr />
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <p>
+                <input type="submit" value="Eliminar" class="btn" />
+                |
+                @Html.ActionLink("Volver", "Index")
+            </p>
+        }
+    </div>
+</div>
+

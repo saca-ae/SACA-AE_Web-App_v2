@@ -38,6 +38,9 @@ namespace SACAAE.Controllers
         [HttpPost]
         public ActionResult UploadCsvFile()
         {
+            gvDatabase.Configuration.AutoDetectChangesEnabled = false;
+            gvDatabase.Configuration.ValidateOnSaveEnabled = false;
+
             List <GroupAssignmentCSVViewModel> vGroupsList = new List<GroupAssignmentCSVViewModel>();
             IEnumerable<DataCSV> vGroups ;
             int vPeriod = int.Parse(Request.Cookies["Periodo"].Value);
@@ -45,7 +48,7 @@ namespace SACAAE.Controllers
             var vAttachedFile = System.Web.HttpContext.Current.Request.Files["CsvDoc"];
             if (vAttachedFile == null || vAttachedFile.ContentLength <= 0) return Json(null);
             var vCsvReader = new StreamReader(vAttachedFile.InputStream);
-            
+
             using (vCsvReader)
             {
                 var vReader = new CsvReader(vCsvReader);
@@ -70,7 +73,6 @@ namespace SACAAE.Controllers
                     int vValidateProfessorSchedule = getProfessorValidationSchedule(vPeriod, vIdProfessor, vIdSchedule);
                     int vValidateClassroomSchedule = getClassroomValidationSchedule(vPeriod, vIdClassroom, vIdSchedule);
                     int vValidateBlockSchedule = getBlockValidationSchedule(vIdBlock, vIdSchedule, vPeriod);
-
 
                     // If there some error in validation, writes on vDetails a little about the error ocurred.
                     if (vIDGroup == 0) { vDetails = " - Informacion de Grupo incorrecta";}
