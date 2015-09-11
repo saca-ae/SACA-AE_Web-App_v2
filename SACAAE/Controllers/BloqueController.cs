@@ -21,28 +21,7 @@ namespace SACAAE.Controllers
         // GET: Bloque
         public ActionResult Index()
         {
-            String entity = Request.Cookies["Entidad"].Value;
-            var entityID = getEntityID(entity);
-            IQueryable<AcademicBlock> result;
-            if (entity == "TEC")
-            {
-                result = from bloque in db.AcademicBlocks
-                         join BloquesXPlan in db.AcademicBlocksXStudyPlans on bloque.ID equals BloquesXPlan.BlockID
-                         join planDeEstudio in db.StudyPlans on BloquesXPlan.PlanID equals planDeEstudio.ID
-                         where planDeEstudio.EntityTypeID == 1 || planDeEstudio.EntityTypeID == 2 ||
-                         planDeEstudio.EntityTypeID == 3 || planDeEstudio.EntityTypeID == 4 || planDeEstudio.EntityTypeID == 10
-                         select bloque;
-            }
-            else
-            {
-                result = from bloque in db.AcademicBlocks
-                         join BloquesXPlan in db.AcademicBlocksXStudyPlans on bloque.ID equals BloquesXPlan.BlockID
-                         join planDeEstudio in db.StudyPlans on BloquesXPlan.PlanID equals planDeEstudio.ID
-                         where planDeEstudio.EntityTypeID == entityID
-                         select bloque;
-            }
-
-            return View(result.Distinct().ToList());
+            return View(db.AcademicBlocks.ToList());
         }
 
         // GET: Bloque/Details/5
@@ -73,8 +52,15 @@ namespace SACAAE.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (db.AcademicBlocks.Where(p => p.Description == bloqueAcademico.Description).Count() > 0)
+                {
+                    TempData[TempDataMessageKey] = "Ya existe un bloque académico con el nombre: " + bloqueAcademico.Description;
+                }
+
                 db.AcademicBlocks.Add(bloqueAcademico);
                 db.SaveChanges();
+
+                TempData[TempDataMessageKeySuccess] = "Bloque académico creada correctamente.";
                 return RedirectToAction("Index");
             }
 
@@ -144,53 +130,5 @@ namespace SACAAE.Controllers
             }
             base.Dispose(disposing);
         }
-
-        #region Helpers
-        private int getEntityID(string entityName)
-        {
-            EntityType entity;
-            switch (entityName)
-            {
-                case "TEC":
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "TEC");
-                    break;
-                case "CIADEG":
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "CIADEG");
-                    break;
-                case "TAE":
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-TAE");
-                    break;
-                case "MAE":
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MAE");
-                    break;
-                case "MDE":
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MDE");
-                    break;
-                case "MGP":
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-MGP");
-                    break;
-                case "DDE":
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Doctorado");
-                    break;
-                case "Emprendedores":
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Emprendedores");
-                    break;
-                case "CIE":
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-CIE");
-                    break;
-                case "Actualizacion_Cartago":
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion Cartago");
-                    break;
-                case "Actualizacion_San_Carlos":
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == "FUNDA-Actualizacion San Carlos");
-                    break;
-                default:
-                    entity = db.EntityTypes.SingleOrDefault(p => p.Name == entityName);
-                    break;
-            }
-
-            return (entity != null) ? entity.ID : 0;
-        }
-        #endregion
     }
 }
