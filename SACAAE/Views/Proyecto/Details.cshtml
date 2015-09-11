@@ -1,0 +1,41 @@
+﻿@model SACAAE.Models.Project
+@{
+    ViewBag.Title = "Detalles";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+<div class="col-lg-4">
+    <h2>Detalles del Proyecto</h2>
+    <hr />
+    <div class="span4">
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Nombre")
+                @Html.DisplayFor(model => model.Name)
+            </span>
+        </h4>
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Inicio")
+                @Html.DisplayFor(model => model.Start)
+            </span>
+        </h4>
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Fin")
+                @Html.DisplayFor(model => model.End)
+            </span>
+        </h4>
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Link")
+                @Html.DisplayFor(model => model.Link)
+            </span>
+        </h4>
+        <hr />
+        <p>
+            @Html.ActionLink("Editar", "Edit", new { id = Model.ID }) |
+            @Html.ActionLink("Regresar", "Index")
+        </p>
+    </div>
+</div>
+

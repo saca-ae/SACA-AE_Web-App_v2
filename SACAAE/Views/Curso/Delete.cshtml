@@ -5,77 +5,48 @@
     Layout = "~/Views/Shared/Privado.cshtml";
 }
 
-<h2>Delete</h2>
+<div class="col-lg-4">
+    <h2 class="page-header">Borrar Informaci&oacute;n de Curso</h2>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Curso</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+    <div class="span12">
+        <h4><span class="label label-warning">¿Est&aacute; seguro de que desea eliminar la informaci&oacute;n de este curso?</span></h4>
+        <br />
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Nombre")
+                @Html.DisplayFor(model => model.Name)
+            </span>
+        </h4>
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Codigo")
+                @Html.DisplayFor(model => model.Code)
+            </span>
+        </h4>
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Bloque")
+                @Html.DisplayFor(model => model.Block)
+            </span>
+        </h4>
+        <h4>
+            <span class="label label-info">
+                @Html.Label("Externo")
+                @Html.DisplayFor(model => model.External)
+            </span>
+        </h4>
+        <br />
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Code)
-        </dt>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-        <dd>
-            @Html.DisplayFor(model => model.Code)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TheoreticalHours)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TheoreticalHours)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Block)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Block)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.External)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.External)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PracticeHours)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PracticeHours)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Credits)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Credits)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
-    }
+            <div class="form-actions no-color">
+                <input type="submit" value="Borrar" class="btn btn-default" /> |
+                @Html.ActionLink("Regresar", "Index")
+            </div>
+        }
+        <
+    </div>
 </div>
