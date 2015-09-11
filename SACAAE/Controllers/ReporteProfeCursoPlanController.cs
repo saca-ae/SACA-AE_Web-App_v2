@@ -40,7 +40,7 @@ namespace SACAAE.Controllers
             {
                 fi.Delete();
             }
-            catch (Exception e)
+            catch (Exception)
             { }
             using (Stream fs = new MemoryStream())
             {
