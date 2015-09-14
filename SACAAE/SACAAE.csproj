@@ -296,6 +296,7 @@
     <Compile Include="Models\ViewModels\ScheduleComissionViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Controllers\PlanController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\SACAAE-Local.mdf" />
@@ -469,6 +470,10 @@
     <Content Include="Views\Horarios\Details.cshtml" />
     <Content Include="Views\Horarios\Edit.cshtml" />
     <Content Include="Views\Horarios\Index.cshtml" />
+    <Content Include="Views\Plan\Index.cshtml" />
+    <Content Include="Views\Plan\BloqueXPlan.cshtml" />
+    <Content Include="Views\Plan\CrearPlan.cshtml" />
+    <Content Include="Views\Plan\CursoXPlanXBloque.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

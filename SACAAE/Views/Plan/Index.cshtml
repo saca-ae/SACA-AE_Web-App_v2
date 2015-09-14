@@ -1,0 +1,138 @@
+﻿@model IEnumerable<SACAAE.Models.StudyPlan>
+
+@{
+    ViewBag.Title = "Planes";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            /* Funcion llamada cuando se cambien los valores de las sedes o las modalidades */
+            $("#sltModalidad, #sltSede").change(function () {
+
+                var route = "/Plans/Planes/List/" + $('select[name="sltSede"]').val() + "/" + $('select[name="sltModalidad"]').val();
+                //alert(route);
+
+                $.getJSON(route, function (data) {
+                    var items = "<tr><th>Plan de Estudio</th><th> </th><th> </th></tr>  ";
+                    $.each(data, function (i, plan) {
+                        var newLink = '<a href="@Url.Action("BloqueXPlan")/' + plan.ID + '">Ver Bloques</a>';
+                        var newLinkDelete = '<a href="@Url.Action("EliminarPlan")/' + plan.ID + '">Eliminar</a>';
+                        var $newLinkTarget = $('@Html.ActionLink("Ver Bloque", "BloqueXPlan")');
+                        var href = $newLinkTarget.attr('href') + '?plan=' + plan.Value;
+                        items += "<tr><td>" + plan.Nombre + "</td><td><td>" + newLink + "</td><td>" + newLinkDelete + "</tr>";
+                    });
+
+                    if (items != "") {
+                        $("#datosPlan").html(items);
+                    }
+                });
+            });
+        });
+
+    </script>
+}
+<h2 class="page-header">
+    Planes de Estudio
+</h2>
+<p>
+    <a href="@Url.Action("CrearPlan", "Plans")"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>  Agregar Plan de Estudio</a>
+</p>
+<table class="table  table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    <a href="@Url.Action("BloqueXPlan", new { id = item.ID })" title="Ver Bloques">Ver Bloques</a>
+                </td>
+                <td>
+                    <a href="@Url.Action("EliminarPlan", new { id = item.ID })" title="Eliminar">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="page-header" data-toggle="collapse" data-target="#planesXSede">Planes de estudio por sede</h3>
+@if (TempData.ContainsKey("MessageError"))
+{
+    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+}
+@if (TempData.ContainsKey("MessageSuccess"))
+{
+    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+}
+@using (Html.BeginForm())
+{
+    <div id="planesXSede" class="row-fluid collapse">
+        <div class="col-lg-5">
+            <div class="span12">
+                <label>
+                    Sede
+                </label>
+                <select id="sltSede" name="sltSede" class="form-control">
+                    @if (ViewBag.Sedes != null)
+                    {
+                        <option value=" " selected="selected">-- Seleccionar Sede --</option>
+                        foreach (var item in ViewBag.Sedes)
+                        {
+                            <option value="@item.ID">@item.Nombre</option>
+                        }
+                    }
+                    else
+                    {
+                        <option selected="selected">No hay sedes</option>
+                    }
+                </select>
+                @if (ViewBag.Sedes == null)
+                {
+                    @Html.ActionLink("Agregar Sede", "Crear", "Sede")
+                }
+                <br />
+                <label>
+                    Modalidad
+                </label>
+                <select id="sltModalidad" name="sltModalidad" class="form-control">
+                    @if (ViewBag.Modalidades != null)
+                    {
+                        <option value=" " selected="selected">-- Seleccionar Modalidad --</option>
+                        foreach (var item in ViewBag.Modalidades)
+                        {
+                            <option value="@item.ID">@item.Nombre</option>
+                        }
+                    }
+                    else
+                    {
+                        <option selected="selected">No hay modalidades</option>
+                    }
+                </select>
+                @if (ViewBag.Modalidades == null)
+                {
+                    @Html.ActionLink("Agregar Modalidad", "Crear", "Modalidad")
+                }
+                <br />
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+
+    <table id="datosPlan" class="table table-hover"></table>
+
+}
+
