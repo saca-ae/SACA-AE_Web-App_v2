@@ -22,30 +22,7 @@ namespace SACAAE.Controllers
         // GET: Aula
         public ActionResult Index()
         {
-            String entity = Request.Cookies["Entidad"].Value;
-            var entityID = getEntityID(entity);
-            IQueryable<Classroom> result;
-            if (entity == "TEC")
-            {
-                result = from aula in db.Classrooms
-                         join sedes in db.Sedes on aula.SedeID equals sedes.ID
-                         join planXSede in db.StudyPlansXSedes on sedes.ID equals planXSede.SedeID
-                         join planDeEstudio in db.StudyPlans on planXSede.StudyPlan.ID equals planDeEstudio.ID
-                         where planDeEstudio.EntityType.ID == 1 || planDeEstudio.EntityType.ID == 2 ||
-                         planDeEstudio.EntityType.ID == 3 || planDeEstudio.EntityType.ID == 4 || planDeEstudio.EntityType.ID == 10
-                         select aula;
-            }
-            else
-            {
-                result = from aula in db.Classrooms
-                         join Sedes in db.Sedes on aula.SedeID equals Sedes.ID
-                         join planXSede in db.StudyPlansXSedes on Sedes.ID equals planXSede.SedeID
-                         join planDeEstudio in db.StudyPlans on planXSede.StudyPlan.ID equals planDeEstudio.ID
-                         where planDeEstudio.EntityType.ID == entityID
-                         select aula;
-            }
-
-            return View(result.Distinct().ToList());
+            return View(db.Classrooms.ToList());
         }
 
         // GET: Aula/Create

@@ -1,5 +1,6 @@
 ﻿using SACAAE.Data_Access;
 using SACAAE.Models;
+using SACAAE.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace SACAAE.Controllers
             var entidad = Request.Cookies["Entidad"].Value;
             var entidadID = getEntityID(entidad);
 
-            ViewBag.profesores = new SelectList(db.Professors, "ID", "Name"); ;
+            ViewBag.Professors = new SelectList(db.Professors, "ID", "Name"); ;
 
             if (entidadID == 1)
             {
@@ -50,12 +51,12 @@ namespace SACAAE.Controllers
                                                           p.EntityTypeID == 2 || p.EntityTypeID == 3 || //TEC-VIC TEC-REC
                                                           p.EntityTypeID == 4 || p.EntityTypeID == 10)) //TEC-MIXTO TEC-Académico
                                               .OrderBy(p => p.Name);
-                ViewBag.comisiones = new SelectList(comisiones, "ID", "Name");
+                ViewBag.Commissions = new SelectList(comisiones, "ID", "Name");
             }
             else
             {
                 var comisiones = db.Commissions.Where(p => p.EntityTypeID == entidadID).OrderBy(p => p.Name);
-                ViewBag.comisiones = new SelectList(comisiones, "ID", "Name");
+                ViewBag.Commissions = new SelectList(comisiones, "ID", "Name");
             }
 
             return View();
@@ -64,10 +65,10 @@ namespace SACAAE.Controllers
         // POST: ComisionProfesor/Asignar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Asignar(String profesor, String comision)
+        public ActionResult Asignar(ScheduleComissionViewModel pSchedule)
         {
-            int Cantidad;
-            try
+            
+            /*try
             {
                 Cantidad = Convert.ToInt32(Request.Cookies["Cantidad"].Value);
                 Cantidad++;
@@ -102,7 +103,7 @@ namespace SACAAE.Controllers
                     //    TempData[TempDataMessageKey] = "Ocurrió un error al asignar el profesor.";
                     //}
                 }
-            }
+            }*/
             return RedirectToAction("Asignar");
         }
 

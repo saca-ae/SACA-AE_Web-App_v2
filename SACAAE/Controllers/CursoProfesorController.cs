@@ -392,20 +392,31 @@ namespace SACAAE.Controllers
         /// ***************** NOT USED  ********************************* 
         /// </summary>
         /// <autor>Unkown</autor>
-        /// <param name="idProfesor"></param>
+        /// <change>
+        /// Esteban Segura Benavides 9/12/2015
+        /// Script Old:
+        /// var listaCursos = from profesores in db.Professors
+        ///join grupo in db.Groups on profesores.ID equals grupo.ProfessorID
+        ///join bloqueXPlanXCurso in db.BlocksXPlansXCourses on grupo.BlockXPlanXCourseID equals bloqueXPlanXCurso.ID
+        ///where profesores.ID == idProfesor
+        ///select new { profesores.ID, bloqueXPlanXCurso.Course.Name, bloqueXPlanXCurso.Course.Code }; 
+        ///
+        /// Script New:
+        /// SP_Professor_Course
+        /// </change>
+        /// <param name="pIDProfesor"></param>
         /// <returns></returns>
-        [Route("CursoProfesor/Profesor/Cursos/{idProfesor:int}")]
-        public ActionResult ObtenerCursosPorProfesor(int idProfesor)
+        [Route("CursoProfesor/Profesor/Cursos/{pIDProfesor:int}")]
+        public ActionResult ObtenerCursosPorProfesor(int pIDProfesor)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaCursos = from profesores in db.Professors
-                                  join grupo in db.Groups on profesores.ID equals grupo.ProfessorID
-                                  join bloqueXPlanXCurso in db.BlocksXPlansXCourses on grupo.BlockXPlanXCourseID equals bloqueXPlanXCurso.ID
-                                  where profesores.ID == idProfesor
-                                  select new { profesores.ID, bloqueXPlanXCurso.Course.Name, bloqueXPlanXCurso.Course.Code }; //Revisar
+                var json = "";
+                var vPeriod = Request.Cookies["Periodo"].Value;
+                var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
 
-                var json = JsonConvert.SerializeObject(listaCursos);
+                var sp_getProfessorCourses = db.SP_Professor_Course( vIDPeriod,pIDProfesor).ToList();
+                json = JsonConvert.SerializeObject(sp_getProfessorCourses);
                 return Content(json);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -452,6 +463,29 @@ namespace SACAAE.Controllers
                 json = JsonConvert.SerializeObject(sp_getCourseGroups);
                 return Content(json);
             
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        /// <summary>
+        /// Get a groups associated a determinated course 
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDCurso">ID Course in database</param>
+        /// <returns>ID, Number of Group, Name of Profesor, Code of Aula and StartHour, EndHour and Day of Schedule</returns>
+        [Route("CursoProfesor/Cursos/{pIDCurso:int}/Sedes/{pIDSede:int}/Profesores/{pIDProfesor}")]
+        public ActionResult getProfessorGroups(int pIDCurso, int pIDSede, int pIDProfesor)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var json = "";
+                var vPeriod = Request.Cookies["Periodo"].Value;
+                var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
+
+                var sp_getProfessorGroups = db.SP_Professor_Group(pIDCurso, pIDSede, vIDPeriod,pIDProfesor).ToList();
+                json = JsonConvert.SerializeObject(sp_getProfessorGroups);
+                return Content(json);
+
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }

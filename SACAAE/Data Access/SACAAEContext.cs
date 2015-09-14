@@ -82,6 +82,55 @@ namespace SACAAE.Data_Access
 
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ejemplo>("SP_Ejemplo @courseID, @sedeID, @periodID", vCourseParameter, vSedeParameter, vPeriodParameter);
         }
+
+        /// <summary>
+        /// Store Procedure return a information about a group according to CourseID, pSedeID,PeriodID and ProfessorID
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDCurso">ID Course in database</param>
+        /// <param name="pIDSede">ID Sede in database</param>
+        ///<param name="pIDPeriod">ID Period in database</param>
+        /// <param name="pIDProfessor">ID Professor in database</param>
+        /// <returns>ID, Number of Group, Name of Profesor, Code of Aula and StartHour, EndHour and Day of Schedule</returns>
+         public virtual ObjectResult<ejemplo> SP_Professor_Group(Nullable<int> pCourseID, Nullable<int> pSedeID, Nullable<int> pPeriodID, Nullable<int> pProfessorID)
+        {
+            var vCourseParameter = pCourseID.HasValue ?
+                new SqlParameter("courseID", pCourseID) :
+                new SqlParameter("courseID", typeof(int));
+            var vSedeParameter = pSedeID.HasValue ?
+                new SqlParameter("sedeID", pSedeID) :
+                new SqlParameter("sedeID", typeof(int));
+            var vPeriodParameter = pPeriodID.HasValue ?
+                new SqlParameter("periodID", pPeriodID) :
+                new SqlParameter("periodID", typeof(int));
+             var vProfessorParameter = pProfessorID.HasValue ?
+                 new SqlParameter("professorID", pProfessorID):
+                 new SqlParameter("professorID",pProfessorID);
+
+             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ejemplo>("SP_Professor_Group @courseID, @sedeID, @periodID,@professorID", 
+                                                                                            vCourseParameter, vSedeParameter, vPeriodParameter,vProfessorParameter);
+        }
+
+        /// <summary>
+        /// Store Procedure return courses related to a professor
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDProfessor">ID Professor in database</param>
+        /// <returns>Course.*</returns>
+         public virtual ObjectResult<Course> SP_Professor_Course(Nullable<int> pPeriodID, Nullable<int> pProfessorID)
+         {
+             var vPeriodParameter = pPeriodID.HasValue ?
+                new SqlParameter("periodID", pPeriodID) :
+                new SqlParameter("periodID", typeof(int));
+
+             var vProfessorParameter = pProfessorID.HasValue ?
+                  new SqlParameter("professorID", pProfessorID) :
+                  new SqlParameter("professorID", pProfessorID);
+
+             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<Course>("SP_Professor_Course  @periodID,@professorID",
+                                                                                             vPeriodParameter, vProfessorParameter);
+         }
+
     }
 }
 /*

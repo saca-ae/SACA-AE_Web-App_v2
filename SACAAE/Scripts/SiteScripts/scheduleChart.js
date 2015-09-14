@@ -11,9 +11,116 @@ function datos_matriz(data) {
         var numero_curso = data[i].Number;
         var numero_dia = data[i].Day;
 
-        var int_hora_entrada = parseInt(data[i].StartHour);
+        var hora_entrada = data[i].StartHour;
 
-        var int_hora_salida = parseInt(data[i].EndHour);
+        var hora_salida = data[i].EndHour;
+
+        var int_hora_entrada
+        switch (hora_entrada)
+        {
+            case "07:30 am":
+                int_hora_entrada = 730;
+                break;
+            case "08:30 am":
+                int_hora_entrada = 830;
+                break;
+            case "09:30 am":
+                int_hora_entrada = 930;
+                break;
+            case "10:30 am":
+                int_hora_entrada = 1030;
+                break;
+            case "11:30 am":
+                int_hora_entrada = 1130;
+                break;
+            case "12:30 pm":
+                int_hora_entrada = 1230;
+                break;
+
+            case "01:00 pm":
+                int_hora_entrada = 1300;
+                break;
+            case "02:00 pm":
+                int_hora_entrada = 1400;
+                break;
+
+            case "03:00 pm":
+                int_hora_entrada = 1500;
+                break;
+            case "04:00 pm":
+                int_hora_entrada = 1600;
+                break;
+
+            case "05:00 pm":
+                int_hora_entrada = 1700;
+                break;
+            case "06:00 pm":
+                int_hora_entrada = 1800;
+                break;
+
+            case "07:00 pm":
+                int_hora_entrada = 1900;
+                break;
+            case "08:00 pm":
+                int_hora_entrada = 2000;
+                break;
+
+            case "09:00 pm":
+                int_hora_entrada = 2100;
+                break;
+        }
+
+        var int_hora_salida;
+        switch (hora_salida) {
+            case "08:20 am":
+                int_hora_salida = 820;
+                break;
+            case "09:20 am":
+                int_hora_salida = 920;
+                break;
+            case "10:20 am":
+                int_hora_salida = 1020;
+                break;
+            case "11:20 am":
+                int_hora_salida = 1120;
+                break;
+            case "12:20 pm":
+                int_hora_salida = 1220;
+                break;
+
+            case "01:50 pm":
+                int_hora_salida = 1350;
+                break;
+            case "02:50 pm":
+                int_hora_salida = 1450;
+                break;
+
+            case "03:50 pm":
+                int_hora_salida = 1550;
+                break;
+            case "04:50 pm":
+                int_hora_salida = 1650;
+                break;
+
+            case "05:50 pm":
+                int_hora_salida = 1750;
+                break;
+            case "06:50 pm":
+                int_hora_salida = 1850;
+                break;
+
+            case "07:50 pm":
+                int_hora_salida = 1950;
+                break;
+            case "08:50 pm":
+                int_hora_salida = 2050;
+                break;
+
+            case "09:50 pm":
+                int_hora_salida = 2150;
+                break;
+        }
+
         var diferencia = (int_hora_salida - int_hora_entrada);
 
         if (int_hora_entrada < 1300) {
