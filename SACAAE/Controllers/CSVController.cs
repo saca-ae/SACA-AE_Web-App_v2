@@ -111,7 +111,6 @@ namespace SACAAE.Controllers
                         else
                         {
                             vState = "Error";
-                            //vDetails = "Problemas con el horario y el aula";
                         }
                     }
                     else

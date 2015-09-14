@@ -188,27 +188,6 @@
     <Compile Include="Controllers\SedesController.cs" />
     <Compile Include="Data Access\DBInitializer.cs" />
     <Compile Include="Data Access\SACAAEContext.cs" />
-    <Compile Include="Data Access\SACAAE_SP.Context.cs" />
-    <Compile Include="Data Access\SACAAE_SP.Context1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SACAAE_SP.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data Access\SACAAE_SP.cs" />
-    <Compile Include="Data Access\SACAAE_SP.Designer.cs" />
-    <Compile Include="Data Access\SACAAE_SP1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SACAAE_SP.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data Access\SACAAE_SP1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SACAAE_SP.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Data Access\SP_Ejemplo_Result.cs">
-      <DependentUpon>SACAAE_SP.tt</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -276,6 +255,7 @@
     <Compile Include="Models\Period.cs" />
     <Compile Include="Models\PeriodNumber.cs" />
     <Compile Include="Models\StoredProcedures\ejemplo.cs" />
+    <Compile Include="Models\StoredProcedures\resultadoStoredProcedure.cs" />
     <Compile Include="Models\StudyPlan.cs" />
     <Compile Include="Models\StudyPlanXSede.cs" />
     <Compile Include="Models\Plaza.cs" />
@@ -328,19 +308,6 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\DataTables\dataTables.responsive.scss" />
     <Content Include="Content\DataTables\Spanish.json" />
-    <Content Include="Data Access\SACAAE_SP.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>SACAAE_SP.Context1.cs</LastGenOutput>
-    </Content>
-    <EntityDeploy Include="Data Access\SACAAE_SP.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>SACAAE_SP1.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Data Access\SACAAE_SP.edmx.diagram" />
-    <Content Include="Data Access\SACAAE_SP.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>SACAAE_SP1.cs</LastGenOutput>
-    </Content>
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

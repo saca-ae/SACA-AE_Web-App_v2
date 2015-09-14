@@ -402,7 +402,8 @@ namespace SACAAE.Controllers
         ///select new { profesores.ID, bloqueXPlanXCurso.Course.Name, bloqueXPlanXCurso.Course.Code }; 
         ///
         /// Script New:
-        /// SP_Professor_Course
+        /// 
+        /// Professor_Course
         /// </change>
         /// <param name="pIDProfesor"></param>
         /// <returns></returns>
