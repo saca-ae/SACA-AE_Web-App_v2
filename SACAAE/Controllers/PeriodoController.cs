@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SACAAE.Data_Access;
 using SACAAE.Models;
+using SACAAE.Models.StoredProcedures;
 using SACAAE.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -17,23 +18,19 @@ namespace SACAAE.Controllers
     public class PeriodoController : Controller
     {
         private SACAAEContext gvDatabase = new SACAAEContext();
-        private SACAAE_SP gvStoredProcedure = new SACAAE_SP();
         private Period gPeriod = new Period();
 
         // GET: Periodo
         public ActionResult Index()
         {
-            gPeriod = gPeriod.AddNewSemester();
-            
-            int vIdPeriod = gPeriod.getIDPeriod(gPeriod.Year, gPeriod.NumberID);
-            gvStoredProcedure.SP_CreateGroupsNewSemester(vIdPeriod);
+            gPeriod = AddNewSemester();
 
-            IQueryable<GroupsCreatedViewModel> vGroupsList = getGroupsList(vIdPeriod);
+            int vIdPeriod = getIDPeriod(gPeriod.Year, gPeriod.NumberID);
+            var vResult = gvDatabase.SP_CreateGroupsinNewSemester(vIdPeriod);
 
             ViewBag.Period = "" + gPeriod.Year + " - " + gPeriod.NumberID + " Semestre";
             ViewBag.IdPeriod = vIdPeriod;
-            ViewBag.Grupos = vGroupsList; 
-            return View(vGroupsList.ToList());
+            return View(getGroupsList(vIdPeriod));
         }
 
         /// <summary>
@@ -62,6 +59,80 @@ namespace SACAAE.Controllers
                 };
 
             return vGroupsList;
+        }
+
+        /// <summary>
+        /// Gets the new period
+        /// </summary>
+        /// <author> Cristian Araya Fuentes </author> 
+        /// <param name=pPeriodType> Name of the period type</param>
+        /// <returns></returns>
+        public Period GetNextPeriod(String pPeriodType)
+        {
+            int vNumber = 0, vYear = 0;
+            NuevoPeriodo vLastPeriod =
+                (from PeriodType TP in gvDatabase.PeriodTypes
+                 from PeriodNumber N in gvDatabase.PeriodNumbers
+                 from Period P in gvDatabase.Periods
+                 where TP.Name == pPeriodType
+                 where N.ID == P.NumberID
+                 where TP.ID == N.TypeID
+                 orderby P.Year descending, N.Number descending
+                 select new NuevoPeriodo { Number = N.Number, Year = P.Year }).FirstOrDefault();
+
+            vNumber = vLastPeriod.Number;
+            vYear = vLastPeriod.Year;
+
+            if ((vNumber != 0) && (vYear != 0))
+            {
+                if (pPeriodType == "Semestre")
+                {
+                    if (vNumber == 2) { vNumber = 1; vYear += 1; }
+                    else { vNumber = 2; }
+                }
+            }
+
+            Period vPeriod = new Period();
+            vPeriod.NumberID = vNumber;
+            vPeriod.Year = vYear;
+
+            return vPeriod;
+        }
+
+        public int getIDPeriodNumber(int pPeriodNumber, String pPeriodType)
+        {
+            return (from NumeroPeriodo in gvDatabase.PeriodNumbers
+                    join TipoPeriodo in gvDatabase.PeriodTypes on NumeroPeriodo.TypeID equals TipoPeriodo.ID
+                    where TipoPeriodo.Name == pPeriodType
+                    where NumeroPeriodo.Number == pPeriodNumber
+                    select NumeroPeriodo).FirstOrDefault().ID;
+        }
+
+        public int getIDPeriod(int pPeriodYear, int pPeriodNumberID)
+        {
+            return (from Period P in gvDatabase.Periods
+                    where P.NumberID == pPeriodNumberID
+                    where P.Year == pPeriodYear
+                    select P).FirstOrDefault().ID;
+        }
+
+        public Period AddNewSemester()
+        {
+            Period vPeriod = GetNextPeriod("Semestre");
+            AddPeriod(vPeriod);
+            return vPeriod;
+        }
+
+        public void AddPeriod(Period pPeriod)
+        {
+            gvDatabase.Periods.Add(pPeriod);
+            gvDatabase.SaveChanges();
+        }
+
+        public class NuevoPeriodo
+        {
+            public int Number { get; set; }
+            public int Year { get; set; }
         }
 
         #region helpers
