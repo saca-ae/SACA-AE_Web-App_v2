@@ -99,6 +99,18 @@ namespace SACAAE.Controllers
                     vTempSchedule.CommissionsXProfessors.Add(vCommissionProfessor);
                     
                 }
+
+                /******/
+                //var HoraInicio = DateTime.Parse(vDay.StartHour);
+                //var HoraFin = DateTime.Parse(vDay.EndHour);
+
+                //var CargaC = Math.Ceiling(HoraFin.Subtract(HoraInicio).TotalHours);
+                //if (HoraInicio <= DateTime.Parse("12:00 PM") && HoraFin >= DateTime.Parse("01:00 PM"))
+                //{
+                //    CargaC = CargaC - 1;
+                //}
+                /*****/
+
                 int vIntStartHour=0;
                 int vIntEndHour=0;
 
@@ -314,15 +326,18 @@ namespace SACAAE.Controllers
                 vNewSchedule.Day = pDay;
                 vNewSchedule.StartHour = pStartHour;
                 vNewSchedule.EndHour = pEndHour;
-                vNewSchedule.CommissionsXProfessors = new List<CommissionXProfessor>();
+                //vNewSchedule.CommissionsXProfessors = new List<CommissionXProfessor>();
 
                 db.Schedules.Add(vNewSchedule);
+                db.SaveChanges();
+
+
                 
 
                 //vSchedule = db.Schedules.Where(p => p.Day == pDay && p.StartHour == pStartHour && p.EndHour == pEndHour).FirstOrDefault();
 
                 //db.SaveChanges();
-                return vNewSchedule;
+                return db.Schedules.Where(p => p.Day == pDay && p.StartHour == pStartHour && p.EndHour == pEndHour).FirstOrDefault();
             }
                 //select * from Schedule where Day='Domingo' AND StartHour = '07:30 am' AND EndHour = '09:20 am'
         }
