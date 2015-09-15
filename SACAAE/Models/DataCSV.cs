@@ -5,7 +5,7 @@ namespace SACAAE.Models
     /// <summary>
     /// This class is used to handle CSV files.
     /// </summary>
-    class DataCSV
+    public class DataCSV
     {
 
         public DataCSV() { }

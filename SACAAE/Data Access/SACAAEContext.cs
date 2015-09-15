@@ -67,6 +67,19 @@ namespace SACAAE.Data_Access
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<resultadoStoredProcedure>("SP_CreateGroupsinNewSemester @pIdPeriod", vIdPeriodParameter);
         }
 
+        public virtual ObjectResult<DataCSV> SP_GetGroupsPeriod(Nullable<int> pIdPeriod, Nullable<int> pIdEntity)
+        {
+            var vIdPeriodParameter = pIdPeriod.HasValue ?
+                new SqlParameter("pIdPeriod", pIdPeriod) :
+                new SqlParameter("pIdPeriod", typeof(int));
+
+            var vIdEntityParameter = pIdEntity.HasValue ?
+                new SqlParameter("pIDEntity", pIdEntity) :
+                new SqlParameter("pIDEntity", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<DataCSV>("SP_GetGroupsPeriod @pIdPeriod, @pIDEntity", vIdPeriodParameter, vIdEntityParameter);
+        }
+
         //Ejemplo SP
         public virtual ObjectResult<ejemplo> SP_Ejemplo(Nullable<int> pCourseID, Nullable<int> pSedeID, Nullable<int> pPeriodID)
         {
