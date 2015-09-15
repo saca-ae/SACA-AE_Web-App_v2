@@ -58,13 +58,26 @@ namespace SACAAE.Data_Access
         public DbSet<HourAllocatedType> HourAllocatedTypes { get; set; }
         public DbSet<GroupClassroom> GroupClassrooms { get; set; }
 
-        public virtual ObjectResult<Nullable<int>> SP_CreateGroupsinNewSemester(Nullable<int> pIdPeriod)
+        public virtual ObjectResult<resultadoStoredProcedure> SP_CreateGroupsinNewSemester(Nullable<int> pIdPeriod)
         {
-            var pIdPeriodParameter = pIdPeriod.HasValue ?
-                new ObjectParameter("pIdPeriod", pIdPeriod) :
-                new ObjectParameter("pIdPeriod", typeof(int));
+            var vIdPeriodParameter = pIdPeriod.HasValue ?
+                new SqlParameter("pIdPeriod", pIdPeriod) :
+                new SqlParameter("pIdPeriod", typeof(int));
 
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("SP_CreateGroupsinNewSemester", pIdPeriodParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<resultadoStoredProcedure>("SP_CreateGroupsinNewSemester @pIdPeriod", vIdPeriodParameter);
+        }
+
+        public virtual ObjectResult<DataCSV> SP_GetGroupsPeriod(Nullable<int> pIdPeriod, Nullable<int> pIdEntity)
+        {
+            var vIdPeriodParameter = pIdPeriod.HasValue ?
+                new SqlParameter("pIdPeriod", pIdPeriod) :
+                new SqlParameter("pIdPeriod", typeof(int));
+
+            var vIdEntityParameter = pIdEntity.HasValue ?
+                new SqlParameter("pIDEntity", pIdEntity) :
+                new SqlParameter("pIDEntity", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<DataCSV>("SP_GetGroupsPeriod @pIdPeriod, @pIDEntity", vIdPeriodParameter, vIdEntityParameter);
         }
 
         //Ejemplo SP
@@ -82,6 +95,55 @@ namespace SACAAE.Data_Access
 
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ejemplo>("SP_Ejemplo @courseID, @sedeID, @periodID", vCourseParameter, vSedeParameter, vPeriodParameter);
         }
+
+        /// <summary>
+        /// Store Procedure return a information about a group according to CourseID, pSedeID,PeriodID and ProfessorID
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDCurso">ID Course in database</param>
+        /// <param name="pIDSede">ID Sede in database</param>
+        ///<param name="pIDPeriod">ID Period in database</param>
+        /// <param name="pIDProfessor">ID Professor in database</param>
+        /// <returns>ID, Number of Group, Name of Profesor, Code of Aula and StartHour, EndHour and Day of Schedule</returns>
+         public virtual ObjectResult<ejemplo> SP_Professor_Group(Nullable<int> pCourseID, Nullable<int> pSedeID, Nullable<int> pPeriodID, Nullable<int> pProfessorID)
+        {
+            var vCourseParameter = pCourseID.HasValue ?
+                new SqlParameter("courseID", pCourseID) :
+                new SqlParameter("courseID", typeof(int));
+            var vSedeParameter = pSedeID.HasValue ?
+                new SqlParameter("sedeID", pSedeID) :
+                new SqlParameter("sedeID", typeof(int));
+            var vPeriodParameter = pPeriodID.HasValue ?
+                new SqlParameter("periodID", pPeriodID) :
+                new SqlParameter("periodID", typeof(int));
+             var vProfessorParameter = pProfessorID.HasValue ?
+                 new SqlParameter("professorID", pProfessorID):
+                 new SqlParameter("professorID",pProfessorID);
+
+             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ejemplo>("SP_Professor_Group @courseID, @sedeID, @periodID,@professorID", 
+                                                                                            vCourseParameter, vSedeParameter, vPeriodParameter,vProfessorParameter);
+        }
+
+        /// <summary>
+        /// Store Procedure return courses related to a professor
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDProfessor">ID Professor in database</param>
+        /// <returns>Course.*</returns>
+         public virtual ObjectResult<Course> SP_Professor_Course(Nullable<int> pPeriodID, Nullable<int> pProfessorID)
+         {
+             var vPeriodParameter = pPeriodID.HasValue ?
+                new SqlParameter("periodID", pPeriodID) :
+                new SqlParameter("periodID", typeof(int));
+
+             var vProfessorParameter = pProfessorID.HasValue ?
+                  new SqlParameter("professorID", pProfessorID) :
+                  new SqlParameter("professorID", pProfessorID);
+
+             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<Course>("SP_Professor_Course  @periodID,@professorID",
+                                                                                             vPeriodParameter, vProfessorParameter);
+         }
+
     }
 }
 /*

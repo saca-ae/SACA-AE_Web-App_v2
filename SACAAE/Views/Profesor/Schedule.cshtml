@@ -6,6 +6,29 @@
 
 <head>
     @Styles.Render("~/Content/custom")
+
+    @section Scripts {
+        <script src="@Url.Content("~/Scripts/SiteScripts/scheduleChart.js")"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var entidadid = "#" + getCookie("Entidad");
+                if (entidadid == "#") { Load('TEC'); }
+                $(entidadid).addClass('active');
+
+                var route = "/Professor/Schedules/" + get_id(3);
+                $.getJSON(route, function (data) {
+                    datos = datos_matriz(data);
+                    obtener_dias(datos);
+
+                });
+            });
+
+
+
+
+
+        </script>
+    }
 </head>
 <body onload="load_window('@(Model.ID)')">
 
@@ -32,25 +55,3 @@
 
 </body>
 
-@section Scripts {
-    <script src="@Url.Content("~/Scripts/SiteScripts/scheduleChart.js")"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var entidadid = "#" + getCookie("Entidad");
-            if (entidadid == "#") { Load('TEC'); }
-            $(entidadid).addClass('active');
-
-            var route = "/Professor/Schedules/" + get_id(3);
-            $.getJSON(route, function (data) {
-                datos = datos_matriz(data);
-                obtener_dias(datos);
-
-            });
-        });
-        
-
-
-
-
-    </script>
-}

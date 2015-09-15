@@ -1,7 +1,9 @@
 ﻿using SACAAE.Data_Access;
 using SACAAE.Models;
+using SACAAE.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -42,7 +44,7 @@ namespace SACAAE.Controllers
             var entidad = Request.Cookies["Entidad"].Value;
             var entidadID = getEntityID(entidad);
 
-            ViewBag.profesores = new SelectList(db.Professors, "ID", "Name"); ;
+            ViewBag.Professors = new SelectList(db.Professors, "ID", "Name"); ;
 
             if (entidadID == 1)
             {
@@ -50,12 +52,12 @@ namespace SACAAE.Controllers
                                                           p.EntityTypeID == 2 || p.EntityTypeID == 3 || //TEC-VIC TEC-REC
                                                           p.EntityTypeID == 4 || p.EntityTypeID == 10)) //TEC-MIXTO TEC-Académico
                                               .OrderBy(p => p.Name);
-                ViewBag.comisiones = new SelectList(comisiones, "ID", "Name");
+                ViewBag.Commissions = new SelectList(comisiones, "ID", "Name");
             }
             else
             {
                 var comisiones = db.Commissions.Where(p => p.EntityTypeID == entidadID).OrderBy(p => p.Name);
-                ViewBag.comisiones = new SelectList(comisiones, "ID", "Name");
+                ViewBag.Commissions = new SelectList(comisiones, "ID", "Name");
             }
 
             return View();
@@ -64,46 +66,187 @@ namespace SACAAE.Controllers
         // POST: ComisionProfesor/Asignar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Asignar(String profesor, String comision)
+        public ActionResult Asignar(ScheduleComissionViewModel pSchedule)
         {
-            int Cantidad;
-            try
+            var vPeriod = Request.Cookies["Periodo"].Value;
+            var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
+
+            string vHourCharge = pSchedule.HourCharge;
+            string vCommission = pSchedule.Commissions;
+            string vProfessor = pSchedule.Professors;
+            List<ScheduleComission> vSchedules = pSchedule.ScheduleCommission;
+
+            int totalHourAssign=0;
+
+            //Save Commission Professor
+            CommissionXProfessor vCommissionProfessor = new CommissionXProfessor();
+            vCommissionProfessor.CommissionID = Convert.ToInt32(vCommission);
+            vCommissionProfessor.ProfessorID = Convert.ToInt32(vProfessor);
+            vCommissionProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourCharge);
+            vCommissionProfessor.PeriodID = vIDPeriod;
+
+           
+          
+
+            //Calculate the total hour assign
+            foreach(ScheduleComission vSchedule in vSchedules )
             {
-                Cantidad = Convert.ToInt32(Request.Cookies["Cantidad"].Value);
-                Cantidad++;
-            }
-            catch (Exception e)
-            {
-                Cantidad = 0;
-            }
-
-            var periodo = Request.Cookies["Periodo"].Value;
-            var IdPeriodo = db.Periods.Find(int.Parse(periodo)).ID;
-
-            for (int i = 1; i < Cantidad; i++)
-            {
-                String Detalles = Request.Cookies["DiaSeleccionadoCookie" + i].Value;//Obtiene los datos de la cookie
-                string[] Partes = Detalles.Split('|');
-
-                String Dia = Partes[0];
-                String HoraInicio = Partes[1];
-                String HoraFin = Partes[2];
-
-
-                if (Dia != "d")
+                Schedule vTempSchedule = existSchedule(vSchedule.Day, vSchedule.StartHour, vSchedule.EndHour);
+                if (vTempSchedule!= null)
                 {
-                    //var creado = repositoriocomisionesprofesor.CrearComisionProfesor(profesor, comision, Dia, HoraInicio, HoraFin, IdPeriodo);
-                    //if (creado)
-                    //{
-                    //    TempData[TempDataMessageKey] = "Profesor asignado correctamente.";
-                    //}
-                    //else
-                    //{
-                    //    TempData[TempDataMessageKey] = "Ocurrió un error al asignar el profesor.";
-                    //}
+                    //Get id schedule
+                    
+                    vTempSchedule.CommissionsXProfessors.Add(vCommissionProfessor);
+                    
                 }
+
+                /******/
+                //var HoraInicio = DateTime.Parse(vDay.StartHour);
+                //var HoraFin = DateTime.Parse(vDay.EndHour);
+
+                //var CargaC = Math.Ceiling(HoraFin.Subtract(HoraInicio).TotalHours);
+                //if (HoraInicio <= DateTime.Parse("12:00 PM") && HoraFin >= DateTime.Parse("01:00 PM"))
+                //{
+                //    CargaC = CargaC - 1;
+                //}
+                /*****/
+
+                int vIntStartHour=0;
+                int vIntEndHour=0;
+
+                 switch ( vSchedule.StartHour)
+                {
+                    case "07:30 am":
+                        vIntStartHour = 730;
+                        break;
+                    case "08:30 am":
+                        vIntStartHour = 830;
+                        break;
+                    case "09:30 am":
+                        vIntStartHour = 930;
+                        break;
+                    case "10:30 am":
+                        vIntStartHour = 1030;
+                        break;
+                    case "11:30 am":
+                        vIntStartHour = 1130;
+                        break;
+                    case "12:30 pm":
+                        vIntStartHour = 1230;
+                        break;
+
+                    case "01:00 pm":
+                        vIntStartHour = 1300;
+                        break;
+                    case "02:00 pm":
+                        vIntStartHour = 1400;
+                        break;
+
+                    case "03:00 pm":
+                        vIntStartHour = 1500;
+                        break;
+                    case "04:00 pm":
+                        vIntStartHour = 1600;
+                        break;
+
+                    case "05:00 pm":
+                        vIntStartHour = 1700;
+                        break;
+                    case "06:00 pm":
+                        vIntStartHour = 1800;
+                        break;
+
+                    case "07:00 pm":
+                        vIntStartHour = 1900;
+                        break;
+                    case "08:00 pm":
+                        vIntStartHour = 2000;
+                        break;
+
+                    case "09:00 pm":
+                        vIntStartHour = 2100;
+                        break;
+                }
+
+                switch (vSchedule.EndHour) {
+                    case "08:20 am":
+                        vIntEndHour = 820;
+                        break;
+                    case "09:20 am":
+                        vIntEndHour = 920;
+                        break;
+                    case "10:20 am":
+                        vIntEndHour = 1020;
+                        break;
+                    case "11:20 am":
+                        vIntEndHour = 1120;
+                        break;
+                    case "12:20 pm":
+                        vIntEndHour = 1220;
+                        break;
+
+                    case "01:50 pm":
+                        vIntEndHour = 1350;
+                        break;
+                    case "02:50 pm":
+                        vIntEndHour = 1450;
+                        break;
+
+                    case "03:50 pm":
+                        vIntEndHour = 1550;
+                        break;
+                    case "04:50 pm":
+                        vIntEndHour = 1650;
+                        break;
+
+                    case "05:50 pm":
+                        vIntEndHour = 1750;
+                        break;
+                    case "06:50 pm":
+                        vIntEndHour = 1850;
+                        break;
+
+                    case "07:50 pm":
+                        vIntEndHour = 1950;
+                        break;
+                    case "08:50 pm":
+                        vIntEndHour = 2050;
+                        break;
+
+                    case "09:50 pm":
+                        vIntEndHour = 2150;
+                        break;
+                }
+
+                int vDiferencia = (vIntEndHour - vIntStartHour);
+
+                if (vIntStartHour < 1300) {
+                    vDiferencia = vDiferencia + 10;
+                }
+                else if (vIntStartHour < 1300 & vIntEndHour > 1300) {
+                    vDiferencia = vDiferencia + 110;
+                }
+                else {
+                    vDiferencia = vDiferencia + 50;
+                }
+
+                vDiferencia = vDiferencia/100;
+
+                totalHourAssign = totalHourAssign+vDiferencia;
             }
+
+           
+            vCommissionProfessor.Hours = totalHourAssign;
+
+            db.CommissionsXProfessors.Add(vCommissionProfessor);
+
+           // db.Entry(vCommissionProfessor).State = EntityState.Modified;
+            db.SaveChanges();
+            TempData[TempDataMessageKey] = "Profesor asignado correctamente.";
+
             return RedirectToAction("Asignar");
+           
+           
         }
 
         // GET: ComisionProfesor/Revocar
@@ -168,6 +311,36 @@ namespace SACAAE.Controllers
         #endregion
 
         #region Helpers
+        private Schedule existSchedule(string pDay, string pStartHour, string pEndHour)
+        {
+            var vSchedule = db.Schedules.Where(p => p.Day == pDay && p.StartHour == pStartHour && p.EndHour == pEndHour).FirstOrDefault();
+
+            if (vSchedule != null)
+            {
+                return vSchedule;
+            }
+            else
+            {
+                //Create schedule and get id
+                Schedule vNewSchedule = new Schedule();
+                vNewSchedule.Day = pDay;
+                vNewSchedule.StartHour = pStartHour;
+                vNewSchedule.EndHour = pEndHour;
+                //vNewSchedule.CommissionsXProfessors = new List<CommissionXProfessor>();
+
+                db.Schedules.Add(vNewSchedule);
+                db.SaveChanges();
+
+
+                
+
+                //vSchedule = db.Schedules.Where(p => p.Day == pDay && p.StartHour == pStartHour && p.EndHour == pEndHour).FirstOrDefault();
+
+                //db.SaveChanges();
+                return db.Schedules.Where(p => p.Day == pDay && p.StartHour == pStartHour && p.EndHour == pEndHour).FirstOrDefault();
+            }
+                //select * from Schedule where Day='Domingo' AND StartHour = '07:30 am' AND EndHour = '09:20 am'
+        }
         private int getEntityID(string entityName)
         {
             EntityType entity;

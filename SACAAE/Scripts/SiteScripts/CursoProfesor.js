@@ -16,9 +16,9 @@
     $("#sltBloque").html(itemSltBloque);
 
     /* Funcion llamada cuando se cambien los valores de las sedes o las modalidades */
-    $("#Modalidades, #Sedes").change(function () {
+    $("#sltModalidad, #sltSede").change(function () {
 
-        var route = "/CursoProfesor/Planes/List/" + $('select[name="Sedes"]').val() + "/" + $('select[name="Modalidades"]').val();
+        var route = "/CursoProfesor/Planes/List/" + $('select[name="sltSede"]').val() + "/" + $('select[name="sltModalidad"]').val();
         $.getJSON(route, function (data) {
             var items = "";
             $.each(data, function (i, plan) {
@@ -73,8 +73,11 @@
         });
     });
 
-    $("#sltCurso").change(function () {
-        var route = "/CursoProfesor/GruposSinProfesor/List/" + $('select[name="sltCurso"]').val() + "/" + $('select[name="sltPlan"]').val() + "/" + $('select[name="Sedes"]').val() + "/" + $('select[name="sltBloque"]').val();
+    $("#sltCurso").change(function () 
+    {
+        //CursoProfesor/Sedes/{pSede:int}/Planes/{pPlan:int}/Bloques/{pBloque:int}/Cursos/{pCurso:int}/GroupWithoutProfesor
+        var route = 
+            "/CursoProfesor/Sedes/"+ $('select[name="sltSede"]').val() +"/Planes/"+ $('select[name="sltPlan"]').val() +"/Bloques/"+ $('select[name="sltBloque"]').val()+"/Cursos/"+ $('select[name="sltCurso"]').val() + "/GroupWithoutProfesor";
         $.getJSON(route, function (data) {
             var items = "";
 
@@ -122,16 +125,81 @@
 
             if (cupo != "" || aula != "" || id != "") {
                 $("#txtCupo").val(cupo)
+                
                 //$("#txtAula").val(aula);
             }
             else {
                 $("#txtCupo").val("No Disponible")
                 $("#txtAula").val("No Disponible");
             }
-
+            $('#txtHoras').val(data.TheoreticalHours)
             /* Obtener información del horario */
-            route2 = "/CursoProfesor/Horarios/Info/" + $('select[name="sltGrupo"]').val();
+           // route2 = "/CursoProfesor/Horarios/Info/" + $('select[name="sltGrupo"]').val();
 
+            /*************************/
+            var curso = $('select[name="sltCurso"]').val();
+            var sede = $('select[name="sltSede"]').val();
+            var modalidad = $('select[name="sltModalidad"]').val();
+
+            var plan = $('select[name="sltPlan"]').val();
+            var grupo = $('select[name="sltGrupo"]').val();
+            /* Obtener información del horario */
+            route2 = "/CursoProfesor/Cursos/" + curso + "/Sedes/" + sede + "/Modalidades/" + modalidad + "/Planes/" + plan + "/Grupos/" + grupo + "/Horario"
+            var tabla = "<table id=\"profesores_asignados_a_curso\" class=\"table table-hover\">" +
+           "<thead>" +
+               "<th>Dia</th>" +
+               "<th>Hora Inicio</th>" +
+               "<th>Hora Fin</th>" +
+               "<th>Aula</th>" +
+           "</thead>" +
+           "<tbody>";
+            $.getJSON(route2, function (data) {
+
+                if (data.length != 0) {
+                    for (i = 0; i < data.length; i++) {
+                        tabla = tabla + "<tr>" +
+                        "<td>" + data[i].Day + "</td>" +
+                        "<td>" + data[i].StartHour + "</td>" +
+                        "<td>" + data[i].EndHour + "</td>" +
+                        "<td>" + data[i].Code + "</td>" +
+                        "</tr>";
+
+
+                    }
+
+                    tabla = tabla + "</tbody> </table>";
+
+                    document.getElementById('table_schedule_group').innerHTML = tabla;
+                }
+                else {
+                    /*Sin Horario Asignado*/
+                    document.getElementById('table_schedule_group').innerHTML =
+                        "<table>" +
+                    "<thead>" +
+                    "<th class=\"table_custom\">Dia</th>" +
+                    "<th class=\"table_custom\">Hora Inicio</th>" +
+                    "<th class=\"table_custom\">Hora Fin</th>" +
+                    "<th class=\"table_custom\">Aula</th>" +
+                    "</thead>" +
+                    "<tbody>" +
+                        "<tr>" +
+                            "<td class=\"table_custom\">-</td>" +
+                            "<td class=\"table_custom\">-</td>" +
+                            "<td class=\"table_custom\">-</td>" +
+                            "<td class=\"table_custom\">-</td>" +
+                    "</tr>" +
+                        "<tr>" +
+                            "<td class=\"table_custom\">-</td>" +
+                            "<td class=\"table_custom\">-</td>" +
+                            "<td class=\"table_custom\">-</td>" +
+                            "<td class=\"table_custom\">-</td>" +
+                        "</tr>" +
+                    "</tbody>" +
+                    "</table>" +
+            "</div>";
+                }
+            });
+            /************************/
             //$.getJSON(route2, function (data) {
             //    //alert(data.toSource());
             //    for (var i = 0; i < data.length; i++) {

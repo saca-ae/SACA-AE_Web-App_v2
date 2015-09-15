@@ -270,3 +270,60 @@ ul.alert-dropdown {
         text-align: center;
         height: 40px;
     }
+
+    /*Asignar comision a curso*/
+#schedule_comission table 
+{
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    
+}
+
+#schedule_comission thead
+{
+		background-color: #939699;
+		height: 40px;
+		width: 50px;
+    	vertical-align: middle;
+    	text-align: center;
+    	color: #2C5B8C;
+}
+
+#schedule_comission th 
+{
+	 font-weight: normal;
+     text-align: center;
+
+}
+
+
+#schedule_comission table, #schedule_comission td,#schedule_comission th
+{
+	border: 1px solid black;
+    width: 100px;
+    empty-cells: hide;
+	
+}
+#schedule_comission td
+{
+    padding: 0px;
+   
+}
+#schedule_comission select
+{
+    border: none;
+    padding: 10px;
+    text-align: center;
+    width: 120px;
+    height: 40px;
+}
+
+#schedule_comission option
+{
+    text-align: left;
+}
+
+#assign_comission
+{
+    margin-left: 80px
+}

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SACAAE.Data_Access;
+using SACAAE.Models;
 using SACAAE.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -30,11 +31,11 @@ namespace SACAAE.Controllers
             }
 
             /* get List of all teachers */
-            ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
+            ViewBag.Profesores = obtenerTodosProfesores().ToList();
             /*get List of all 'sedes' */
-            ViewBag.Sedes = new SelectList(db.Sedes, "ID", "Name");
+            ViewBag.Sedes = obtenerTodasSedes().ToList();
             /* get List of all 'modalidades' */
-            ViewBag.Modalidades = new SelectList(db.Modalities, "ID", "Name"); 
+            ViewBag.Modalidades = obtenerTodasModalidades().ToList<Modality>(); 
 
             return View();
         }
@@ -42,21 +43,52 @@ namespace SACAAE.Controllers
         // POST: CursoProfesor/Asignar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Asignar(AsignacionCursoProfesorViewModel viewModel)
+        public ActionResult Asignar(int sltCurso, int sltProfesor, int sltGrupo, int txtHoras)
         {
             if (ModelState.IsValid)
             {
-                int idGrupo = viewModel.idGrupo;
-                int idProfesor = viewModel.idProfesor;
+                if (ModelState.IsValid)
+                {
+                    
+                    //Verify if profesor have other assign in the same day and start hour, if don't have conflict with other group in the same hour and day return true, else
+                    //if found problem with other group in the same day and start hour return false and the assign is cancelled and the user receive information
+                    Boolean vChoqueHorario = isScheduleProfesorValidate(sltGrupo, sltProfesor);
 
-                
-                db.Groups.Find(idGrupo).Professor.ID = idProfesor;
-                db.SaveChanges();
+                    //If doesn't exist problems in the profesor schedule
+                    if (!vChoqueHorario)
+                    {
+                        var grupo = db.Groups.Find(sltGrupo);
+                        grupo.ProfessorID = sltProfesor;
 
-                TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
-                return RedirectToAction("Curso","Index");
+                        //FALTA AGREGAR EL TIPO DE HORA SI ES RECARGO O NO
+                        /*if (HourCharge == 1)
+                        {
+                            grupo.HourAllocatedTypeID = 1;
+                        }*/
+                        db.SaveChanges();
+
+                        TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
+                        return RedirectToAction("Asignar");
+                    }
+                    // Exist problems in profesor schedule, so the assign is cancelled and the user recive the information of the problem
+                    else
+                    {
+                        TempData[TempDataMessageKey] = "No se puede asignar al profesor al curso\n porque existe choque de horario";
+                        /* get List of all teachers */
+                        ViewBag.Profesores = obtenerTodosProfesores().ToList();
+                        /*get List of all 'sedes' */
+                        ViewBag.Sedes = obtenerTodasSedes().ToList();
+                        /* get List of all 'modalidades' */
+                        ViewBag.Modalidades = obtenerTodasModalidades().ToList<Modality>(); 
+                        return View();
+                    }
+                    
+
+
+                }
+                return View();
             }
-            return View(viewModel);
+            return View();
 
         }
         
@@ -84,8 +116,10 @@ namespace SACAAE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult revocar(int sltCursosImpartidos)
         {
+
             var revocado = false;
-  
+
+            //revocado = repositorioCursoProfesor.revocarProfesor(sltCursosImpartidos);
 
             if (revocado)
             {
@@ -98,6 +132,98 @@ namespace SACAAE.Controllers
 
             return RedirectToAction("Revocar");
         }
+
+        #region Helpers
+
+        public IQueryable<Professor>obtenerTodosProfesores()
+        {
+            return from profesor in db.Professors
+                   orderby profesor.Name
+                   where profesor.StateID == 1
+                   select profesor;
+        }
+
+        /// <summary>
+        /// Se obtienen todas las sedes.
+        /// </summary>
+        /// <returns>Lista de sedes.</returns>
+        public IQueryable<Sede> obtenerTodasSedes()
+        {
+            return from sede in db.Sedes
+                   orderby sede.Name
+                   select sede;
+        }
+
+        /// <summary>
+        /// Se obtienen las modalidades de los planes.
+        /// </summary>
+        /// <returns>Lista de modalidades.</returns>
+        public IQueryable<Modality> obtenerTodasModalidades()
+        {
+            return from modalidad in db.Modalities
+                   orderby modalidad.Name
+                   select modalidad;
+        }
+
+        private Boolean isScheduleProfesorValidate(int pIDGrupo, int pIDProfesor)
+        {
+            /*Get Group from database accordin to idGrupo*/
+            var vListScheduleGroup = (from grupo in db.Groups
+                                      join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+                                      join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
+                                      where (grupo.ID == pIDGrupo)
+                                      select new { horario.StartHour, horario.EndHour, horario.Day }).ToList();
+
+
+            /*Get all profesor schedules*/
+            var vListScheduleProfesors = (from profesor in db.Professors
+                                          join grupo in db.Groups on profesor.ID equals grupo.ProfessorID
+                                          join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
+                                          join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
+                                          where (profesor.ID == pIDProfesor)
+                                          select new { horario.StartHour, horario.EndHour, horario.Day }).ToList();
+            //Bandera que determina si el horario esta repetido o no
+            Boolean vChoqueHoraio = false;
+            foreach (var vHorarioProfesor in vListScheduleProfesors)
+            {
+                foreach (var vScheduleGroup in vListScheduleGroup)
+                {
+                    //If the schedule of profesor is equals to group schedule this is a problem because is assign a group but with the same schedule
+                    if (vHorarioProfesor.StartHour.Equals(vScheduleGroup.StartHour) && vHorarioProfesor.Day.Equals(vScheduleGroup.Day))
+                    {
+                        vChoqueHoraio = true;
+                    }
+                }
+            }
+
+            return vChoqueHoraio;
+        }
+
+        /// <summary>
+        /// Revoca la asignación de un profesor a un curso.
+        /// </summary>
+        /// <param name="idProfesorXCurso">El id del profesor x curso.</param>
+        /// <returns>True si logra revocarlo.</returns>
+        public bool revocarProfesor(int idProfesorXCurso)
+        {
+            var retorno = false;
+            /*var grupo = db.Groups.Find(pIDGroup);
+            grupo.ProfessorID = null;
+            grupo.HourAllocatedTypeID = null;
+            db.SaveChanges();
+
+            if (temp != null)
+            {
+                entidades.Entry(temp).Property(p => p.Profesor).CurrentValue = 3;
+                entidades.Entry(temp).Property(p => p.Horas).CurrentValue = 0;
+                retorno = true;
+            }
+
+            entidades.SaveChanges();*/
+
+            return retorno;
+        }
+        #endregion
 
         #region Ajax Post
 
@@ -266,20 +392,32 @@ namespace SACAAE.Controllers
         /// ***************** NOT USED  ********************************* 
         /// </summary>
         /// <autor>Unkown</autor>
-        /// <param name="idProfesor"></param>
+        /// <change>
+        /// Esteban Segura Benavides 9/12/2015
+        /// Script Old:
+        /// var listaCursos = from profesores in db.Professors
+        ///join grupo in db.Groups on profesores.ID equals grupo.ProfessorID
+        ///join bloqueXPlanXCurso in db.BlocksXPlansXCourses on grupo.BlockXPlanXCourseID equals bloqueXPlanXCurso.ID
+        ///where profesores.ID == idProfesor
+        ///select new { profesores.ID, bloqueXPlanXCurso.Course.Name, bloqueXPlanXCurso.Course.Code }; 
+        ///
+        /// Script New:
+        /// 
+        /// Professor_Course
+        /// </change>
+        /// <param name="pIDProfesor"></param>
         /// <returns></returns>
-        [Route("CursoProfesor/Profesor/Cursos/{idProfesor:int}")]
-        public ActionResult ObtenerCursosPorProfesor(int idProfesor)
+        [Route("CursoProfesor/Profesor/Cursos/{pIDProfesor:int}")]
+        public ActionResult ObtenerCursosPorProfesor(int pIDProfesor)
         {
             if (HttpContext.Request.IsAjaxRequest())
             {
-                var listaCursos = from profesores in db.Professors
-                                  join grupo in db.Groups on profesores.ID equals grupo.ProfessorID
-                                  join bloqueXPlanXCurso in db.BlocksXPlansXCourses on grupo.BlockXPlanXCourseID equals bloqueXPlanXCurso.ID
-                                  where profesores.ID == idProfesor
-                                  select new { profesores.ID, bloqueXPlanXCurso.Course.Name, bloqueXPlanXCurso.Course.Code }; //Revisar
+                var json = "";
+                var vPeriod = Request.Cookies["Periodo"].Value;
+                var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
 
-                var json = JsonConvert.SerializeObject(listaCursos);
+                var sp_getProfessorCourses = db.SP_Professor_Course( vIDPeriod,pIDProfesor).ToList();
+                json = JsonConvert.SerializeObject(sp_getProfessorCourses);
                 return Content(json);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -326,6 +464,29 @@ namespace SACAAE.Controllers
                 json = JsonConvert.SerializeObject(sp_getCourseGroups);
                 return Content(json);
             
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        /// <summary>
+        /// Get a groups associated a determinated course 
+        /// </summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// <param name="pIDCurso">ID Course in database</param>
+        /// <returns>ID, Number of Group, Name of Profesor, Code of Aula and StartHour, EndHour and Day of Schedule</returns>
+        [Route("CursoProfesor/Cursos/{pIDCurso:int}/Sedes/{pIDSede:int}/Profesores/{pIDProfesor}")]
+        public ActionResult getProfessorGroups(int pIDCurso, int pIDSede, int pIDProfesor)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var json = "";
+                var vPeriod = Request.Cookies["Periodo"].Value;
+                var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
+
+                var sp_getProfessorGroups = db.SP_Professor_Group(pIDCurso, pIDSede, vIDPeriod,pIDProfesor).ToList();
+                json = JsonConvert.SerializeObject(sp_getProfessorGroups);
+                return Content(json);
+
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
@@ -474,6 +635,8 @@ namespace SACAAE.Controllers
         /// <param name="pIDPlan">id of plan study in database</param>
         /// <param name="pIDGrupo">id of group in database</param>
         /// <returns>Code of Classroom and StartHour, EndHour and Day of Group</returns>
+        /// 
+
         [Route("CursoProfesor/Cursos/{pIDCurso:int}/Sedes/{pIDSede:int}/Modalidades/{pIDModalidad:int}/Planes/{pIDPlan:int}/Grupos/{pIDGrupo:int}/Horario")]
         public ActionResult getSchedule(int pIDCurso,int pIDSede, int pIDModalidad, int pIDPlan, int pIDGrupo)
         {

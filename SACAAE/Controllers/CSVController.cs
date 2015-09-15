@@ -111,7 +111,6 @@ namespace SACAAE.Controllers
                         else
                         {
                             vState = "Error";
-                            //vDetails = "Problemas con el horario y el aula";
                         }
                     }
                     else
@@ -150,8 +149,8 @@ namespace SACAAE.Controllers
             int vIDEntity = getEntityID(Request.Cookies["Entidad"].Value);
             int vIDPeriod = Int32.Parse(Request.Cookies["Periodo"].Value);
 
-            IEnumerable<DataCSV> vGroups = getGroupesPeriod(vIDPeriod, vIDEntity);
-
+            IEnumerable<DataCSV> vGroups = gvDatabase.SP_GetGroupsPeriod(vIDPeriod, vIDEntity);
+                
             using (Stream memoryStream = new MemoryStream())
             {
                 StreamWriter streamWriter = new StreamWriter(memoryStream, Encoding.UTF8);
@@ -498,7 +497,7 @@ namespace SACAAE.Controllers
         /// <param name="pIDPeriod"> ID of period </param>
         /// <param name="pIDEntity"> ID of entity </param>
         /// <returns> A object of type "IEnumerable<DataCSV>" </returns>
-        private IEnumerable<DataCSV> getGroupesPeriod(int pIDPeriod, int pIDEntity)
+        private IEnumerable<DataCSV> getGroupesPeriod2(int pIDPeriod, int pIDEntity)
         {
             // Queries all the tables needed for the complete information of groups. 
             // Complete Information of groups: Group's Number, Course Name, Professor, Day, Start Hour, End Hour, Headquarter, Classroom, Study Plan and Modality

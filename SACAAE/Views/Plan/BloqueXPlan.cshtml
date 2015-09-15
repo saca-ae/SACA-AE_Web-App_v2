@@ -1,0 +1,60 @@
+﻿@model IEnumerable<SACAAE.Models.AcademicBlock>
+
+@{
+    ViewBag.Title = "Planes";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<h2>Bloques Academicos</h2>
+@using (Html.BeginForm())
+{
+    <div class="row-fluid">
+        <div class="col-lg-5">
+            <div class="span12">
+                @if (TempData.ContainsKey("MessageError"))
+                {
+                    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+                }
+                @if (TempData.ContainsKey("MessageSuccess"))
+                {
+                    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+                }
+                <label>Plan de Estudio</label>
+                <select id="sltPlan" name="sltPlan" class="form-control">
+                    <option value="@ViewBag.Plan.ID">@ViewBag.Plan.Nombre</option>
+                </select>
+                <br />
+                <p> @Html.ActionLink("Agregar Bloques", "CrearBloqueXPlan", "BloqueXPlan", new { plan = ViewBag.Plan.ID }, null)</p>
+                <br />
+
+            </div>
+        </div>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nivel)
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nivel)
+                </td>
+                <td>
+                    @Html.ActionLink("Ver Cursos", "CursoXPlanXBloque", new { bloque = item.ID, plan = ViewBag.Plan.ID })|@Html.ActionLink("Eliminar", "EliminarBloque", new { bloque = item.ID, plan = ViewBag.Plan.ID })
+                </td>
+            </tr>
+        }
+    </table>
+    <p>@Html.ActionLink("Regresar", "Index", "Plans")</p>
+}

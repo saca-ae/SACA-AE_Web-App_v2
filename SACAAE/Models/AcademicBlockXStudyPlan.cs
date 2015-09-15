@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SACAAE.Data_Access;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -17,5 +18,6 @@ namespace SACAAE.Models
         public virtual AcademicBlock AcademicBlock { get; set; }
         public virtual StudyPlan StudyPlan { get; set; }
         public virtual ICollection<BlockXPlanXCourse> BlocksXPlansXCourses { get; set; }
+        
     }
 }
