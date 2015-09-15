@@ -146,16 +146,15 @@ namespace SACAAE.Controllers
             foreach (Group vGroup in vGroups)
             {
                 var vDetail = db.GroupClassrooms.Where(p => p.GroupID == vGroup.ID).ToList();
+                var vCargaEstimada = (int)Math.Floor(10.0/vDetail.Count);
 
                 foreach (var vSchedule in vDetail)
                 {
 
                     string HoraInicio = vSchedule.Schedule.StartHour;
                     string HoraFin = vSchedule.Schedule.EndHour;
-                    int Carga = 0;
+                    int Carga = vCargaEstimada;
                     var vCourseInfo = db.BlocksXPlansXCourses.Single(p => p.ID == vGroup.BlockXPlanXCourseID).Course;
-
-                    Carga = vGroup.BlockXPlanXCourse.Course.TheoreticalHours;    
 
                     entidad_temp = vGroup.BlockXPlanXCourse.AcademicBlockXStudyPlan.StudyPlan.EntityType.Name;
                     pReportInfo.todo_profesores.Add(new Profesor
