@@ -32,8 +32,8 @@ function obtener_dias() {
         var row = table.insertRow(contador);
         row.setAttribute("id", "trRow" + contador);
         row.setAttribute("data-day", "Lunes");
-        row.setAttribute("data-starthour", "7:30 AM");
-        row.setAttribute("data-endhour", "8:20 AM");
+        row.setAttribute("data-starthour", "07:30 am");
+        row.setAttribute("data-endhour", "08:20 am");
         contador++;
 
         var celda_Day = row.insertCell(0);
