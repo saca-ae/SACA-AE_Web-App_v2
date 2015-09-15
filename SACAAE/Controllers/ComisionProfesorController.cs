@@ -84,7 +84,7 @@ namespace SACAAE.Controllers
             vCommissionProfessor.ProfessorID = Convert.ToInt32(vProfessor);
             vCommissionProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourCharge);
             vCommissionProfessor.PeriodID = vIDPeriod;
-
+            vCommissionProfessor.Schedule = new List<Schedule>();
            
           
 
@@ -326,18 +326,15 @@ namespace SACAAE.Controllers
                 vNewSchedule.Day = pDay;
                 vNewSchedule.StartHour = pStartHour;
                 vNewSchedule.EndHour = pEndHour;
-                //vNewSchedule.CommissionsXProfessors = new List<CommissionXProfessor>();
+                vNewSchedule.CommissionsXProfessors = new List<CommissionXProfessor>();
 
                 db.Schedules.Add(vNewSchedule);
-                db.SaveChanges();
-
-
-                
+                //db.SaveChanges();
 
                 //vSchedule = db.Schedules.Where(p => p.Day == pDay && p.StartHour == pStartHour && p.EndHour == pEndHour).FirstOrDefault();
 
                 //db.SaveChanges();
-                return db.Schedules.Where(p => p.Day == pDay && p.StartHour == pStartHour && p.EndHour == pEndHour).FirstOrDefault();
+                return vNewSchedule;
             }
                 //select * from Schedule where Day='Domingo' AND StartHour = '07:30 am' AND EndHour = '09:20 am'
         }
