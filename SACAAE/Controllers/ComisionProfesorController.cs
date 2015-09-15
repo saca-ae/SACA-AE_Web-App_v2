@@ -85,7 +85,7 @@ namespace SACAAE.Controllers
             vCommissionProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourCharge);
             vCommissionProfessor.PeriodID = vIDPeriod;
 
-            db.CommissionsXProfessors.Add(vCommissionProfessor);
+           
           
 
             //Calculate the total hour assign
