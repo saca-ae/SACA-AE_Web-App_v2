@@ -1,1 +1,82 @@
-﻿
+﻿@model SACAAE.Models.StudyPlan
+
+@{
+    ViewBag.Title = "CrearPlan";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<div class="col-lg-4">
+
+    <h2> Crear Plan De Estudio</h2>
+    <hr />
+    @if (TempData.ContainsKey("MessageError"))
+    {
+        <p class="text-danger">@TempData["MessageError"].ToString()</p>
+    }
+    @if (TempData.ContainsKey("MessageSuccess"))
+    {
+        <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+    }
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <div id="ventanaAgregar">
+            <div class=" editor-label">
+                <label> Nombre </label>
+            </div>
+
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Nombre, new
+               {
+                   @class = "form-control",
+                   @placeholder = "Nombre del Plan de Estudio"
+               })
+                @Html.ValidationMessageFor(model => model.Nombre)
+            </div>
+
+            <div class=" editor-label">
+                <label> Modalidad </label>
+            </div>
+
+            <div class="editor-field">
+                <select name="Modalidades" id="Modalidades" class="form-control">
+                    @foreach (var item in ViewBag.Modalidades)
+                    {
+                        <option value="@item.ID">@item.Nombre</option>
+                    }
+                </select>
+
+            </div>
+
+            <div class=" editor-label">
+                <label> Sedes </label>
+            </div>
+
+            <div class="editor-field">
+                @foreach (var item in ViewBag.Sedes)
+                {
+                    <input type="checkbox" name="Sedes" id="Sedes" value="@item.ID">@item.Nombre
+                }
+
+
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Crear" class="btn btn-default" />
+                    @Html.ActionLink("Regresar", "Index", "Plans")
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

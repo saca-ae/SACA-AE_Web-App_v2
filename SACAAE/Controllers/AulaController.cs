@@ -53,6 +53,7 @@ namespace SACAAE.Controllers
                     return View(aula);
                 }
 
+                aula.SedeID = Convert.ToInt32(Request.Form["Sedes"].ToString());
                 aula.Active = true;
                 db.Classrooms.Add(aula);
                 db.SaveChanges();
@@ -89,6 +90,7 @@ namespace SACAAE.Controllers
             {
                 if (db.Classrooms.Where(p => p.Code == aula.Code && p.SedeID == aula.SedeID).Count() == 0)
                 {
+                    aula.SedeID = Convert.ToInt32(Request.Form["Sedes"].ToString());
                     db.Entry(aula).State = EntityState.Modified;
                     db.SaveChanges();
                     TempData[TempDataMessageKeySuccess] = "Aula código: "+aula.Code+" editada correctamente";

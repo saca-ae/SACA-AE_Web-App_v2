@@ -111,8 +111,10 @@ namespace SACAAE.Controllers
         [HttpPost]
         public ActionResult GuardarCambios()
         {
-            //Hay que volver a hacer de nuevo existe mucho desorden
-            /*int Cantidad;
+            //*****************************************************************************************************
+            //******************************* Se obtienen los datos del formulario ********************************
+            //*****************************************************************************************************
+            int Cantidad;
             int PlanDeEstudio;
             try
             {
@@ -131,25 +133,30 @@ namespace SACAAE.Controllers
             {
                 throw new ArgumentException("No se detecto ningun Grupo o Plan de Estudio" + e.Message);
             }
+            //*****************************************************************************************************
 
+            //En caso de que el horario este vacio se asume que se desea borrar por lo que se limpian los dias y se termina, este return evita que falle el programa cuando no hay cookies
+            if (Cantidad == 0) 
+            { 
+                return RedirectToAction("Horarios"); 
+             }
+            //Eliminar Horarios Viejos
+            //for (int i = 1; i <= Cantidad; i++)
+            //{
+            //   String Detalles= Request.Cookies["Cookie" + i].Value;
+            //   string[] Partes = Detalles.Split('|');
+            //   int Grupo = Int32.Parse(Partes[5]);
+            //    int IdHorario = IdHorarioCurso(Grupo);
+            //    if(IdHorario!=0)
+            //    {
+            //        Horario.EliminarDias(IdHorario);
+            //    }
+            //}
 
-            if (Cantidad == 0) { return RedirectToAction("Horarios"); }//En caso de que el horario este vacio se asume que se desea borrar por lo que se limpian los dias y se termina, este return evita que falle el programa cuando no hay cookies
-            Eliminar Horarios Viejos
-            for (int i = 1; i <= Cantidad; i++)
-            {
-             /  String Detalles= Request.Cookies["Cookie" + i].Value;
-                string[] Partes = Detalles.Split('|');
-               int Grupo = Int32.Parse(Partes[5]);
-                int IdHorario = IdHorarioCurso(Grupo);
-             //   if(IdHorario!=0){
-              //      Horario.EliminarDias(IdHorario);
-               // }
-
-            }
             //Guardar Datos
             for (int i = 1; i <= Cantidad; i++)
             {
-                String Detalles= Request.Cookies["Cookie" + i].Value;//Obtiene los datos de la cookie
+                String Detalles = Request.Cookies["Cookie" + i].Value;//Obtiene los datos de la cookie
                 string[] Partes = Detalles.Split('|');
                 String Curso = Partes[0];
                 String Dia = Partes[1];
@@ -160,28 +167,51 @@ namespace SACAAE.Controllers
                 String Aula = Partes[6];
                 if (Curso != "d")
                 {
+                    //Curso segun el ID y el Plan de Estudio
                     int IdCurso = IdCursos(Curso, PlanDeEstudio);
+
+                    //Se obtiene el id del horario del grupo
                     int IdHorario = IdHorarioCurso(Grupo);
-                   // if (IdHorario != 0)
-                   // {
+
+                    //Si existe Que hace aqui????
+                    //if (IdHorario != 0)
+                    //{
                     //    Horario.AgregarDia(Dia, IdHorario, Convert.ToInt32(HoraInicio), Convert.ToInt32(HoraFin));
                     //}
+
+                    //En caso de que no exista se crea el nuevo horario y se retorna el id
                     //else
-                   // {
-                        NuevoHorario(Dia, HoraInicio, HoraFin);
-                        //Horario.AgregarDia(Dia, HorarioNuevo, Convert.ToInt32(HoraInicio), Convert.ToInt32(HoraFin));
-                        //int idAula = repoAulas.idAula(Aula);
-                        //int cupo = repoAulas.ObtenerAula(idAula).Espacio;
-                        //Cursos.GuardarDetallesCurso(Grupo, HorarioNuevo, Aula, 5, cupo);
-                   // }
+                    //{
+                    if (IdHorario == null)
+                    {
+                        //Se agrega el horario nuevo
+                        IdHorario = NuevoHorario(Dia, HoraInicio, HoraFin);
+                    }
+                    //Horario.AgregarDia(Dia, HorarioNuevo, Convert.ToInt32(HoraInicio), Convert.ToInt32(HoraFin));
+
+                    //Se retorna el id del Aula de acuerdo al codigo Porque no se busca por id y se valida si es valido o no???
+                    int vIDAula = idAula(Aula);
+
+                    //Se obtiene el cupo del aula INNECESARIO
+                    //int cupo = repoAulas.ObtenerAula(idAula).Espacio;
+
+                    //Se almacena la relacion
+                    GroupClassroom vNewGroupClassroom = new GroupClassroom();
+                    vNewGroupClassroom.ClassroomID = vIDAula;
+                    vNewGroupClassroom.ScheduleID = IdHorario;
+                    vNewGroupClassroom.GroupID = Grupo;
+                    //GroupClassroom(GroupID,ClassroomID, ScheduleID)
+                    //Cursos.GuardarDetallesCurso(Grupo, HorarioNuevo, Aula, 5, cupo);
+                    // }
+                    //}
+
                 }
-                
             }
             Response.Cookies.Clear();
-            TempData["Message"] = "Cambios guardados satisfactoriamente";*/
+            TempData["Message"] = "Cambios guardados satisfactoriamente";
             return RedirectToAction("Horarios");
         }
-
+            
         /*public ActionResult ObtenerHorarios(int plan, int periodo)
         {
             int idSede = Int16.Parse(Request.Cookies["SelSede"].Value);
@@ -311,6 +341,14 @@ namespace SACAAE.Controllers
             db.SaveChanges();
 
             return 1;
+        }
+
+        
+        public int idAula(string pCodigoAula)
+        {
+            return (from Aulas in db.Classrooms
+                    where Aulas.Code == pCodigoAula
+                    select Aulas).FirstOrDefault().ID;
         }
         #endregion
     }
