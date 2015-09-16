@@ -1,5 +1,7 @@
-﻿using SACAAE.Data_Access;
+﻿using Newtonsoft.Json;
+using SACAAE.Data_Access;
 using SACAAE.Models;
+using SACAAE.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,31 +20,7 @@ namespace SACAAE.Controllers
         // GET: ProyectoProfesor/Asignar
         public ActionResult Asignar()
         {
-            /*EN CASO DE UTILIZAR HORARIO TEC
             
-            List<String> HorasInicio = new List<String>();
-            List<String> HorasFin = new List<String>();
-            
-            for (int i = 7; i < 22; i++)
-            {
-                if (i < 13)
-                    HorasInicio.Add(i.ToString() + ":30");
-                else
-                    HorasInicio.Add(i.ToString() + ":00");
-            }
-            ViewBag.HorasInicio = HorasInicio;
-
-            List<String> HorasFin = new List<String>();
-            for (int i = 8; i < 22; i++)
-            {
-                if (i < 13)
-                    HorasFin.Add(i.ToString() + ":20");
-                else
-                    HorasFin.Add(i.ToString() + ":50");
-            }
-            ViewBag.HorasFin = HorasFin;
-            */
-
             List<String> HorasInicio = new List<String>();
             List<String> HorasFin = new List<String>();
             for (int i = 7; i < 23; i++)
@@ -56,20 +34,20 @@ namespace SACAAE.Controllers
             String entidad = Request.Cookies["Entidad"].Value;
             var entidadID = getEntityID(entidad);
 
-            ViewBag.profesores = new SelectList(db.Professors, "ID", "Name"); ;
+            ViewBag.Professors = new SelectList(db.Professors, "ID", "Name"); ;
 
             if (entidadID == 1)
             {
-                var proyectos = db.Projects.Where(p => p.StateID == 1 && (p.EntityTypeID == 1 ||      //TEC
+                var Projects = db.Projects.Where(p => p.StateID == 1 && (p.EntityTypeID == 1 ||      //TEC
                                                          p.EntityTypeID == 2 || p.EntityTypeID == 3 || //TEC-VIC TEC-REC
                                                          p.EntityTypeID == 4 || p.EntityTypeID == 10)) //TEC-MIXTO TEC-Académico
                                              .OrderBy(p => p.Name);
-                ViewBag.proyectos = new SelectList(proyectos, "ID", "Name");
+                ViewBag.Projects = new SelectList(Projects, "ID", "Name");
             }
             else
             {
-                var proyectos = db.Projects.Where(p => p.EntityTypeID == entidadID).OrderBy(p => p.Name);
-                ViewBag.proyectos = new SelectList(proyectos, "ID", "Name");
+                var Projects = db.Projects.Where(p => p.EntityTypeID == entidadID).OrderBy(p => p.Name);
+                ViewBag.Projects = new SelectList(Projects, "ID", "Name");
             }
             return View();
         }
@@ -77,48 +55,185 @@ namespace SACAAE.Controllers
         // POST: ProyectoProfesor/Asignar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Asignar(String sltProfesor, String sltProyecto)
+        public ActionResult Asignar(ScheduleProjectViewModel pSchedule)
         {
+            var vPeriod = Request.Cookies["Periodo"].Value;
+            var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
 
-            int Cantidad;
-            try
+            string vHourCharge = pSchedule.HourCharge;
+            string vProjects = pSchedule.Projects;
+            string vProfessor = pSchedule.Professors;
+            List<ScheduleProject> vSchedules = pSchedule.ScheduleProject;
+
+            int totalHourAssign = 0;
+
+            //Save Commission Professor
+            ProjectXProfessor vProjectProfessor = new ProjectXProfessor();
+            vProjectProfessor.ProjectID = Convert.ToInt32(vProjects);
+            vProjectProfessor.ProfessorID = Convert.ToInt32(vProfessor);
+            vProjectProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourCharge);
+            vProjectProfessor.PeriodID = vIDPeriod;
+            vProjectProfessor.Schedule = new List<Schedule>();
+
+            //Calculate the total hour assign
+            foreach (ScheduleProject vSchedule in vSchedules)
             {
-                Cantidad = Convert.ToInt32(Request.Cookies["Cantidad"].Value);
-                Cantidad++;
-            }
-            catch (Exception e)
-            {
-                Cantidad = 0;
-            }
-
-            var periodo = Request.Cookies["Periodo"].Value;
-            var IdPeriodo = db.Periods.Find(int.Parse(periodo)).ID;
-
-            for (int i = 1; i < Cantidad; i++)
-            {
-                String Detalles = Request.Cookies["DiaSeleccionadoCookie" + i].Value;//Obtiene los datos de la cookie
-                string[] Partes = Detalles.Split('|');
-
-                String Dia = Partes[0];
-                String HoraInicio = Partes[1];
-                String HoraFin = Partes[2];
-
-                if (Dia != "d")
+                Schedule vTempSchedule = existSchedule(vSchedule.Day, vSchedule.StartHour, vSchedule.EndHour);
+                if (vTempSchedule != null)
                 {
-                    //var creado = repoProfesProyectos.CrearProyectoProfesor(sltProfesor, sltProyecto, Dia, HoraInicio, HoraFin, IdPeriodo);
+                    //Get id schedule
 
-                    //if (creado)
-                    //{
-                    //    TempData[TempDataMessageKey] = "Profesor asignado correctamente.";
-                    //}
-                    //else
-                    //{
-                    //    TempData[TempDataMessageKey] = "Ocurrió un error al asignar el profesor.";
-                    //}
+                    vTempSchedule.ProjectsXProfessors.Add(vProjectProfessor);
+
                 }
 
+                /******/
+                //var HoraInicio = DateTime.Parse(vDay.StartHour);
+                //var HoraFin = DateTime.Parse(vDay.EndHour);
 
+                //var CargaC = Math.Ceiling(HoraFin.Subtract(HoraInicio).TotalHours);
+                //if (HoraInicio <= DateTime.Parse("12:00 PM") && HoraFin >= DateTime.Parse("01:00 PM"))
+                //{
+                //    CargaC = CargaC - 1;
+                //}
+                /*****/
+
+                int vIntStartHour = 0;
+                int vIntEndHour = 0;
+
+                switch (vSchedule.StartHour)
+                {
+                    case "07:30 am":
+                        vIntStartHour = 730;
+                        break;
+                    case "08:30 am":
+                        vIntStartHour = 830;
+                        break;
+                    case "09:30 am":
+                        vIntStartHour = 930;
+                        break;
+                    case "10:30 am":
+                        vIntStartHour = 1030;
+                        break;
+                    case "11:30 am":
+                        vIntStartHour = 1130;
+                        break;
+                    case "12:30 pm":
+                        vIntStartHour = 1230;
+                        break;
+
+                    case "01:00 pm":
+                        vIntStartHour = 1300;
+                        break;
+                    case "02:00 pm":
+                        vIntStartHour = 1400;
+                        break;
+
+                    case "03:00 pm":
+                        vIntStartHour = 1500;
+                        break;
+                    case "04:00 pm":
+                        vIntStartHour = 1600;
+                        break;
+
+                    case "05:00 pm":
+                        vIntStartHour = 1700;
+                        break;
+                    case "06:00 pm":
+                        vIntStartHour = 1800;
+                        break;
+
+                    case "07:00 pm":
+                        vIntStartHour = 1900;
+                        break;
+                    case "08:00 pm":
+                        vIntStartHour = 2000;
+                        break;
+
+                    case "09:00 pm":
+                        vIntStartHour = 2100;
+                        break;
+                }
+
+                switch (vSchedule.EndHour)
+                {
+                    case "08:20 am":
+                        vIntEndHour = 820;
+                        break;
+                    case "09:20 am":
+                        vIntEndHour = 920;
+                        break;
+                    case "10:20 am":
+                        vIntEndHour = 1020;
+                        break;
+                    case "11:20 am":
+                        vIntEndHour = 1120;
+                        break;
+                    case "12:20 pm":
+                        vIntEndHour = 1220;
+                        break;
+
+                    case "01:50 pm":
+                        vIntEndHour = 1350;
+                        break;
+                    case "02:50 pm":
+                        vIntEndHour = 1450;
+                        break;
+
+                    case "03:50 pm":
+                        vIntEndHour = 1550;
+                        break;
+                    case "04:50 pm":
+                        vIntEndHour = 1650;
+                        break;
+
+                    case "05:50 pm":
+                        vIntEndHour = 1750;
+                        break;
+                    case "06:50 pm":
+                        vIntEndHour = 1850;
+                        break;
+
+                    case "07:50 pm":
+                        vIntEndHour = 1950;
+                        break;
+                    case "08:50 pm":
+                        vIntEndHour = 2050;
+                        break;
+
+                    case "09:50 pm":
+                        vIntEndHour = 2150;
+                        break;
+                }
+
+                int vDiferencia = (vIntEndHour - vIntStartHour);
+
+                if (vIntStartHour < 1300)
+                {
+                    vDiferencia = vDiferencia + 10;
+                }
+                else if (vIntStartHour < 1300 & vIntEndHour > 1300)
+                {
+                    vDiferencia = vDiferencia + 110;
+                }
+                else
+                {
+                    vDiferencia = vDiferencia + 50;
+                }
+
+                vDiferencia = vDiferencia / 100;
+
+                totalHourAssign = totalHourAssign + vDiferencia;
             }
+           
+
+            vProjectProfessor.Hours = totalHourAssign;
+
+            db.ProjectsXProfessors.Add(vProjectProfessor);
+
+            db.SaveChanges();
+            TempData[TempDataMessageKey] = "Profesor asignado correctamente.";
+
             return RedirectToAction("Asignar");
         }
 
@@ -172,11 +287,14 @@ namespace SACAAE.Controllers
         [Route("ProyectoProfesor/Profesor/Proyecto/{idProfesor:int}")]
         public ActionResult ObtenerProyectosXProfesor(int idProfesor)
         {
+            var vPeriod = Request.Cookies["Periodo"].Value;
+            int vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
             if (HttpContext.Request.IsAjaxRequest())
             {
                 var listaProyectos = db.Professors.Find(idProfesor)
                                                   .ProjectsXProfessors
-                                                  .Select(p => new { p.Project.ID, p.Project.Name });
+                                                  .Where(p => p.PeriodID == vIDPeriod)
+                                                  .Select(p => new { p.ID, p.Project.Name });
 
                 return Json(listaProyectos, JsonRequestBehavior.AllowGet);
             }
@@ -185,6 +303,28 @@ namespace SACAAE.Controllers
         #endregion
 
         #region Helpers
+        private Schedule existSchedule(string pDay, string pStartHour, string pEndHour)
+        {
+            var vSchedule = db.Schedules.Where(p => p.Day == pDay && p.StartHour == pStartHour && p.EndHour == pEndHour).FirstOrDefault();
+
+            if (vSchedule != null)
+            {
+                return vSchedule;
+            }
+            else
+            {
+                //Create schedule and get id
+                Schedule vNewSchedule = new Schedule();
+                vNewSchedule.Day = pDay;
+                vNewSchedule.StartHour = pStartHour;
+                vNewSchedule.EndHour = pEndHour;
+                vNewSchedule.ProjectsXProfessors = new List<ProjectXProfessor>();
+
+                db.Schedules.Add(vNewSchedule);
+               
+                return vNewSchedule;
+            }
+        }
         private int getEntityID(string entityName)
         {
             EntityType entity;
@@ -229,6 +369,38 @@ namespace SACAAE.Controllers
             }
 
             return (entity != null) ? entity.ID : 0;
+        }
+
+        /// <summary>
+        ///  Remove a profesor from a group
+        /// </summary>
+        /// <autor> Esteban Segura Benavides </autor>
+        /// <param name="pIDGrupo"> ID of group in database</param>
+        /// <returns>Information about the action of remove a profesor from a group</returns>
+        [Route("ProyectoProfesor/ProyectoProfesor/{pIDProyectoProfesor:int}/removeProfesor")]
+        public ActionResult removeGroup(int pIDProyectoProfesor)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var vProjectProfesor = db.ProjectsXProfessors.Find(pIDProyectoProfesor);
+                if (vProjectProfesor != null)
+                {
+                    db.ProjectsXProfessors.Remove(vProjectProfesor);
+                    db.SaveChanges();
+                    var respuesta = new { respuesta = "success" };
+                    var json = JsonConvert.SerializeObject(respuesta);
+                    return Content(json);
+                }
+                else
+                {
+                    var respuesta_error = new { respuesta = "error" };
+                    var json_respuesta_error = JsonConvert.SerializeObject(respuesta_error);
+                    return Content(json_respuesta_error);
+                }
+            }
+            var error = new { respuesta = "error" };
+            var json_error = JsonConvert.SerializeObject(error);
+            return Content(json_error);
         }
         #endregion
     }

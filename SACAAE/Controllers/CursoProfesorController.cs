@@ -687,7 +687,30 @@ namespace SACAAE.Controllers
             var json_error = JsonConvert.SerializeObject(respuesta_error);
             return Content(json_error);
         }
-      
+
+        /// <summary>
+        /// Obtiene la información de los grupos de un curso determinado.
+        /// </summary>
+        /// <param name="pIDCurso">El id del curso.</param>
+        /// <returns>Lista de grupos abiertos de ese curso.</returns>
+
+         [Route("CursoProfesor/Grupos/List/{pIDCurso:int}/{pIDPlan:int}/{pIDSede:int}/{pIDBloque:int}/{pIDPeriodo:int}")]
+        public ActionResult obtenerGrupos(int pIDCurso, int pIDPlan, int pIDSede, int pIDBloque, int pIDPeriodo)
+        {
+            var idBloqueXPlan = (from bloqueXPlan in db.AcademicBlocksXStudyPlans
+                                 where bloqueXPlan.BlockID== pIDBloque && bloqueXPlan.PlanID == pIDPlan
+                                 select bloqueXPlan.ID).FirstOrDefault();
+            var idBloqueXPlanXCurso = (from bloqueXPlanXCurso in db.BlocksXPlansXCourses
+                                       where bloqueXPlanXCurso.CourseID == pIDCurso && bloqueXPlanXCurso.BlockXPlanID == idBloqueXPlan
+                                       select bloqueXPlanXCurso.ID).FirstOrDefault();
+
+            var lista_grupos =  from grupos in db.Groups
+                   where grupos.BlockXPlanXCourseID == idBloqueXPlanXCurso && grupos.PeriodID == pIDPeriodo && grupos.BlockXPlanXCourse.SedeID == pIDSede
+                   select new { grupos.ID, grupos.Number };
+
+            var json = JsonConvert.SerializeObject(lista_grupos);
+            return Content(json);
+        }
         #endregion
     }
 }

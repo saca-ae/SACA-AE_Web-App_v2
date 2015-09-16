@@ -1,4 +1,5 @@
-﻿using SACAAE.Data_Access;
+﻿using Newtonsoft.Json;
+using SACAAE.Data_Access;
 using SACAAE.Models;
 using SACAAE.Models.ViewModels;
 using System;
@@ -240,7 +241,6 @@ namespace SACAAE.Controllers
 
             db.CommissionsXProfessors.Add(vCommissionProfessor);
 
-           // db.Entry(vCommissionProfessor).State = EntityState.Modified;
             db.SaveChanges();
             TempData[TempDataMessageKey] = "Profesor asignado correctamente.";
 
@@ -298,11 +298,15 @@ namespace SACAAE.Controllers
         [Route("ComisionProfesor/Profesor/Comisiones/{idProfesor:int}")]
         public ActionResult ObtenerComisionesXProfesor(int idProfesor)
         {
+            var vPeriod = Request.Cookies["Periodo"].Value;
+            int vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
             if (HttpContext.Request.IsAjaxRequest())
             {
                 var listaComisiones = db.Professors.Find(idProfesor)
                                                    .CommissionsXProfessors
-                                                   .Select(p => new { p.Commission.ID, p.Commission.Name });
+                                                   .Where(p => p.PeriodID == vIDPeriod)
+                                                   .Select(p => new { p.ID, p.Commission.Name });
+                                                   
 
                 return Json(listaComisiones, JsonRequestBehavior.AllowGet);
             }
@@ -382,6 +386,38 @@ namespace SACAAE.Controllers
             }
 
             return (entity != null) ? entity.ID : 0;
+        }
+
+        /// <summary>
+        ///  Remove a profesor from a group
+        /// </summary>
+        /// <autor> Esteban Segura Benavides </autor>
+        /// <param name="pIDGrupo"> ID of group in database</param>
+        /// <returns>Information about the action of remove a profesor from a group</returns>
+        [Route("ComisionProfesor/ComisionProfesor/{pIDComisionProfesor:int}/removeProfesor")]
+        public ActionResult removeGroup(int pIDComisionProfesor)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var vComisionProfesor = db.CommissionsXProfessors.Find(pIDComisionProfesor);
+                if(vComisionProfesor!=null)
+                {
+                    db.CommissionsXProfessors.Remove(vComisionProfesor);
+                    db.SaveChanges();
+                    var respuesta = new { respuesta = "success" };
+                    var json = JsonConvert.SerializeObject(respuesta);
+                    return Content(json);
+                }
+                else
+                {
+                    var respuesta_error = new { respuesta = "error" };
+                    var json_respuesta_error = JsonConvert.SerializeObject(respuesta_error);
+                    return Content(json_respuesta_error);
+                }
+            }
+            var error = new { respuesta = "error" };
+            var json_error = JsonConvert.SerializeObject(error);
+            return Content(json_error);
         }
         #endregion
     }

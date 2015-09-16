@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using SACAAE.Models;
 using SACAAE.Data_Access;
+using Newtonsoft.Json;
 
 namespace SACAAE.Controllers
 {
@@ -24,108 +25,296 @@ namespace SACAAE.Controllers
             return View();
         }
 
-        // GET: /Horario/Details/5
-        public ActionResult Details(int? id)
+        [Authorize]
+        [HttpPost]
+        public ActionResult Index(string button)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Schedule schedule = db.Schedules.Find(id);
-            if (schedule == null)
-            {
-                return HttpNotFound();
-            }
-            return View(schedule);
+            return RedirectToAction("Horarios");
         }
 
-        // GET: /Horario/Create
-        public ActionResult Create()
+        public ActionResult Horarios()
+        {
+            String PlanDeEstudio;
+            String Modalidad;
+            String Periodo;
+
+            try
+            {
+                PlanDeEstudio = Request.Cookies["SelPlanDeEstudio"].Value;
+                Modalidad = Request.Cookies["SelModalidad"].Value;
+                Periodo = Request.Cookies["PeriodoHorario"].Value;
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException("No se detecto ningun Plan de Estudio" + e.Message);
+            }
+
+            int IdPlanDeEstudio = Int32.Parse(PlanDeEstudio);
+            int IdPeriodo = Int32.Parse(Periodo);
+            List<String> Dias = new List<String>();
+            Dias.Add("Lunes");
+            Dias.Add("Martes");
+            Dias.Add("Miercoles");
+            Dias.Add("Jueves");
+            Dias.Add("Viernes");
+            Dias.Add("Sabado");
+            Dias.Add("Domingo");
+            ViewBag.Dias = Dias;
+
+            List<String> HorasInicio = new List<String>();
+
+            for (int i = 7; i < 22; i++)
+            {
+                if (i < 13)
+                    HorasInicio.Add(i.ToString() + ":30");
+                else
+                    HorasInicio.Add(i.ToString() + ":00");
+            }
+            ViewBag.HorasInicio = HorasInicio;
+
+            List<String> HorasFin = new List<String>();
+            for (int i = 8; i < 22; i++)
+            {
+                if (i < 13)
+                    HorasFin.Add(i.ToString() + ":20");
+                else
+                    HorasFin.Add(i.ToString() + ":50");
+            }
+            ViewBag.HorasFin = HorasFin;
+
+            List<String> Horas = new List<String>();
+            for (int i = 0; i < 24; i++)
+            {
+                if (i < 10)
+                    Horas.Add("0" + i.ToString());
+                else
+                    Horas.Add(i.ToString());
+            }
+            ViewBag.Horas = Horas;
+
+            List<String> Minutos = new List<String>();
+            for (int i = 0; i < 60; i += 10)
+            {
+                if (i < 10)
+                    Minutos.Add("0" + i.ToString());
+                else
+                    Minutos.Add(i.ToString());
+            }
+            int idSede = Int16.Parse(Request.Cookies["SelSede"].Value);
+            ViewBag.Minutos = Minutos;
+            ViewBag.Bloques = ListarBloquesXPlan(IdPlanDeEstudio);
+            ViewBag.Aulas = ListarAulasXSedeCompleta(idSede);
+            int idPlanXSede = IdPlanDeEstudioXSede(idSede, IdPlanDeEstudio);
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult GuardarCambios()
+        {
+            //Hay que volver a hacer de nuevo existe mucho desorden
+            /*int Cantidad;
+            int PlanDeEstudio;
+            try
+            {
+                 Cantidad = Convert.ToInt32(Request.Cookies["Cantidad"].Value);
+            }
+            catch (Exception e)
+            {
+                Cantidad = 0;
+            }
+
+            try
+           {
+                PlanDeEstudio = Int32.Parse(Request.Cookies["SelPlanDeEstudio"].Value);
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException("No se detecto ningun Grupo o Plan de Estudio" + e.Message);
+            }
+
+
+            if (Cantidad == 0) { return RedirectToAction("Horarios"); }//En caso de que el horario este vacio se asume que se desea borrar por lo que se limpian los dias y se termina, este return evita que falle el programa cuando no hay cookies
+            Eliminar Horarios Viejos
+            for (int i = 1; i <= Cantidad; i++)
+            {
+             /  String Detalles= Request.Cookies["Cookie" + i].Value;
+                string[] Partes = Detalles.Split('|');
+               int Grupo = Int32.Parse(Partes[5]);
+                int IdHorario = IdHorarioCurso(Grupo);
+             //   if(IdHorario!=0){
+              //      Horario.EliminarDias(IdHorario);
+               // }
+
+            }
+            //Guardar Datos
+            for (int i = 1; i <= Cantidad; i++)
+            {
+                String Detalles= Request.Cookies["Cookie" + i].Value;//Obtiene los datos de la cookie
+                string[] Partes = Detalles.Split('|');
+                String Curso = Partes[0];
+                String Dia = Partes[1];
+                String HoraInicio = Partes[2];
+                String HoraFin = Partes[3];
+                String Bloque = Partes[4];
+                int Grupo = Int32.Parse(Partes[5]);
+                String Aula = Partes[6];
+                if (Curso != "d")
+                {
+                    int IdCurso = IdCursos(Curso, PlanDeEstudio);
+                    int IdHorario = IdHorarioCurso(Grupo);
+                   // if (IdHorario != 0)
+                   // {
+                    //    Horario.AgregarDia(Dia, IdHorario, Convert.ToInt32(HoraInicio), Convert.ToInt32(HoraFin));
+                    //}
+                    //else
+                   // {
+                        NuevoHorario(Dia, HoraInicio, HoraFin);
+                        //Horario.AgregarDia(Dia, HorarioNuevo, Convert.ToInt32(HoraInicio), Convert.ToInt32(HoraFin));
+                        //int idAula = repoAulas.idAula(Aula);
+                        //int cupo = repoAulas.ObtenerAula(idAula).Espacio;
+                        //Cursos.GuardarDetallesCurso(Grupo, HorarioNuevo, Aula, 5, cupo);
+                   // }
+                }
+                
+            }
+            Response.Cookies.Clear();
+            TempData["Message"] = "Cambios guardados satisfactoriamente";*/
+            return RedirectToAction("Horarios");
+        }
+
+        /*public ActionResult ObtenerHorarios(int plan, int periodo)
+        {
+            int idSede = Int16.Parse(Request.Cookies["SelSede"].Value);
+            int idPlanXSede = repoPlanes.IdPlanDeEstudioXSede(idSede, plan);
+            IQueryable listaHorarios = Horario.obtenerInfo(idPlanXSede, periodo);
+                var json = JsonConvert.SerializeObject(listaHorarios);
+
+                return Content(json);
+        }*/
+
+       /* public ActionResult ExisteHorario(string dia,int HoraInicio, int HoraFin, string aula, int grupo, int periodo)
+        {
+            int res = ExisteHorarioHelper(dia, HoraInicio, HoraFin, aula, grupo, periodo);
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }*/
+        
+
+        public ActionResult Resultado()
         {
             return View();
         }
 
-        // POST: /Horario/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="ID,Day,StartHour,EndHour")] Schedule schedule)
+        #region Helpers
+        public IQueryable<AcademicBlock > ListarBloquesXPlan(int pPlanID)
         {
-            if (ModelState.IsValid)
-            {
-                db.Schedules.Add(schedule);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(schedule);
+            return from Bloques in db.AcademicBlocks
+                   join BloquesXPlan in db.AcademicBlocksXStudyPlans on Bloques.ID equals BloquesXPlan.BlockID
+                   where BloquesXPlan.PlanID == pPlanID
+                   select Bloques;
         }
 
-        // GET: /Horario/Edit/5
-        public ActionResult Edit(int? id)
+        public IQueryable ListarAulasXSedeCompleta(int pSedeID)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Schedule schedule = db.Schedules.Find(id);
-            if (schedule == null)
-            {
-                return HttpNotFound();
-            }
-            return View(schedule);
+            return from Aulas in db.Classrooms
+                   where Aulas.SedeID == pSedeID
+                   select Aulas;
         }
 
-        // POST: /Horario/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="ID,Day,StartHour,EndHour")] Schedule schedule)
+
+        public int IdPlanDeEstudioXSede(int sede, int plan)
         {
-            if (ModelState.IsValid)
+            return (from planXSede in db.StudyPlansXSedes
+                    where planXSede.SedeID == sede && planXSede.StudyPlanID == plan
+                    select planXSede).FirstOrDefault().ID;
+        }
+       /* public int ExisteHorarioHelper(string dia, int HoraInicio, int HoraFin, string aula, int grupo, int periodo)
+        {
+            var vDetalleGrupo = from Horario in db.Schedules
+                                join Grupos in db.Groups on DetalleGrupo.Grupo equals Grupos.ID
+                                where Dia.Dia1 == dia && (Dia.Hora_Inicio <= HoraInicio && Dia.Hora_Fin >= HoraFin) && Grupos.Periodo == periodo && DetalleGrupo.Aula == aula || DetalleGrupo.Grupo == grupo
+                                select DetalleGrupo;
+            if (vDetalleGrupo.Any())
+                return 1;
+            else
+                return 0;
+        }*/
+        public int IdCursos(string CursoBuscado, int PlanDeEstudioCurso)
+        {
+
+            IQueryable<Course> Resultado =
+                from Curso in db.Courses
+                join BloqueXPlanXCursos in db.BlocksXPlansXCourses on Curso.ID equals BloqueXPlanXCursos.CourseID
+                join BloquesXPlan in db.AcademicBlocksXStudyPlans on BloqueXPlanXCursos.BlockXPlanID equals BloquesXPlan.ID
+                where (Curso.Name == CursoBuscado && BloquesXPlan.PlanID == PlanDeEstudioCurso)
+                select Curso;
+
+            try
             {
-                db.Entry(schedule).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return Resultado.FirstOrDefault().ID;
             }
-            return View(schedule);
+            catch (Exception e)
+            {
+                return -1;
+            }
         }
 
-        // GET: /Horario/Delete/5
-        public ActionResult Delete(int? id)
+        public int IdHorarioCurso(int grupo)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Schedule schedule = db.Schedules.Find(id);
-            if (schedule == null)
-            {
-                return HttpNotFound();
-            }
-            return View(schedule);
+            IQueryable<GroupClassroom> Resultado =
+                from Detalle_Grupos in db.Groups
+                 join Grupo_Classroom in db.GroupClassrooms on Detalle_Grupos.ID equals Grupo_Classroom.GroupID
+                where Grupo_Classroom.GroupID == grupo
+                select Grupo_Classroom;
+            GroupClassroom res = Resultado.FirstOrDefault();
+            if (res == null)
+                return 0;
+            return res.Schedule.ID;
         }
 
-        // POST: /Horario/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        private Schedule existSchedule(string pDay, string pStartHour, string pEndHour)
         {
-            Schedule schedule = db.Schedules.Find(id);
-            db.Schedules.Remove(schedule);
+            var vSchedule = db.Schedules.Where(p => p.Day == pDay && p.StartHour == pStartHour && p.EndHour == pEndHour).FirstOrDefault();
+
+            if (vSchedule != null)
+            {
+                return vSchedule;
+            }
+            else
+            {
+                //Create schedule and get id
+                Schedule vNewSchedule = new Schedule();
+                vNewSchedule.Day = pDay;
+                vNewSchedule.StartHour = pStartHour;
+                vNewSchedule.EndHour = pEndHour;
+                vNewSchedule.CommissionsXProfessors = new List<CommissionXProfessor>();
+
+                db.Schedules.Add(vNewSchedule);
+                //db.SaveChanges();
+
+                //vSchedule = db.Schedules.Where(p => p.Day == pDay && p.StartHour == pStartHour && p.EndHour == pEndHour).FirstOrDefault();
+
+                //db.SaveChanges();
+                return vNewSchedule;
+            }
+            //select * from Schedule where Day='Domingo' AND StartHour = '07:30 am' AND EndHour = '09:20 am'
+        }
+
+        public int NuevoHorario(string pDay, string pStartHour, string pEndHour)
+        {
+            //Create schedule and get id
+            Schedule vNewSchedule = new Schedule();
+            vNewSchedule.Day = pDay;
+            vNewSchedule.StartHour = pStartHour;
+            vNewSchedule.EndHour = pEndHour;
+
+            db.Schedules.Add(vNewSchedule);
             db.SaveChanges();
-            return RedirectToAction("Index");
-        }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            return 1;
         }
+        #endregion
     }
+
+    
+
 }
