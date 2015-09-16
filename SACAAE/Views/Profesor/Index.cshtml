@@ -1,24 +1,41 @@
 ﻿@model IEnumerable<SACAAE.Models.ViewModels.ProfesorViewModel>
 
-    @{
-        ViewBag.Title = "Profesores";
-        Layout = "~/Views/Shared/Privado.cshtml";
-    }
+@{
+    ViewBag.Title = "Profesores";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
 
-    <h1 class="page-header">
-        Profesores
-    </h1>
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#indexTable').DataTable({
+                "language": {
+                    url: "/Content/DataTables/Spanish.json",
+                },
+                responsive: true
+            });
+        });
+    </script>
+}
+<h1 class="page-header">
+    Profesores
+</h1>
 
-    @if (TempData.ContainsKey("Message"))
-    {
-        <p class="text-success">@TempData["Message"].ToString()</p>
-    }
-    <p>
+@if (TempData.ContainsKey("MessageError"))
+{
+    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+}
+@if (TempData.ContainsKey("MessageSuccess"))
+{
+    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+}
 
-        <a href="@Url.Action("Create", "Profesor")"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>  Agregar Profesor</a>
-    </p>
+<p>
+    <a href="@Url.Action("Create", "Profesor")"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>  Agregar Profesor</a>
+</p>
 
-    <table class="table table-hover">
+<div class="dataTables_wrapper">
+    <table class="table table-hover" id="indexTable">
         <thead>
             <tr>
                 <th>
@@ -34,10 +51,6 @@
                 </th>
                 <th class="text-center">
                     <!--Plaza-->
-                    Horas REC
-                </th>
-                <th class="text-center">
-                    <!--Plaza-->
                     Total
                 </th>
                 <th class="text-center">Asignar a</th>
@@ -50,9 +63,6 @@
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td class="text-center">
-                        
                     </td>
                     <td class="text-center"></td>
                     <td class="text-center"></td>
@@ -72,4 +82,5 @@
             }
         </tbody>
     </table>
+</div>
 
