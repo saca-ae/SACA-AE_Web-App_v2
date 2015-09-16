@@ -178,6 +178,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HorariosController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\OfertaAcademicaController.cs" />
     <Compile Include="Controllers\PeriodoController.cs" />
     <Compile Include="Controllers\PlazasController.cs" />
     <Compile Include="Controllers\ProfesorController.cs" />
@@ -441,6 +442,12 @@
     <Content Include="Views\Plan\BloqueXPlan.cshtml" />
     <Content Include="Views\Plan\CrearPlan.cshtml" />
     <Content Include="Views\Plan\CursoXPlanXBloque.cshtml" />
+    <Content Include="Views\OfertaAcademica\Index.cshtml" />
+    <Content Include="Views\OfertaAcademica\EliminarOferta.cshtml" />
+    <Content Include="Views\OfertaAcademica\CrearOfertaAcademica.cshtml" />
+    <Content Include="Views\Plan\EliminarBloque.cshtml" />
+    <Content Include="Views\Plan\EliminarPlan.cshtml" />
+    <Content Include="Views\Plan\ModificarCurso.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

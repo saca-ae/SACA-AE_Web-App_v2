@@ -1,8 +1,100 @@
-﻿
+﻿@model SACAAE.Models.Course
+
 @{
-    ViewBag.Title = "CursoXPlanXBloque";
+    ViewBag.Title = "Planes";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
 
-<h2>CursoXPlanXBloque</h2>
 
+
+<h2>Cursos</h2>
+@if (TempData.ContainsKey("MessageError"))
+{
+    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+}
+@if (TempData.ContainsKey("MessageSuccess"))
+{
+    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+}
+@using (Html.BeginForm())
+{
+    <div class="row-fluid">
+        <div class="col-lg-5">
+            <div class="span12">
+                <p>@Html.ActionLink("Agregar Curso", "CrearBloqueXPlanXCurso", "BloqueXPlanXCurso", new { plan = @ViewBag.Plan.ID }, null)</p>
+                <table id="tablaCurso" class="table table-hover">
+
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Nombre)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Codigo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.HorasTeoricas)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bloque)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Externo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.HorasPracticas)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in ViewBag.Cursos)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Nombre
+                                </td>
+                                <td>
+                                    @item.Codigo
+                                </td>
+                                <td>
+                                    @item.HorasTeoricas
+                                </td>
+                                <td>
+                                    @ViewBag.Bloque.Nivel
+                                </td>
+
+                                <td>
+                                    <input type="checkbox" checked=@item.Externo disabled>
+                                </td>
+                                <td>
+                                    @item.HorasPracticas
+                                </td>
+                                <td>@Html.ActionLink("Editar", "ModificarCurso", new { curso = @item.ID, plan = @ViewBag.Plan.ID, bloque = @ViewBag.Bloque.ID }, null)</td>
+                            </tr>
+                        }
+                    </tbody>
+
+
+
+                </table>
+
+                <p>@Html.ActionLink("Regresar", "BloqueXPlan", new { id = @ViewBag.Plan.ID })</p>
+            </div>
+        </div>
+    </div>
+    <br />
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("#tablaCurso").tablesorter();
+        }
+);
+    </script>
+    <script type="text/javascript" src="../Scripts/jquery.tablesorter.js"></script>
+
+
+}
