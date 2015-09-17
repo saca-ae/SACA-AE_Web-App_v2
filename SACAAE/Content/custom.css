@@ -327,3 +327,56 @@ ul.alert-dropdown {
 {
     margin-left: 80px
 }
+
+
+    /*Assign Prokect to Course*/
+#schedule_project table 
+{
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    
+}
+
+#schedule_project thead
+{
+		background-color: #939699;
+		height: 40px;
+		width: 50px;
+    	vertical-align: middle;
+    	text-align: center;
+    	color: #2C5B8C;
+}
+
+#schedule_project th 
+{
+	 font-weight: normal;
+     text-align: center;
+
+}
+
+
+#schedule_project table, #schedule_project td,#schedule_project th
+{
+	border: 1px solid black;
+    width: 100px;
+    empty-cells: hide;
+	
+}
+#schedule_project td
+{
+    padding: 0px;
+   
+}
+#schedule_project select
+{
+    border: none;
+    padding: 10px;
+    text-align: center;
+    width: 120px;
+    height: 40px;
+}
+
+#schedule_project option
+{
+    text-align: left;
+}

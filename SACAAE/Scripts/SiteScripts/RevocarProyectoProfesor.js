@@ -41,3 +41,35 @@
         }
     });
 });
+
+
+/// <summary>
+///  Get the element select for delete
+/// </summary>
+/// <autor> Esteban Segura Benavides </autor>
+/// <param name="vIDGroup"> ID of Group to delete/param>
+/// <returns>None</returns>
+function init_delete() {
+    //tempIndex = vIDGroup;
+}
+
+
+/// <summary>
+/// Remove profesor from a group
+/// </summary>
+/// <autor> Esteban Segura Benavides </autor>
+/// <returns> If not have problem, return message 'success' to a View, else return message 'Error'</returns>
+function eliminar_asignacion_proyecto() {
+    
+    //ComisionProfesor/ComisionProfesor/{pIDComisionProfesor:int}/removeProfesor
+    var route_temporal = "/ProyectoProfesor/ProyectoProfesor/" + $('select[name="sltProyectos"]').val() + "/removeProfesor";
+    $.getJSON(route_temporal, function (data) {
+        if (data.respuesta = 'success') {
+
+            location.reload();
+        }
+        else {
+            alert('Error');
+        }
+    });
+}

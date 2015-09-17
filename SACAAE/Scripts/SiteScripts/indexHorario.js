@@ -4,11 +4,11 @@
     /* Funcion llamada cuando se cambien los valores de las sedes o las modalidades */
     $("#sltModalidad, #sltSede").change(function () {
 
-        var route = "/Plans/Planes/List/" + $('select[name="sltSede"]').val() + "/" + $('select[name="sltModalidad"]').val();
+        var route = "/CursoProfesor/Planes/List/" + $('select[name="sltSede"]').val() + "/" + $('select[name="sltModalidad"]').val();
         $.getJSON(route, function (data) {
             var items = "";
             $.each(data, function (i, plan) {
-                items += "<option value= " + plan.ID + ">" + plan.Nombre + "</option>";
+                items += "<option value= " + plan.ID + ">" + plan.Name + "</option>";
             });
 
             if (items != "") {

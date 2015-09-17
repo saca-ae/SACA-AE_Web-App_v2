@@ -159,7 +159,7 @@ function onchangeEndHourSelection(identificador) {
             int_hora_entrada = 2100;
             break;
     }
-
+    /*
     switch (vEndHour)
     {
         case "07:30 am":
@@ -213,7 +213,7 @@ function onchangeEndHourSelection(identificador) {
             int_hora_entrada = 2100;
             break;
     }
-
+    */
     switch (vEndHour)
     {
         case "08:20 am":
@@ -271,22 +271,8 @@ function onchangeEndHourSelection(identificador) {
     }
     else
     {
-        alert("Error");
+       // alert("Error");
     }
    
 }
-/*
-$("#buttonPost").on("click", function () {
-    var listName = "ScheduleComission";
-
-    var qtd = 0;
-    $("#schedule_comission > tbody > tr").each(function () {
-        var nome = $(this).data("nome");
-        var tel = $(this).data("tel");
-        $("#formPost").prepend("<input type='hidden' name='" + listName + "[" + qtd + "].Nome' value='" + nome + "'>");
-        $("#formPost").prepend("<input type='hidden' name='" + listName + "[" + qtd + "].Telefone' value='" + tel + "'>");
-        qtd += 1;
-        alert(nome);
-    });
-});*/
 

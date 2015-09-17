@@ -1,24 +1,20 @@
-﻿@model SACAAE.Models.ProyectoXProfesor
+﻿@model SACAAE.Models.ViewModels.ScheduleProjectViewModel
 @{
     ViewBag.Title = "Asignar";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
-<style type="text/css">
-    .ComboCursosSeleccionados {
-        width: 25%;
-    }
-
-
-    .alineacion-div > div {
-        display: inline-block;
-        width: 30%;
-        margin: 0;
-    }
-</style>
 
 @section Scripts {
     <script src="@Url.Content("~/Scripts/SiteScripts/GuardarDias.js")"></script>
+<script src="@Url.Content("~/Scripts/SiteScripts/ProjectProfessor.js")"></script>
 }
+
+
+    <style type="text/css">
+
+    </style>
+    <link href="~/Content/custom.css" rel="stylesheet" />
+
 <body onload="Load()">
     <h2 class="page-header">Asignar Profesor a Proyecto</h2>
     <div class="col-lg-4">
@@ -27,7 +23,7 @@
             {
                 <p class="text-success">@TempData["Message"].ToString()</p>
             }
-            @using (Html.BeginForm())
+            @using (Html.BeginForm("Asignar", "ProyectoProfesor", FormMethod.Post, new { @id = "formPost" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)
@@ -37,120 +33,103 @@
                     @Html.Label("Profesores")
                 </div>
                 <div class="editor-field">
-                    @Html.DropDownList("Profesores", null, "-- Seleccione Profesor --", htmlAttributes: new { @class = "form-control" })
-                    @if (ViewBag.profesores == null)
-                    {
-
-                        @Html.ActionLink("Crear Profesor", "Crear", "Profesor")
-                    }
+                    @Html.DropDownList("Professors", null, "-- Seleccione Profesor --", htmlAttributes: new { @class = "form-control" })
+                   
                 </div>
                 <br />
                 <div class="editor-label">
                     @Html.Label("Proyectos")
                 </div>
                 <div class="editor-field">
-                    @Html.DropDownList("proyectos", null, "-- Seleccione Proyecto --", htmlAttributes: new { @class = "form-control" })
-                    @if (ViewBag.Profesores == null)
-                    {
-
-                        @Html.ActionLink("Crear Proyecto", "Crear", "Proyecto")
-                    }
+                    @Html.DropDownList("Projects", null, "-- Seleccione Proyecto --", htmlAttributes: new { @class = "form-control" })
+                    
                 </div>
                 <br />
-                <!--<div class="editor-label">
-                    Html.Label("Día")
+                <div>
+                    @Html.Label("Hora Reconocimiento")
                 </div>
                 <div class="editor-field">
-                    <select id="sltDia" class="form-control" name="dia">
-                        <option>Lunes</option>
-                        <option>Martes</option>
-                        <option>Miércoles</option>
-                        <option>Jueves</option>
-                        <option>Viernes</option>
-                        <option>Sábado</option>
+                    <select id="HourCharge" name="HourCharge" class="form-control">
+
+                        <option selected="selected" value="1">Si</option>
+                        <option value="0">No</option>
                     </select>
-                </div>-->
-
-                <div class="editor-field">
-                </div>
-
-                <div class="alineacion-div">
-                    <div class="editor-label">   @Html.Label("Día") </div>
-                    <div class="editor-label">   @Html.Label("Inicio") </div>
-                    <div class="editor-label">   @Html.Label("Fin") </div>
-                </div>
-
-
-                <div class="alineacion-div">
-                    <div> <input type="checkbox" id="LunesID" name="LunesOption" value="Lunes"> Lunes<br> </div>
-                    <div> @Html.DropDownList("ComboHoraInicioLunes", new SelectList(ViewBag.HorasInicio), new { @id = "ComboHoraInicioLunes" }) </div>
-                    <div> @Html.DropDownList("ComboHoraFinLunes", new SelectList(ViewBag.HorasFin), new { @id = "ComboHoraFinLunes" }) </div>
-                </div>
-
-                <div class="editor-field">
-                </div>
-
-                <div class="alineacion-div">
-                    <div> <input type="checkbox" id="MartesID" name="MartesOption" value="Martes"> Martes<br> </div>
-                    <div> @Html.DropDownList("ComboHoraInicioMartes", new SelectList(ViewBag.HorasInicio), new { @id = "ComboHoraInicioMartes" }) </div>
-                    <div> @Html.DropDownList("ComboHoraFinMartes", new SelectList(ViewBag.HorasFin), new { @id = "ComboHoraFinMartes" }) </div>
-                </div>
-
-                <div class="editor-field">
-                </div>
-
-                <div class="alineacion-div">
-                    <div> <input type="checkbox" id="MiercolesID" name="MiercolesOption" value="Miercoles"> Miércoles<br> </div>
-                    <div> @Html.DropDownList("ComboHoraInicioMiercoles", new SelectList(ViewBag.HorasInicio), new { @id = "ComboHoraInicioMiercoles" }) </div>
-                    <div> @Html.DropDownList("ComboHoraFinMiercoles", new SelectList(ViewBag.HorasFin), new { @id = "ComboHoraFinMiercoles" }) </div>
-                </div>
-
-                <div class="editor-field">
-                </div>
-
-                <div class="alineacion-div">
-                    <div> <input type="checkbox" id="JuevesID" name="JuevesOption" value="Jueves"> Jueves<br> </div>
-                    <div> @Html.DropDownList("ComboHoraInicioJueves", new SelectList(ViewBag.HorasInicio), new { @id = "ComboHoraInicioJueves" }) </div>
-                    <div> @Html.DropDownList("ComboHoraFinJueves", new SelectList(ViewBag.HorasFin), new { @id = "ComboHoraFinJueves" }) </div>
-                </div>
-
-                <div class="editor-field">
-                </div>
-
-                <div class="alineacion-div">
-                    <div> <input type="checkbox" id="ViernesID" name="ViernesOption" value="Viernes"> Viernes<br> </div>
-                    <div> @Html.DropDownList("ComboHoraInicioViernes", new SelectList(ViewBag.HorasInicio), new { @id = "ComboHoraInicioViernes" }) </div>
-                    <div> @Html.DropDownList("ComboHoraFinViernes", new SelectList(ViewBag.HorasFin), new { @id = "ComboHoraFinViernes" }) </div>
-                </div>
-
-                <div class="editor-field">
-                </div>
-
-                <div class="alineacion-div">
-                    <div> <input type="checkbox" id="SabadoID" name="SabadoOption" value="Sabado"> Sábado<br> </div>
-                    <div> @Html.DropDownList("ComboHoraInicioSabado", new SelectList(ViewBag.HorasInicio), new { @id = "ComboHoraInicioSabado" }) </div>
-                    <div> @Html.DropDownList("ComboHoraFinSabado", new SelectList(ViewBag.HorasFin), new { @id = "ComboHoraFinSabado" }) </div>
                 </div>
                 <br />
-                <br />
-                <!-- <br />
-                 <div class="editor-label">
-                     Html.Label("Hora Inicio")
-                 </div>
-                 <div class="editor-field">
-                     Html.TextBox("HoraInicio", null, new { type="number", class = "form-control", required = "true", placeholder = "9:00" })
-                 </div>
-                 <br />
-                 <div class="editor-label">
-                     Html.Label("Hora Fin")
-                 </div>
-                 <div class="editor-field">
-                     Html.TextBox("HoraFin", null, new { type="number", class = "form-control", required = "true", placeholder = "12:00" })
+               <table id="schedule_project">
+				
+				<thead>
+					<tr>
+						<th>Dia</th>
+						<th>Inicio</th>
+						<th>Fin</th>
+					</tr>
+				</thead>
+				<tbody>
+                    <tr id="trRow1" data-day="Lunes" data-starthour="07:30 am" data-endhour="08:20 am">
+                        <td>
+                             <select id="tdRow1Day" onchange="onchangeDaySelection(1)">
+                                <option>Lunes</option>
+                                <option>Martes</option>
+                                <option>Miercoles</option>
+                                <option>Jueves</option>
+                                <option>Viernes</option>
+                                <option>Sabado</option>
+                            </select>
 
-                 </div>
-                 <br /> -->
+                        </td>
+                        <td>
+                            <div id="campo_inicio">
+
+                                <select id="tdRow1StartHour" onchange="onchangeStartHourSelection(1)">
+                                    <option>07:30 am</option>
+                                    <option>08:30 am</option>
+                                    <option>09:30 am</option>
+                                    <option>10:30 am</option>
+                                    <option>11:30 am</option>
+                                    <option>12:30 pm</option>
+                                    <option>01:00 pm</option>
+                                    <option>02:00 pm</option>
+                                    <option>03:00 pm</option>
+                                    <option>04:00 pm</option>
+                                    <option>05:00 pm</option>
+                                    <option>06:00 pm</option>
+                                    <option>07:00 pm</option>
+                                    <option>08:00 pm</option>
+                                    <option>09:00 pm</option>
+                                </select>
+
+                            </div>
+                        </td>
+                        <td>
+                            <select id="tdRow1EndHour" onchange="onchangeEndHourSelection(1)">
+                                <option>08:20 am</option>
+                                <option>09:20 am</option>
+                                <option>10:20 am</option>
+                                <option>11:20 am</option>
+                                <option>12:20 pm</option>
+                                <option>01:50 pm</option>
+                                <option>02:30 pm</option>
+                                <option>03:50 pm</option>
+                                <option>04:50 pm</option>
+                                <option>05:50 pm</option>
+                                <option>06:50 pm</option>
+                                <option>07:50 pm</option>
+                                <option>08:50 pm</option>
+                                <option>09:50 pm</option>
+                            </select>
+                        </td>
+                    </tr>
+				</tbody>
+			</table>
+
+			 <p>
+        		<a id="assign_comission" onclick="obtener_dias()" href="#"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Horario</a>
+    		</p>
+
                 <p>
-                    <input type="submit" onclick="ActualizarContadores()" value="Asignar" class="btn" />
+                    <input id="buttonPost" type="submit"  value="Asignar" class="btn" />
+                 
 
                 </p>
             }
