@@ -380,3 +380,60 @@ ul.alert-dropdown {
 {
     text-align: left;
 }
+
+ /*Administrar Horario*/
+#new_schedule table 
+{
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    
+}
+
+#new_schedule thead
+{
+		background-color: #939699;
+		height: 40px;
+		width: 50px;
+    	vertical-align: middle;
+    	text-align: center;
+    	color: #2C5B8C;
+}
+
+#new_schedule th 
+{
+	 font-weight: normal;
+     text-align: center;
+
+}
+
+
+#new_schedule table, #schedule_comission td,#schedule_comission th
+{
+	border: 1px solid black;
+    width: 100px;
+    empty-cells: hide;
+	
+}
+#new_schedule td
+{
+    padding: 0px;
+   
+}
+#new_schedule select
+{
+    /*border: none;*/
+    padding: 10px;
+    text-align: center;
+    width: 120px;
+    height: 40px;
+}
+
+#new_schedule option
+{
+    text-align: left;
+}
+
+#new_schedule
+{
+    border: 1px;
+}

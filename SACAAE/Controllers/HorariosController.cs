@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using SACAAE.Models;
 using SACAAE.Data_Access;
 using Newtonsoft.Json;
+using SACAAE.Models.ViewModels;
 
 namespace SACAAE.Controllers
 {
@@ -25,13 +26,15 @@ namespace SACAAE.Controllers
             return View();
         }
 
-        [Authorize]
-        [HttpPost]
-        public ActionResult Index(string button)
+        // POST /Horario/
+        /*[HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index()
         {
             return RedirectToAction("Horarios");
-        }
+        }*/
 
+        
         public ActionResult Horarios()
         {
             String PlanDeEstudio;
@@ -108,13 +111,15 @@ namespace SACAAE.Controllers
             return View();
         }
 
+        // POST: Horario/Horarios
         [HttpPost]
-        public ActionResult GuardarCambios()
+        [ValidateAntiForgeryToken]
+        public ActionResult Horarios(NewScheduleViewModel vNewSchedule)
         {
             //*****************************************************************************************************
             //******************************* Se obtienen los datos del formulario ********************************
             //*****************************************************************************************************
-            int Cantidad;
+            /*int Cantidad;
             int PlanDeEstudio;
             try
             {
@@ -208,7 +213,7 @@ namespace SACAAE.Controllers
                 }
             }
             Response.Cookies.Clear();
-            TempData["Message"] = "Cambios guardados satisfactoriamente";
+            TempData["Message"] = "Cambios guardados satisfactoriamente";*/
             return RedirectToAction("Horarios");
         }
             
@@ -234,20 +239,29 @@ namespace SACAAE.Controllers
             return View();
         }
 
-        #region Helpers
-        public IQueryable<AcademicBlock > ListarBloquesXPlan(int pPlanID)
+        #region Ajax
+        [Route("Horarios/Plan/{pPlanID:int}/Bloques")]
+        public ActionResult ListarBloquesXPlan(int pPlanID)
         {
-            return from Bloques in db.AcademicBlocks
+            var ListaBloquexPlan =  from Bloques in db.AcademicBlocks
                    join BloquesXPlan in db.AcademicBlocksXStudyPlans on Bloques.ID equals BloquesXPlan.BlockID
                    where BloquesXPlan.PlanID == pPlanID
-                   select Bloques;
+                   select new{Bloques.ID, Bloques.Description};
+            var json = JsonConvert.SerializeObject(ListaBloquexPlan);
+            return Content(json);
         }
-
-        public IQueryable ListarAulasXSedeCompleta(int pSedeID)
+        #endregion
+        #region Helpers
+        
+        [Route("Horarios/Sedes/{pSedeID:int}/Aulas")]
+        public ActionResult ListarAulasXSedeCompleta(int pSedeID)
         {
-            return from Aulas in db.Classrooms
+            var ListaAulasXSede =  from Aulas in db.Classrooms
                    where Aulas.SedeID == pSedeID
-                   select Aulas;
+                   select new{Aulas.ID, Aulas.Code};
+
+            var json = JsonConvert.SerializeObject(ListaAulasXSede);
+            return Content(json);
         }
 
 
