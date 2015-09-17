@@ -1,0 +1,31 @@
+﻿@model SACAAE.Models.Group
+
+@{
+    ViewBag.Title = "EliminarOferta";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<div class="col-lg-4">
+    <h2>Borrar Informaci&oacute;n de Oferta</h2>
+    <hr />
+    <div class="span12">
+        <h4><span class="label label-warning">¿Est&aacute; seguro de que desea eliminar la informaci&oacute;n de esta oferta?</span></h4>
+        <br />
+        <h4>
+            <span class="label label-info">
+                @Html.DisplayNameFor(model => model.Numero)
+                @Html.DisplayFor(model => model.Numero)
+            </span>
+        </h4>
+
+        <br />
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <p>
+                <input type="submit" value="Borrar" class="btn" />
+                |@Html.ActionLink("Regresar", "Index")
+            </p>
+        }
+    </div>
+</div>
