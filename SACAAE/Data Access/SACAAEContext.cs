@@ -3,6 +3,7 @@ using SACAAE.Models;
 using SACAAE.Models.StoredProcedures;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
@@ -65,6 +66,15 @@ namespace SACAAE.Data_Access
                 new SqlParameter("pIdPeriod", typeof(int));
 
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<resultadoStoredProcedure>("SP_CreateGroupsinNewSemester @pIdPeriod", vIdPeriodParameter);
+        }
+
+        public virtual ObjectResult<resultadoStoredProcedure> SPGetIDSchedule(string pDay, string pHStart, string pHEnd)
+        {
+            var vDay = new SqlParameter("pDay",pDay); 
+            var vHStart = new SqlParameter("pHStart",pHStart); 
+            var vHEnd = new SqlParameter("pHEnd",pHEnd);
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<resultadoStoredProcedure>("SPGetIDSchedule @pDay, @pHStart, @pHEnd", vDay, vHStart, vHEnd);
         }
 
         public virtual ObjectResult<DataCSV> SP_GetGroupsPeriod(Nullable<int> pIdPeriod, Nullable<int> pIdEntity)

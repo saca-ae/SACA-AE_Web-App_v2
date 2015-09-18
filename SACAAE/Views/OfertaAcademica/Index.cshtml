@@ -1,0 +1,149 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            /* Deshabilitar componentes que no tienen datos cargados */
+            $("#sltPlan").prop("disabled", "disabled");
+            /* Funcion llamada cuando se cambien los valores de las sedes o las modalidades */
+            $("#sltModalidad, #sltSede").change(function () {
+
+                var route = "/Plans/PlanesSede/List/" + $('select[name="sltSede"]').val() + "/" + $('select[name="sltModalidad"]').val();
+                $.getJSON(route, function (data) {
+                    var items = "";
+                    $.each(data, function (i, plan) {
+                        items += "<option value= " + plan.ID + ">" + plan.Nombre + "</option>";
+                    });
+
+                    if (items != "") {
+                        $("#sltPlan").prop("disabled", false);
+                        $("#sltPlan").html(items);
+                        $("#sltPlan").prepend("<option value='' selected='selected'>-- Seleccionar Plan de Estudio --</option>");
+                    }
+                    else
+                    {
+                        $("#sltPlan").prop("disabled", true);
+
+                    }
+                    $("#datosOferta").html("");
+                });
+            });
+            $("#sltPlan").change(function () {
+
+                var route = "/OfertaAcademica/Ofertas/List/" + $('select[name="sltSede"]').val() + "/" + $('select[name="sltPlan"]').val() + "/" + $('select[name="sltPeriodo"]').val();
+                //alert(route);
+
+                $.getJSON(route, function (data) {
+                    var items = "<tr><th>Número Grupo</th><th>Curso</th></tr>  ";
+                    $.each(data, function (i, oferta) {
+                        var newLink = '<a href="@Url.Action("EliminarOferta")/' + oferta.ID + '">Eliminar</a>';
+                        items += "<tr><td>" + oferta.Numero + "</td><td>" + oferta.Nombre + "</td><td>" + newLink + "</td></tr>";
+                    });
+
+                    if (items != "") {
+                        $("#datosOferta").html(items);
+                    }
+                });
+            });
+        });
+
+    </script>
+}
+
+<h1 class="page-header">Oferta Académica</h1>
+@if (TempData.ContainsKey("MessageError"))
+{
+    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+}
+@if (TempData.ContainsKey("MessageSuccess"))
+{
+    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+}
+@using (Html.BeginForm())
+{
+    <div class="row-fluid">
+        <div class="col-lg-5">
+            <div class="span12">
+                <p>
+                    <a href="@Url.Action("CrearOfertaAcademica", "OfertaAcademica")"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>  Agregar Oferta Académica</a>
+                </p>
+                <label>
+                    Período
+                </label>
+                <select id="sltPeriodo" name="sltPeriodo" class="form-control">
+                    @if (ViewBag.Periodos != null)
+                    {
+                        <option value=" " selected="selected">-- Seleccionar Periodo --</option>
+                        foreach (var item in ViewBag.Periodos)
+                        {
+                            <option value="@item.ID">@item.Name</option>
+                        }
+                    }
+                    else
+                    {
+                        <option selected="selected">No hay Periodos</option>
+                    }
+
+                </select>
+                <label>
+                    Sede
+                </label>
+                <select id="sltSede" name="sltSede" class="form-control">
+                    @if (ViewBag.Sedes != null)
+                    {
+                        <option value=" " selected="selected">-- Seleccionar Sede --</option>
+                        foreach (var item in ViewBag.Sedes)
+                        {
+                            <option value="@item.ID">@item.Name</option>
+                        }
+                    }
+                    else
+                    {
+                        <option selected="selected">No hay sedes</option>
+                    }
+
+                </select>
+                @if (ViewBag.Sedes == null)
+                {
+                    @Html.ActionLink("Agregar Sede", "Crear", "Sede")
+                }
+
+                <label>
+                    Modalidad
+                </label>
+                <select id="sltModalidad" name="sltModalidad" class="form-control">
+                    @if (ViewBag.Modalidades != null)
+                    {
+                        <option value=" " selected="selected">-- Seleccionar Modalidad --</option>
+                        foreach (var item in ViewBag.Modalidades)
+                        {
+                            <option value="@item.ID">@item.Name</option>
+                        }
+                    }
+                    else
+                    {
+                        <option selected="selected">No hay modalidades</option>
+                    }
+
+                </select>
+                @if (ViewBag.Modalidades == null)
+                {
+                    @Html.ActionLink("Agregar Modalidad", "Crear", "Modalidad")
+                }
+                <label>
+                    Plan
+                </label>
+                <select id="sltPlan" name="sltPlan" class="form-control"></select>
+                <br />
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+
+    <table id="datosOferta" class="table table-hover"></table>
+}
