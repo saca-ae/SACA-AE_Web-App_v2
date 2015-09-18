@@ -36,13 +36,13 @@
     Planes de Estudio
 </h2>
 <p>
-    <a href="@Url.Action("CrearPlan", "Plans")"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>  Agregar Plan de Estudio</a>
+    <a href="@Url.Action("CrearPlan", "Plan")"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>  Agregar Plan de Estudio</a>
 </p>
 <table class="table  table-hover">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
             </th>
@@ -55,7 +55,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
+                    @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
                     <a href="@Url.Action("BloqueXPlan", new { id = item.ID })" title="Ver Bloques">Ver Bloques</a>
@@ -91,7 +91,7 @@
                         <option value=" " selected="selected">-- Seleccionar Sede --</option>
                         foreach (var item in ViewBag.Sedes)
                         {
-                            <option value="@item.ID">@item.Nombre</option>
+                            <option value="@item.ID">@item.Name</option>
                         }
                     }
                     else
@@ -113,7 +113,7 @@
                         <option value=" " selected="selected">-- Seleccionar Modalidad --</option>
                         foreach (var item in ViewBag.Modalidades)
                         {
-                            <option value="@item.ID">@item.Nombre</option>
+                            <option value="@item.ID">@item.Name</option>
                         }
                     }
                     else

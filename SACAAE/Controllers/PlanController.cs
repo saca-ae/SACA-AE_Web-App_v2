@@ -9,9 +9,9 @@ using System.Web.Mvc;
 using SACAAE.Data_Access;
 using SACAAE.Models;
 
-namespace SACAAE.Views
+namespace SACAAE.Controllers
 {
-    public class Plan : Controller
+    public class PlanController : Controller
     {
         private const string TempDataMessageKey = "MessageError";
         private const string TempDataMessageKeySuccess = "MessageSuccess";
