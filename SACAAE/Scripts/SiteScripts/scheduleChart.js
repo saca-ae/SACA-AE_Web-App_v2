@@ -18,54 +18,54 @@ function datos_matriz(data) {
         var int_hora_entrada
         switch (hora_entrada)
         {
-            case "07:30 am":
+            case 1:
                 int_hora_entrada = 730;
                 break;
-            case "08:30 am":
+            case 2:
                 int_hora_entrada = 830;
                 break;
-            case "09:30 am":
+            case 3:
                 int_hora_entrada = 930;
                 break;
-            case "10:30 am":
+            case 4:
                 int_hora_entrada = 1030;
                 break;
-            case "11:30 am":
+            case 5:
                 int_hora_entrada = 1130;
                 break;
-            case "12:30 pm":
+            case 6:
                 int_hora_entrada = 1230;
                 break;
 
-            case "01:00 pm":
+            case 7:
                 int_hora_entrada = 1300;
                 break;
-            case "02:00 pm":
+            case 8:
                 int_hora_entrada = 1400;
                 break;
 
-            case "03:00 pm":
+            case 9:
                 int_hora_entrada = 1500;
                 break;
-            case "04:00 pm":
+            case 10:
                 int_hora_entrada = 1600;
                 break;
 
-            case "05:00 pm":
+            case 11:
                 int_hora_entrada = 1700;
                 break;
-            case "06:00 pm":
+            case 12:
                 int_hora_entrada = 1800;
                 break;
 
-            case "07:00 pm":
+            case 13:
                 int_hora_entrada = 1900;
                 break;
-            case "08:00 pm":
+            case 14:
                 int_hora_entrada = 2000;
                 break;
 
-            case "09:00 pm":
+            case 15:
                 int_hora_entrada = 2100;
                 break;
         }
@@ -135,8 +135,8 @@ function datos_matriz(data) {
         var bloque_inicio;
 
 
-
-        switch (int_hora_entrada) {
+        bloque_inicio = hora_entrada;
+        /*switch (int_hora_entrada) {
             case 730:
                 bloque_inicio = 1;
                 break;
@@ -183,7 +183,7 @@ function datos_matriz(data) {
                 bloque_inicio = 15;
                 break;
 
-        }
+        }*/
         diferencia = diferencia / 100
 
         dato_unico = [numero_dia, bloque_inicio, diferencia, nombre_curso, numero_curso];
