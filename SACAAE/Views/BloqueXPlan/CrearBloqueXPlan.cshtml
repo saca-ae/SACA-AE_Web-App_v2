@@ -1,0 +1,50 @@
+﻿@model SACAAE.Models.AcademicBlockXStudyPlan
+
+@{
+    ViewBag.Title = "Asignacion de Bloques";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<h2>Asignacion de Bloques Académicos</h2>
+@if (TempData.ContainsKey("MessageError"))
+{
+    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+}
+@if (TempData.ContainsKey("MessageSuccess"))
+{
+    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div class="col-lg-4">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <label>Plan de Estudios</label>
+            <br />
+            <div class="selectpicker">
+                <select name="selectPlanDeEstudio" id="selectPlanDeEstudio" class="form-control">
+                    <option value="@ViewBag.Planes.ID">@ViewBag.Planes.Name</option>
+                </select>
+            </div>
+            <label>Bloques Académicos</label>
+            <br />
+            <div class="selectpicker">
+                <select name="selectBloqueAcademico" id="selectBloqueAcademico" class="form-control">
+                    @foreach (var item in ViewBag.Bloques)
+                    {
+                        <option value="@item.ID">@item.Description</option>
+                    }
+                </select>
+            </div>
+            <br />
+            <div class="editor-field">
+                <input name="button" type="submit" value="Asignar" class="btn btn-default" />
+                <input name="button" type="submit" value="Asignar Curso" class="btn btn-default" />
+                @Html.ActionLink("Regresar", "Index", "Plan")
+            </div>
+        </div>
+    </div>
+}

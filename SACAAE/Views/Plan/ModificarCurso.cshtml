@@ -24,30 +24,30 @@
             @Html.HiddenFor(model => model.ID)
 
             <div class="editor-field">
-                @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2", @id = "bloque", @value = @ViewBag.bloque })
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2", @id = "bloque", @value = @ViewBag.bloque })
                 <br />
-                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
-                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
 
             <div class="editor-field">
-                @Html.LabelFor(model => model.Codigo, htmlAttributes: new { @class = "control-label col-md-2", @id = "plan", @value = @ViewBag.plan })
+                @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-2", @id = "plan", @value = @ViewBag.plan })
                 <br />
-                @Html.EditorFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
-                @Html.ValidationMessageFor(model => model.Codigo, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
             </div>
 
             <div class="editor-field">
-                @Html.LabelFor(model => model.HorasTeoricas, htmlAttributes: new { @class = "control-label col-md-2", @id = "curso", @value = @ViewBag.curso })
+                @Html.LabelFor(model => model.TheoreticalHours, htmlAttributes: new { @class = "control-label col-md-2", @id = "curso", @value = @ViewBag.curso })
                 <br />
-                @Html.EditorFor(model => model.HorasTeoricas, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
-                @Html.ValidationMessageFor(model => model.HorasTeoricas, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.TheoreticalHours, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
+                @Html.ValidationMessageFor(model => model.TheoreticalHours, "", new { @class = "text-danger" })
             </div>
             <div class="editor-field">
-                @Html.LabelFor(model => model.HorasPracticas, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.PracticeHours, htmlAttributes: new { @class = "control-label col-md-2" })
                 <br />
-                @Html.EditorFor(model => model.HorasPracticas, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
-                @Html.ValidationMessageFor(model => model.HorasPracticas, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.PracticeHours, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
+                @Html.ValidationMessageFor(model => model.PracticeHours, "", new { @class = "text-danger" })
             </div>
 
             <div class="editor-field">
@@ -55,17 +55,17 @@
                 <select id="sltBloques" name="sltBloques" class="form-control">
                     @foreach (var item in ViewBag.Bloques)
                     {
-                        <option value="@item.ID">@item.Descripcion</option>
+                        <option value="@item.ID">@item.Description</option>
                     }
                 </select>
                 <br />
             </div>
 
             <div class="editor-field">
-                @Html.LabelFor(model => model.Externo, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.External, htmlAttributes: new { @class = "control-label col-md-2" })
                 <br />
-                @Html.EditorFor(model => model.Externo)
-                @Html.ValidationMessageFor(model => model.Externo, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.External)
+                @Html.ValidationMessageFor(model => model.External, "", new { @class = "text-danger" })
             </div>
             <br />
             <p>

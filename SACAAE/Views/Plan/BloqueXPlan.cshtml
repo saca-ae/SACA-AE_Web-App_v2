@@ -21,7 +21,7 @@
                 }
                 <label>Plan de Estudio</label>
                 <select id="sltPlan" name="sltPlan" class="form-control">
-                    <option value="@ViewBag.Plan.ID">@ViewBag.Plan.Nombre</option>
+                    <option value="@ViewBag.Plan.ID">@ViewBag.Plan.Name</option>
                 </select>
                 <br />
                 <p> @Html.ActionLink("Agregar Bloques", "CrearBloqueXPlan", "BloqueXPlan", new { plan = ViewBag.Plan.ID }, null)</p>
@@ -34,10 +34,10 @@
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
+                @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nivel)
+                @Html.DisplayNameFor(model => model.Level)
             </th>
             <th></th>
         </tr>
@@ -45,10 +45,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Descripcion)
+                    @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nivel)
+                    @Html.DisplayFor(modelItem => item.Level)
                 </td>
                 <td>
                     @Html.ActionLink("Ver Cursos", "CursoXPlanXBloque", new { bloque = item.ID, plan = ViewBag.Plan.ID })|@Html.ActionLink("Eliminar", "EliminarBloque", new { bloque = item.ID, plan = ViewBag.Plan.ID })
@@ -56,5 +56,5 @@
             </tr>
         }
     </table>
-    <p>@Html.ActionLink("Regresar", "Index", "Plans")</p>
+    <p>@Html.ActionLink("Regresar", "Index", "Plan")</p>
 }
