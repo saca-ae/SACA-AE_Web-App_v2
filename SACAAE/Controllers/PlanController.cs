@@ -512,6 +512,23 @@ namespace SACAAE.Controllers
                    orderby Sede.Name
                    select Sede;
         }
+
+        [Route("Plan/PlanesSede/List/{pSede:int}/{pModalidad:int}")]
+        public ActionResult ObtenerPlanesEstudio(int pSede, int pModalidad)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var listaPlanes = from sedes in gvDatabase.Sedes
+                                  join planesporsede in gvDatabase.StudyPlansXSedes on sedes.ID equals planesporsede.SedeID
+                                  join planesestudio in gvDatabase.StudyPlans on planesporsede.StudyPlanID equals planesestudio.ID
+                                  join modalidades in gvDatabase.Modalities on planesestudio.ModeID equals modalidades.ID
+                                  where (sedes.ID == pSede) && (modalidades.ID == pModalidad)
+                                  select new { planesestudio.ID, planesestudio.Name };
+
+                return Json(listaPlanes, JsonRequestBehavior.AllowGet);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
        
     
     }

@@ -474,7 +474,7 @@ namespace SACAAE.Controllers
 
             var vResult = gvDatabase.SPGetIDSchedule(pDay, pStartHour, pEndHour).ToList();
 
-            if (vResult != null) vID = vResult.ElementAt(0).Result ;
+            if (vResult.Count != 0) vID = vResult.ElementAt(0).Result ;
 
             if (vID == null) return 0;
             return Convert.ToInt32(vID);
