@@ -12,11 +12,11 @@
             /* Funcion llamada cuando se cambien los valores de las sedes o las modalidades */
             $("#sltModalidad, #sltSede").change(function () {
 
-                var route = "/Plans/PlanesSede/List/" + $('select[name="sltSede"]').val() + "/" + $('select[name="sltModalidad"]').val();
+                var route = "/OfertaAcademica/Planes/List/" + $('select[name="sltSede"]').val() + "/" + $('select[name="sltModalidad"]').val();
                 $.getJSON(route, function (data) {
                     var items = "";
                     $.each(data, function (i, plan) {
-                        items += "<option value= " + plan.ID + ">" + plan.Nombre + "</option>";
+                        items += "<option value= " + plan.ID + ">" + plan.Name + "</option>";
                     });
 
                     if (items != "") {
@@ -41,7 +41,7 @@
                     var items = "<tr><th>Número Grupo</th><th>Curso</th></tr>  ";
                     $.each(data, function (i, oferta) {
                         var newLink = '<a href="@Url.Action("EliminarOferta")/' + oferta.ID + '">Eliminar</a>';
-                        items += "<tr><td>" + oferta.Numero + "</td><td>" + oferta.Nombre + "</td><td>" + newLink + "</td></tr>";
+                        items += "<tr><td>" + oferta.Number + "</td><td>" + oferta.Name + "</td><td>" + newLink + "</td></tr>";
                     });
 
                     if (items != "") {
@@ -81,7 +81,7 @@
                         foreach (var item in ViewBag.Periodos)
                         {
                             <option value="@item.ID">@item.Name</option>
-                        }
+                        } 
                     }
                     else
                     {

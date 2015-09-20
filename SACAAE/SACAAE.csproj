@@ -180,6 +180,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HorariosController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\OfertaAcademicaController.cs" />
     <Compile Include="Controllers\PeriodoController.cs" />
     <Compile Include="Controllers\PlazasController.cs" />
     <Compile Include="Controllers\ProfesorController.cs" />
@@ -234,6 +235,7 @@
     <Compile Include="Models\ViewModels\GroupAssignmentCSVViewModel.cs" />
     <Compile Include="Models\ViewModels\GroupsCreatedViewModel.cs" />
     <Compile Include="Models\ViewModels\NewScheduleViewModel.cs" />
+    <Compile Include="Models\ViewModels\PeriodoViewModel.cs" />
     <Compile Include="Models\ViewModels\PlazaViewModel.cs" />
     <Compile Include="Models\ViewModels\ProfesorViewModel.cs" />
     <Compile Include="Models\ViewModels\ScheduleComissionViewModel.cs" />
