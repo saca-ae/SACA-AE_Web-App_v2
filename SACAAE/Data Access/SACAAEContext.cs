@@ -92,7 +92,7 @@ namespace SACAAE.Data_Access
         }
 
         //Ejemplo SP
-        public virtual ObjectResult<ejemplo> SP_Ejemplo(Nullable<int> pCourseID, Nullable<int> pSedeID, Nullable<int> pPeriodID)
+        public virtual ObjectResult<CourseGroupResult> SP_GroupCourse(Nullable<int> pCourseID, Nullable<int> pSedeID, Nullable<int> pPeriodID)
         {
             var vCourseParameter = pCourseID.HasValue ?
                 new SqlParameter("courseID", pCourseID) :
@@ -104,7 +104,7 @@ namespace SACAAE.Data_Access
                 new SqlParameter("periodID", pPeriodID) :
                 new SqlParameter("periodID", typeof(int));
 
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ejemplo>("SP_Ejemplo @courseID, @sedeID, @periodID", vCourseParameter, vSedeParameter, vPeriodParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<CourseGroupResult>("SP_GroupCourse @courseID, @sedeID, @periodID", vCourseParameter, vSedeParameter, vPeriodParameter);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace SACAAE.Data_Access
         ///<param name="pIDPeriod">ID Period in database</param>
         /// <param name="pIDProfessor">ID Professor in database</param>
         /// <returns>ID, Number of Group, Name of Profesor, Code of Aula and StartHour, EndHour and Day of Schedule</returns>
-        public virtual ObjectResult<ejemplo> SP_Professor_Group(Nullable<int> pCourseID, Nullable<int> pSedeID, Nullable<int> pPeriodID, Nullable<int> pProfessorID)
+        public virtual ObjectResult<CourseGroupResult> SP_Professor_Group(Nullable<int> pCourseID, Nullable<int> pSedeID, Nullable<int> pPeriodID, Nullable<int> pProfessorID)
         {
             var vCourseParameter = pCourseID.HasValue ?
                 new SqlParameter("courseID", pCourseID) :
@@ -131,7 +131,7 @@ namespace SACAAE.Data_Access
                  new SqlParameter("professorID", pProfessorID):
                  new SqlParameter("professorID",pProfessorID);
 
-             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ejemplo>("SP_Professor_Group @courseID, @sedeID, @periodID,@professorID", 
+             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<CourseGroupResult>("SP_Professor_Group @courseID, @sedeID, @periodID,@professorID", 
                                                                                             vCourseParameter, vSedeParameter, vPeriodParameter,vProfessorParameter);
         }
 

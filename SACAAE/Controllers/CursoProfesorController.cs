@@ -460,7 +460,7 @@ namespace SACAAE.Controllers
                 var vPeriod = Request.Cookies["Periodo"].Value;
                 var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
                
-                var sp_getCourseGroups= db.SP_Ejemplo(pIDCurso, pSede, vIDPeriod).ToList();
+                var sp_getCourseGroups= db.SP_GroupCourse(pIDCurso, pSede, vIDPeriod).ToList();
                 json = JsonConvert.SerializeObject(sp_getCourseGroups);
                 return Content(json);
             
