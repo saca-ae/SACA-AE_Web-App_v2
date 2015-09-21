@@ -23,6 +23,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <UseGlobalApplicationHostFile />
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,6 +60,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Routing" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -170,6 +175,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AulaController.cs" />
     <Compile Include="Controllers\BloqueController.cs" />
+    <Compile Include="Controllers\BloqueXPlanController.cs" />
+    <Compile Include="Controllers\BloqueXPlanXCursoController.cs" />
     <Compile Include="Controllers\ComisionController.cs" />
     <Compile Include="Controllers\ComisionProfesorController.cs" />
     <Compile Include="Controllers\CSVController.cs" />
@@ -178,6 +185,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HorariosController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\OfertaAcademicaController.cs" />
     <Compile Include="Controllers\PeriodoController.cs" />
     <Compile Include="Controllers\PlazasController.cs" />
     <Compile Include="Controllers\ProfesorController.cs" />
@@ -191,6 +199,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="IWebServiceMobile.cs" />
     <Compile Include="Migrations\201509170403230_publish.cs" />
     <Compile Include="Migrations\201509170403230_publish.Designer.cs">
       <DependentUpon>201509170403230_publish.cs</DependentUpon>
@@ -214,7 +223,6 @@
     <Compile Include="Models\Modality.cs" />
     <Compile Include="Models\Period.cs" />
     <Compile Include="Models\PeriodNumber.cs" />
-    <Compile Include="Models\StoredProcedures\ejemplo.cs" />
     <Compile Include="Models\StoredProcedures\resultadoStoredProcedure.cs" />
     <Compile Include="Models\StudyPlan.cs" />
     <Compile Include="Models\StudyPlanXSede.cs" />
@@ -232,6 +240,7 @@
     <Compile Include="Models\ViewModels\GroupAssignmentCSVViewModel.cs" />
     <Compile Include="Models\ViewModels\GroupsCreatedViewModel.cs" />
     <Compile Include="Models\ViewModels\NewScheduleViewModel.cs" />
+    <Compile Include="Models\ViewModels\PeriodoViewModel.cs" />
     <Compile Include="Models\ViewModels\PlazaViewModel.cs" />
     <Compile Include="Models\ViewModels\ProfesorViewModel.cs" />
     <Compile Include="Models\ViewModels\ScheduleComissionViewModel.cs" />
@@ -239,6 +248,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Controllers\PlanController.cs" />
+    <Compile Include="WebService Models\WebServiceModels.cs" />
+    <Compile Include="WebServiceMobile.svc.cs">
+      <DependentUpon>WebServiceMobile.svc</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\SACAAE-Local.mdf" />
@@ -270,6 +283,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\DataTables\dataTables.responsive.scss" />
     <Content Include="Content\DataTables\Spanish.json" />
+    <Content Include="WebServiceMobile.svc" />
     <None Include="Properties\PublishProfiles\saca-ae.net - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\saca-ae.net - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
@@ -416,6 +430,8 @@
     <Content Include="Views\Horarios\Horarios.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Views\BloqueXPlan\CrearBloqueXPlan.cshtml" />
+    <Content Include="Views\BloqueXPlanXCurso\CrearBloqueXPlanXCurso.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -425,6 +441,7 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\BlockXPlanXCourses\" />
     <Folder Include="Views\Reportes\" />
   </ItemGroup>
   <ItemGroup>

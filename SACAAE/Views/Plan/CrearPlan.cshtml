@@ -30,12 +30,12 @@
             </div>
 
             <div class="editor-field">
-                @Html.TextBoxFor(model => model.Nombre, new
+                @Html.TextBoxFor(model => model.Name, new
                {
                    @class = "form-control",
                    @placeholder = "Nombre del Plan de Estudio"
                })
-                @Html.ValidationMessageFor(model => model.Nombre)
+                @Html.ValidationMessageFor(model => model.Name)
             </div>
 
             <div class=" editor-label">
@@ -46,7 +46,7 @@
                 <select name="Modalidades" id="Modalidades" class="form-control">
                     @foreach (var item in ViewBag.Modalidades)
                     {
-                        <option value="@item.ID">@item.Nombre</option>
+                        <option value="@item.ID">@item.Name</option>
                     }
                 </select>
 
@@ -59,7 +59,7 @@
             <div class="editor-field">
                 @foreach (var item in ViewBag.Sedes)
                 {
-                    <input type="checkbox" name="Sedes" id="Sedes" value="@item.ID">@item.Nombre
+                    <input type="checkbox" name="Sedes" id="Sedes" value="@item.ID">@item.Name
                 }
 
 
@@ -70,7 +70,7 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Crear" class="btn btn-default" />
-                    @Html.ActionLink("Regresar", "Index", "Plans")
+                    @Html.ActionLink("Regresar", "Index", "Plan")
                 </div>
             </div>
         </div>

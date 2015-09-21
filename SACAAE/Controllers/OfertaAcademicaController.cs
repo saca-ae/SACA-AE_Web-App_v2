@@ -1,8 +1,10 @@
 ﻿using SACAAE.Data_Access;
 using SACAAE.Models;
+using SACAAE.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -19,12 +21,7 @@ namespace SACAAE.Controllers
         {
             ViewBag.Modalidades = ObtenerTodosModalidades();
             ViewBag.Sedes = ObtenerTodosSedes();
-            var periodos = gvDatabase.Periods.Select(p => new
-            {
-                ID = p.ID,
-                Name = (p.Year + " - " + p.Number.Type.Name + " " + p.Number.Number)
-            }).ToList();
-            ViewBag.Periodos = periodos;
+            ViewBag.Periodos = ObtenerTodosPeriodos();
             return View();
         }
 
@@ -33,12 +30,7 @@ namespace SACAAE.Controllers
         {
             ViewBag.Modalidades = ObtenerTodosModalidades();
             ViewBag.Sedes = ObtenerTodosSedes();
-            var periodos = gvDatabase.Periods.Select(p => new
-            {
-                ID = p.ID,
-                Name = (p.Year + " - " + p.Number.Type.Name + " " + p.Number.Number)
-            }).ToList();
-            ViewBag.Periodos = periodos;
+            ViewBag.Periodos = ObtenerTodosPeriodos();
             return View();
         }
 
@@ -104,16 +96,6 @@ namespace SACAAE.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult ObtenerOfertasAcademicas(int sede, int plan, int periodo)
-        {
-            IQueryable listaOfertas = ListarGruposXSedeXPeriodo(plan, periodo);
-            if (HttpContext.Request.IsAjaxRequest())
-            {
-                return Json(listaOfertas, JsonRequestBehavior.AllowGet);
-            }
-            return View(listaOfertas);
-        }
-
         [Authorize]
         [HttpPost]
         public ActionResult EliminarOferta(Group grupo)
@@ -135,6 +117,17 @@ namespace SACAAE.Controllers
             return from Sede in gvDatabase.Sedes
                    orderby Sede.Name
                    select Sede;
+        }
+
+        public IQueryable<PeriodoViewModel> ObtenerTodosPeriodos()
+        {
+
+            return gvDatabase.Periods.Select(p => new PeriodoViewModel
+            {
+                ID = p.ID,
+                Name = (p.Year + " - " + p.Number.Type.Name + " " + p.Number.Number)
+            });
+
         }
 
         public StudyPlanXSede tomarIDPlanXSede(int idSede, int idPlan)
@@ -196,6 +189,79 @@ namespace SACAAE.Controllers
             }
             else
                 return;
+        }
+        
+
+        [Route("OfertaAcademica/Ofertas/List/{pSede:int}/{pModalidad:int}/{pPeriodo:int}")]
+        public ActionResult ObtenerOfertasAcademicas(int sede, int plan, int periodo)
+        {
+            IQueryable listaOfertas = ListarGruposXSedeXPeriodo(plan, periodo);
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                return Json(listaOfertas, JsonRequestBehavior.AllowGet);
+            }
+            return View(listaOfertas);
+        }
+
+        [Route("OfertaAcademica/Planes/List/{pSede:int}/{pModalidad:int}")]
+        public ActionResult ObtenerPlanesEstudio(int pSede, int pModalidad)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var listaPlanes = from sedes in gvDatabase.Sedes
+                                  join planesporsede in gvDatabase.StudyPlansXSedes on sedes.ID equals planesporsede.SedeID
+                                  join planesestudio in gvDatabase.StudyPlans on planesporsede.StudyPlanID equals planesestudio.ID
+                                  join modalidades in gvDatabase.Modalities on planesestudio.ModeID equals modalidades.ID
+                                  where (sedes.ID == pSede) && (modalidades.ID == pModalidad)
+                                  select new { planesestudio.ID, planesestudio.Name };
+
+                return Json(listaPlanes, JsonRequestBehavior.AllowGet);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        [Route("OfertaAcademica/Bloques/List/{plan:int}")]
+        public ActionResult ObtenerBloques(int plan)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var listaBloquesV = from Bloques in gvDatabase.AcademicBlocks
+                                    join BloquesXPlan in gvDatabase.AcademicBlocksXStudyPlans on Bloques.ID equals BloquesXPlan.BlockID
+                                    where BloquesXPlan.PlanID == plan
+                                    select new { Bloques.ID, Bloques.Description };
+
+                return Json(listaBloquesV, JsonRequestBehavior.AllowGet);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        [Route("OfertaAcademica/Cursos/List/{plan}/{bloque}")]
+        public ActionResult ObtenerCursos(int plan, int bloque)  //Por entidad
+        {
+            String entidad = Request.Cookies["Entidad"].Value;
+            int entidadID = 0;
+            if (entidad.Equals("TEC")){entidadID = 1;}
+            else if (entidad.Equals("CIE")){entidadID = 7;}
+            else if (entidad.Equals("TAE")) {entidadID = 5;}
+            else if (entidad.Equals("MAE")){ entidadID = 6;}
+            else if (entidad.Equals("DDE")){ entidadID = 11;}
+            else if (entidad.Equals("Emprendedores")) {entidadID = 12;}
+            else if (entidad.Equals("Actualizacion_Cartago")){entidadID = 9;}
+            else { entidadID = 8;}
+
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                 var listaBloquesV = from curso in gvDatabase.Courses
+                       join BloqueXPlanXCursos in gvDatabase.BlocksXPlansXCourses on curso.ID equals BloqueXPlanXCursos.CourseID
+                       join BloquesXPlan in gvDatabase.AcademicBlocksXStudyPlans on BloqueXPlanXCursos.BlockXPlanID equals BloquesXPlan.ID
+                       join PlanDeEstudio in gvDatabase.StudyPlans on BloquesXPlan.PlanID equals PlanDeEstudio.ID
+                       where BloquesXPlan.PlanID == plan && BloquesXPlan.BlockID == bloque && PlanDeEstudio.EntityTypeID == entidadID
+                       orderby curso.Name
+                       select new { curso.ID, curso.Name };
+
+                return Json(listaBloquesV, JsonRequestBehavior.AllowGet);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
     }
 }

@@ -9,9 +9,9 @@ using System.Web.Mvc;
 using SACAAE.Data_Access;
 using SACAAE.Models;
 
-namespace SACAAE.Views
+namespace SACAAE.Controllers
 {
-    public class Plan : Controller
+    public class PlanController : Controller
     {
         private const string TempDataMessageKey = "MessageError";
         private const string TempDataMessageKeySuccess = "MessageSuccess";
@@ -223,7 +223,7 @@ namespace SACAAE.Views
         [HttpPost]
         public ActionResult EliminarPlan(StudyPlan plan, string button)
         {
-            TempData[TempDataMessageKey] = EliminarPlanV(plan.ID);
+            TempData[TempDataMessageKey] = EliminarPlan(plan.ID);
             return RedirectToAction("Index");
         }
 
@@ -511,6 +511,23 @@ namespace SACAAE.Views
             return from Sede in gvDatabase.Sedes
                    orderby Sede.Name
                    select Sede;
+        }
+
+        [Route("Plan/PlanesSede/List/{pSede:int}/{pModalidad:int}")]
+        public ActionResult ObtenerPlanesEstudio(int pSede, int pModalidad)
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var listaPlanes = from sedes in gvDatabase.Sedes
+                                  join planesporsede in gvDatabase.StudyPlansXSedes on sedes.ID equals planesporsede.SedeID
+                                  join planesestudio in gvDatabase.StudyPlans on planesporsede.StudyPlanID equals planesestudio.ID
+                                  join modalidades in gvDatabase.Modalities on planesestudio.ModeID equals modalidades.ID
+                                  where (sedes.ID == pSede) && (modalidades.ID == pModalidad)
+                                  select new { planesestudio.ID, planesestudio.Name };
+
+                return Json(listaPlanes, JsonRequestBehavior.AllowGet);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
        
     

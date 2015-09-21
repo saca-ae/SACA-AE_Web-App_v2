@@ -24,11 +24,11 @@
             /* Funcion llamada cuando se cambien los valores de las sedes o las modalidades */
             $("#sltModalidad, #sltSede").change(function () {
 
-                var route = "/Plans/Planes/List/" + $('select[name="sltSede"]').val() + "/" + $('select[name="sltModalidad"]').val();
+                var route = "/OfertaAcademica/Planes/List/" + $('select[name="sltSede"]').val() + "/" + $('select[name="sltModalidad"]').val();
                 $.getJSON(route, function (data) {
                     var items = "";
                     $.each(data, function (i, plan) {
-                        items += "<option value= " + plan.ID + ">" + plan.Nombre + "</option>";
+                        items += "<option value= " + plan.ID + ">" + plan.Name + "</option>";
                     });
 
                     if (items != "") {
@@ -41,11 +41,11 @@
 
             /* Funcion llamada cuando se cambien los valores de los planes */
             $("#sltPlan").change(function () {
-                var route = "/BloqueXPlan/Bloques/List/" + $('select[name="sltPlan"]').val();
+                var route = "/OfertaAcademica/Bloques/List/" + $('select[name="sltPlan"]').val();
                 $.getJSON(route, function (data) {
                     var items = "";
                     $.each(data, function (i, bloque) {
-                        items += "<option value= " + bloque.Value + ">" + bloque.Text + "</option>";
+                        items += "<option value= " + bloque.ID + ">" + bloque.Description + "</option>";
                     });
 
                     if (items != "") {
@@ -62,11 +62,11 @@
 
             /* Funcion llamada cuando se cambien los valores de los bloques academicos */
             $("#sltBloque,sltPlan").change(function () {
-                var route = "/BloqueXPlanXCurso/Cursos/List/"+$('select[name="sltPlan"]').val() + "/" + $('select[name="sltBloque"]').val();
+                var route = "/OfertaAcademica/Cursos/List/" + $('select[name="sltPlan"]').val() + "/" + $('select[name="sltBloque"]').val();
                 $.getJSON(route, function (data) {
                     var items = "";
                     $.each(data, function (i, curso) {
-                        items += "<option value= " + curso.Value + ">" + curso.Text + "</option>";
+                        items += "<option value= " + curso.ID + ">" + curso.Name + "</option>";
                     });
                     //for (var i = 0; i < data.length; i++) {
                        // items += "<option value='" + data[i]["ID"] + "'>" + data[i]["Codigo"] + " - " + data[i]["Nombre"] + "</option>";
@@ -110,9 +110,9 @@
                     @if (ViewBag.Periodos != null)
                     {
                         <option value=" " selected="selected">-- Seleccionar Periodo --</option>
-                        foreach (var item in ViewBag.Periodos)
+                        foreach (var @item in ViewBag.Periodos)
                         {
-                            <option value="@item.ID">@item.Nombre</option>
+                            <option value="@item.ID">@item.Name</option>
                         }
                     }
                     else
@@ -130,7 +130,7 @@
                         <option value=" " selected="selected">-- Seleccionar Sede --</option>
                         foreach (var item in ViewBag.Sedes)
                         {
-                            <option value="@item.ID">@item.Nombre</option>
+                            <option value="@item.ID">@item.Name</option>
                         }
                     }
                     else
@@ -153,7 +153,7 @@
                         <option value=" " selected="selected">-- Seleccionar Modalidad --</option>
                         foreach (var item in ViewBag.Modalidades)
                         {
-                            <option value="@item.ID">@item.Nombre</option>
+                            <option value="@item.ID">@item.Name</option>
                         }
                     }
                     else
