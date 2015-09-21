@@ -223,7 +223,7 @@ namespace SACAAE.Controllers
         [HttpPost]
         public ActionResult EliminarPlan(StudyPlan plan, string button)
         {
-            TempData[TempDataMessageKey] = EliminarPlanV(plan.ID);
+            TempData[TempDataMessageKey] = EliminarPlan(plan.ID);
             return RedirectToAction("Index");
         }
 
