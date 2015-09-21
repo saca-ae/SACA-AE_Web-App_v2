@@ -79,7 +79,7 @@
             @Html.Label("Profesor")
         </div>
         <div class="editor-field">
-            @Html.DropDownList("Profesores", null, "-- Seleccione Profesor si existe --", htmlAttributes: new { @class = "form-control" })
+            @Html.DropDownList("Profesores", null, "-- Seleccione Profesor --", htmlAttributes: new { @class = "form-control" })
             @if (ViewBag.Profesores == null)
             {
 
@@ -94,7 +94,7 @@
             @Html.Label("Sede")
         </div>
         <div class="editor-field">
-            <select id="Sedes" name="Sedes" class="form-control"></select>
+            <select id="Sedes" name="Sedes" class="form-control" disabled="disabled"></select>
         </div>
 
         <br />
@@ -103,7 +103,7 @@
             @Html.Label("Modalidad")
         </div>
         <div class="editor-field">
-            <select id="Modalidades" name="Modalidades" class="form-control" ></select>
+            <select id="Modalidades" name="Modalidades" class="form-control" disabled="disabled"></select>
 
         </div>
                    
@@ -114,7 +114,7 @@
             @Html.Label("Plan de Estudio")
         </div>
         <div class="editor-field">
-            <select id="Planes" name="Planes" class="form-control"></select>
+            <select id="Planes" name="Planes" class="form-control" disabled="disabled"></select>
         </div>
 
         <br />
@@ -124,7 +124,7 @@
             @Html.Label("Bloque")
         </div>
         <div class="editor-field">
-            <select id="Bloques" name="Bloques" class="form-control"></select>
+            <select id="Bloques" name="Bloques" class="form-control" disabled="disabled"></select>
         </div>
                    
     </div>
@@ -134,7 +134,7 @@
             @Html.Label("Grupos sin profesor asignado")
         </div>
         <div class="editor-field">
-            <select id="Grupos_Disponibles" name="Grupos_Disponibles" class="form-control"></select>
+            <select id="Grupos_Disponibles" name="Grupos_Disponibles" class="form-control" disabled="disabled"></select>
         </div>
 
         <br />
@@ -192,7 +192,7 @@
             @Html.Label("Horas Recargo")
         </div>
         <div class="editor-field">
-            <select id="HourCharge" name="HourCharge" class="form-control">
+            <select id="HourCharge" name="HourCharge" class="form-control" disabled="disabled">
 
                 <option selected="selected" value="1">Si</option>
                 <option value="0">No</option>
@@ -204,7 +204,7 @@
     <div id="columna_inferior">
         <p>
             <input id="idCurso" type="hidden" name="Grupo">
-            <input type="submit" value="Asignar" class="btn" id="Asignar" />
+            <input type="submit" value="Asignar" class="btn" id="Asignar" disabled="disabled"/>
             |
             @if (ViewBag.returnUrl != null)
             {
