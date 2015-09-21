@@ -15,112 +15,140 @@ namespace SACAAE
     public class WebServiceMobile : IWebServiceMobile
     {
         private SACAAEContext db = new SACAAEContext();
+        private const string MOVIL_CODE = "SACAAE.Profesor";
 
-        public string getPeriods()
+        public bool LogIn(string pPassword)
+        {
+            var result = false;
+            if (pPassword.Equals(MOVIL_CODE))
+            {
+                result = true;
+            }
+
+            return result;
+        }
+
+        public bool LogInUser(string pUser, string pPassword)
+        {
+            var professors = db.Professors.Where(p => p.Email == pUser).ToList();
+            var result = false;
+
+            if(professors.Count > 0)
+            {
+                if (pPassword.Equals(MOVIL_CODE))
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        public List<PeriodWSModel> getPeriods()
         {
             var result = db.SP_getAllPeriod().ToList();
 
-            return JsonConvert.SerializeObject(result);
+            return result;
         }
 
-        public string getCourses(string pPeriod)
+        public List<BasicInfoWSModel> getCourses(string pPeriod)
         {
             var period = int.Parse(pPeriod);
             var result = db.SP_getAllCourses(period).ToList();
 
-            return JsonConvert.SerializeObject(result);
+            return result;
         }
 
-        public string getProjects(string pPeriod)
+        public List<BasicInfoWSModel> getProjects(string pPeriod)
         {
             var period = int.Parse(pPeriod);
             var result = db.SP_getAllProjects(period).ToList();
 
-            return JsonConvert.SerializeObject(result);
+            return result;
         }
 
-        public string getCommissions(string pPeriod)
+        public List<BasicInfoWSModel> getCommissions(string pPeriod)
         {
             var period = int.Parse(pPeriod);
             var result = db.SP_getAllCommissions(period).ToList();
 
-            return JsonConvert.SerializeObject(result);
+            return result;
         }
 
-        public string getGroups(string pPeriod, string pCourse)
+        public List<BasicInfoWSModel> getGroups(string pPeriod, string pCourse)
         {
             var period = int.Parse(pPeriod);
             var course = int.Parse(pCourse);
             var result = db.SP_getAllGroups(period, course).ToList();
 
-            return JsonConvert.SerializeObject(result);
+            return result;
         }
 
-        public string getOneProject(string pPeriod, string pProject)
+        public List<ProjectCommissionWSModel> getOneProject(string pPeriod, string pProject)
         {
             var period = int.Parse(pPeriod);
             var project = int.Parse(pProject);
             var result = db.SP_getOneProject(period, project).ToList();
 
-            return JsonConvert.SerializeObject(result);
+            return result;
         }
 
-        public string getOneCommission(string pPeriod, string pCommission)
+        public List<ProjectCommissionWSModel> getOneCommission(string pPeriod, string pCommission)
         {
             var period = int.Parse(pPeriod);
             var commission = int.Parse(pCommission);
             var result = db.SP_getOneCommission(period, commission).ToList();
 
-            return JsonConvert.SerializeObject(result);
+            return result;
         }
 
-        public string getOneGroup(string pPeriod, string pGroup)
+        public List<GroupWSModel> getOneGroup(string pPeriod, string pGroup)
         {
             var period = int.Parse(pPeriod);
             var group = int.Parse(pGroup);
             var result = db.SP_getOneGroup(period, group).ToList();
 
-            return JsonConvert.SerializeObject(result);
+            return result;
         }
 
         //
-        public string getCoursesName(string pStudyPlan, string pBlockNumber)
+        public List<NameWSModel> getCoursesName(string pStudyPlan, string pBlockNumber)
         {
             var blockNumber = int.Parse(pBlockNumber);
             var result = db.SP_GetCourses(pStudyPlan, blockNumber).ToList();
 
-            return JsonConvert.SerializeObject(result) + pStudyPlan + pBlockNumber;
+            return result;
         }
 
-        public string getPeriodInformation(string pPeriod, string pStudyPlan, string pBlockLevel, string pCourse, string pProfessor)
+        public List<PeriodInformationWSModel> getPeriodInformation(string pPeriod, string pStudyPlan, string pBlockLevel, string pCourse, string pProfessor)
         {
             var period = int.Parse(pPeriod);
             var blockLevel = int.Parse(pBlockLevel);
             var result = db.SP_GetPeriodInformation(period, pStudyPlan, blockLevel, pCourse, pProfessor).ToList();
 
-            return JsonConvert.SerializeObject(result) + pStudyPlan + pBlockLevel;
+            return result;
         }
 
-        public string getStudyPlan()
+        public List<NameWSModel> getStudyPlan()
         {
             var result = db.SP_GetStudyPlan().ToList();
             
-            return JsonConvert.SerializeObject(result);
+            return result;
         }
 
-        public string getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel)
+        public List<NameWSModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel)
         {
             var blockLevel = int.Parse(pBlockLevel);
             var result = db.SP_GetCoursesXBlockXPlan(pStudyPlan, blockLevel).ToList();
 
-            return JsonConvert.SerializeObject(result) + pStudyPlan + pBlockLevel;
+            return result;
         }
 
-        public string getProfessors(string pCourse)
+        public List<NameWSModel> getProfessors(string pCourse)
         {
             var result = db.SP_GetProfessor(pCourse).ToList();
 
-            return JsonConvert.SerializeObject(result);
+            return result;
         }
     }
 }
