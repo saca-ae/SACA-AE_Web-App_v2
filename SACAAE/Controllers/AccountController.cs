@@ -23,7 +23,7 @@ namespace SACAAE.Controllers
         public AccountController()
         {
         }
-
+        /*****/
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
         {
             UserManager = userManager;
