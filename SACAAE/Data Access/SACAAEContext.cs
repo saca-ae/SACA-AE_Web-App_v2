@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using SACAAE.Models;
 using SACAAE.Models.StoredProcedures;
+using SACAAE.Models.ViewModels;
 using SACAAE.WebService_Models;
 using System;
 using System.Collections.Generic;
@@ -276,14 +277,14 @@ namespace SACAAE.Data_Access
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<NameWSModel>("SP_GetStudyPlan");
         }
 
-        public virtual ObjectResult<NameWSModel> SP_GetCoursesXBlockXPlan(string pStudyPlan, int? pBlockLevel)
+        public virtual ObjectResult<PeriodInformationViewModel> SP_GetCoursesXBlockXPlan(string pStudyPlan, int? pBlockLevel)
         {
             var vStudyPlanParameter = new SqlParameter("pStudyPlan", pStudyPlan);
             var vBlockLevelParameter = pBlockLevel.HasValue ?
                  new SqlParameter("pBlockLevel", pBlockLevel) :
                  new SqlParameter("pBlockLevel", pBlockLevel);
 
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<NameWSModel>("SP_GetCoursesXBlockXPlan @pStudyPlan, @pBlockLevel",
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<PeriodInformationViewModel>("SP_GetCoursesXBlockXPlan @pStudyPlan, @pBlockLevel",
                                                                                                         vStudyPlanParameter, vBlockLevelParameter);
         }
 

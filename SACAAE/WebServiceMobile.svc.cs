@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.Web.Mvc;
 using System.Net;
 using Newtonsoft.Json;
+using SACAAE.Models.ViewModels;
 
 namespace SACAAE
 {
@@ -15,13 +16,6 @@ namespace SACAAE
     public class WebServiceMobile : IWebServiceMobile
     {
         private SACAAEContext db = new SACAAEContext();
-
-        public string getPeriods()
-        {
-            var result = db.SP_getAllPeriod().ToList();
-
-            return JsonConvert.SerializeObject(result);
-        }
 
         public string getCourses(string pPeriod)
         {
@@ -83,44 +77,42 @@ namespace SACAAE
             return JsonConvert.SerializeObject(result);
         }
 
-        //
-        public string getCoursesName(string pStudyPlan, string pBlockNumber)
+        public List<NameWSModel> getStudyPlan()
         {
-            var blockNumber = int.Parse(pBlockNumber);
-            var result = db.SP_GetCourses(pStudyPlan, blockNumber).ToList();
-
-            return JsonConvert.SerializeObject(result) + pStudyPlan + pBlockNumber;
+            return db.SP_GetStudyPlan().ToList();
         }
 
-        public string getPeriodInformation(string pPeriod, string pStudyPlan, string pBlockLevel, string pCourse, string pProfessor)
+        public List<NameWSModel> getProfessors(string pCourse)
+        {
+            return db.SP_GetProfessor(pCourse).ToList();
+        }
+
+        public IQueryable<PeriodoViewModel> getPeriods()
+        {
+            return db.Periods.Select(p => new PeriodoViewModel
+            {
+                ID = p.ID,
+                Name = (p.Year + " - " + p.Number.Type.Name + " " + p.Number.Number)
+            });
+        }
+
+        public List<PeriodInformationViewModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel)
+        {
+            var blockLevel = int.Parse(pBlockLevel);
+            return db.SP_GetCoursesXBlockXPlan(pStudyPlan, blockLevel).ToList();
+        }
+
+        public List<NameWSModel> getCoursesName(string pStudyPlan, string pBlockNumber)
+        {
+            var blockNumber = int.Parse(pBlockNumber);
+            return db.SP_GetCourses(pStudyPlan, blockNumber).ToList();
+        }
+
+        public List<PeriodInformationWSModel> getPeriodInformation(string pPeriod, string pStudyPlan, string pBlockLevel, string pCourse, string pProfessor)
         {
             var period = int.Parse(pPeriod);
             var blockLevel = int.Parse(pBlockLevel);
-            var result = db.SP_GetPeriodInformation(period, pStudyPlan, blockLevel, pCourse, pProfessor).ToList();
-
-            return JsonConvert.SerializeObject(result) + pStudyPlan + pBlockLevel;
-        }
-
-        public string getStudyPlan()
-        {
-            var result = db.SP_GetStudyPlan().ToList();
-            
-            return JsonConvert.SerializeObject(result);
-        }
-
-        public string getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel)
-        {
-            var blockLevel = int.Parse(pBlockLevel);
-            var result = db.SP_GetCoursesXBlockXPlan(pStudyPlan, blockLevel).ToList();
-
-            return JsonConvert.SerializeObject(result) + pStudyPlan + pBlockLevel;
-        }
-
-        public string getProfessors(string pCourse)
-        {
-            var result = db.SP_GetProfessor(pCourse).ToList();
-
-            return JsonConvert.SerializeObject(result);
+            return db.SP_GetPeriodInformation(period, pStudyPlan, blockLevel, pCourse, pProfessor).ToList();
         }
     }
 }

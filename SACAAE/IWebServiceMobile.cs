@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using SACAAE.Models.ViewModels;
+using SACAAE.WebService_Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
@@ -9,9 +12,7 @@ namespace SACAAE
     public interface IWebServiceMobile
     {
         //Esteban
-        [OperationContract]
-        [WebInvoke(Method = "GET", UriTemplate = "getPeriods", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-        string getPeriods();
+
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "getCourses/{pPeriod}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
@@ -42,26 +43,30 @@ namespace SACAAE
         string getOneGroup(string pPeriod, string pGroup);
 
         //Cristian
-        [OperationContract]
-        [WebInvoke(Method = "GET", UriTemplate = "getCoursesName/{pStudyPlan}/{pBlockNumber}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-        string getCoursesName(string pStudyPlan, string pBlockNumber);
-
-        [OperationContract]
-        [WebInvoke(Method = "GET", UriTemplate = "getPeriodInformation/{pPeriod}/{pStudyPlan}/{pBlockLevel}/{pCourse}/{pProfessor}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-        string getPeriodInformation(string pPeriod, string pStudyPlan, string pBlockLevel, string pCourse, string pProfessor);
-
-        //periodo usar "getPeriods"
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "getStudyPlan", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-        string getStudyPlan();
-
-        [OperationContract]
-        [WebInvoke(Method = "GET", UriTemplate = "getCoursesXBlockXPlan/{pStudyPlan}/{pBlockLevel}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-        string getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel);
+        List<NameWSModel> getStudyPlan();
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "getProfessors/{pCourse}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-        string getProfessors(string pCourse);
+        List<NameWSModel> getProfessors(string pCourse);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", UriTemplate = "getPeriods", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
+        IQueryable<PeriodoViewModel> getPeriods();
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", UriTemplate = "getCoursesXBlockXPlan/{pStudyPlan}/{pBlockLevel}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
+        List<PeriodInformationViewModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", UriTemplate = "getCoursesName/{pStudyPlan}/{pBlockNumber}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
+        List<NameWSModel> getCoursesName(string pStudyPlan, string pBlockNumber);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", UriTemplate = "getPeriodInformation/{pPeriod}/{pStudyPlan}/{pBlockLevel}/{pCourse}/{pProfessor}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
+        List<PeriodInformationWSModel> getPeriodInformation(string pPeriod, string pStudyPlan, string pBlockLevel, string pCourse, string pProfessor);
+
     }
 }
