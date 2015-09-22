@@ -57,6 +57,11 @@ function eliminar_asignacion_grupo() {
 /*********************************************************************************************************************************************/
 
 /***************************************************** Function use in AsignarProfesoraCurso.cshtml***************************************************/
+$("#Profesores").change(function ()
+{
+    $("#Sedes").prop("disabled", false);
+})
+
 $("#Sedes").change(function () {
     var sede = document.getElementById('Sedes').value
     var route = "/CursoProfesor/Cursos/" + get_id(3) + "/Sedes/" + sede + "/Modalidades"
@@ -71,6 +76,7 @@ $("#Sedes").change(function () {
         if (items != "") {
             $("#Modalidades").html(items);
             $("#Modalidades").prepend("<option value='' selected='selected'>-- Seleccionar Modalidad --</option>");
+            $("#Modalidades").prop("disabled", false);
 
         }
         else {
@@ -95,7 +101,7 @@ $('#Modalidades').change(function () {
         if (items != "") {
             $("#Planes").html(items);
             $("#Planes").prepend("<option value='' selected='selected'>-- Seleccionar Plan de estudio --</option>");
-
+            $("#Planes").prop("disabled", false);
         }
         else {
             $("#Planes").html("<option>No hay planes de estudio relacionadas a la modalidad seleccionada.</option>")
@@ -122,7 +128,7 @@ $('#Planes').change(function () {
         if (items != "") {
             $("#Bloques").html(items);
             $("#Bloques").prepend("<option value='' selected='selected'>-- Seleccionar Plan de estudio --</option>");
-
+            $("#Bloques").prop("disabled", false);
         }
         else {
             $("#Bloques").html("<option>No hay bloques academicos relacionadas al plan de estudio seleccionado</option>")
@@ -151,7 +157,7 @@ $("#Bloques").change(function () {
         if (items != "") {
             $("#Grupos_Disponibles").html(items);
             $("#Grupos_Disponibles").prepend("<option value='' selected='selected'>-- Seleccionar Grupo --</option>");
-
+            $("#Grupos_Disponibles").prop("disabled", false);
         }
         else {
             $("#Grupos_Disponibles").html("<option>No hay grupos abiertos para ese curso.</option>")
@@ -160,6 +166,9 @@ $("#Bloques").change(function () {
 });
 
 $("#Grupos_Disponibles").change(function () {
+    $('#Asignar').prop("disabled", false);
+    
+
     var sede = document.getElementById('Sedes').value;
     var modalidad = document.getElementById('Modalidades').value
     var plan = document.getElementById('Planes').value
@@ -187,7 +196,8 @@ $("#Grupos_Disponibles").change(function () {
 
         if (cupo != "" || aula != "" || id != "") {
             $("#txtHoras").val(horas)
-            $('#txtHorasEstimadas').val("")
+            $('#txtHorasEstimadas').val("0")
+            $('#HourCharge').prop("disabled", false);
         }
         else {
             $("#txtCupo").val("No Disponible")
@@ -251,6 +261,8 @@ $("#Grupos_Disponibles").change(function () {
             }
         });
     });
+
+    
 });
 
 $("#HourCharge").change(function () {
@@ -259,13 +271,16 @@ $("#HourCharge").change(function () {
     if (HourSelection == 1) {
         $("#txtHorasEstimadas").val(0)
     }
-    else {
+    else
+    {
         var horas_teoricas = document.getElementById("txtHoras").value;
 
-        var horas_estimadas = 11 - horas_teoricas;
+        var horas_estimadas = 10 - horas_teoricas;
 
         $("#txtHorasEstimadas").val(horas_estimadas);
+        
     }
+    
 });
 /*********************************************************************************************************************************************/
 /***************************************************** Function use in EditarAsignacion.cshtml***************************************************/
