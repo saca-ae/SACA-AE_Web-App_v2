@@ -15,7 +15,19 @@ namespace SACAAE
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "LogInUser/{pUser}/{pPassword}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-        bool LogInUser(string pUser, string pPassword);
+        string LogInUser(string pUser, string pPassword);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", UriTemplate = "getCoursesPerProfe/{pPeriod}/{pProfessor}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
+        List<GroupScheduleWSModel> getCoursesPerProfe(string pPeriod, string pProfessor);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", UriTemplate = "getProjectsPerProfe/{pPeriod}/{pProfessor}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
+        List<ProjectCommissionWSModel> getProjectsPerProfe(string pPeriod, string pProfessor);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", UriTemplate = "getCommissionsPerProfe/{pPeriod}/{pProfessor}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
+        List<ProjectCommissionWSModel> getCommissionsPerProfe(string pPeriod, string pProfessor);
 
         //Esteban
         [OperationContract]

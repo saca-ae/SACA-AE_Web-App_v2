@@ -28,18 +28,42 @@ namespace SACAAE
             return result;
         }
 
-        public bool LogInUser(string pUser, string pPassword)
+        public string LogInUser(string pUser, string pPassword)
         {
             var professors = db.Professors.Where(p => p.Email == pUser).ToList();
-            var result = false;
+            var result = "";
 
             if(professors.Count > 0)
             {
                 if (pPassword.Equals(MOVIL_CODE))
                 {
-                    result = true;
+                    result = professors[0].Name;
                 }
             }
+
+            return result;
+        }
+
+        public List<GroupScheduleWSModel> getCoursesPerProfe(string pPeriod, string pProfessor)
+        {
+            var period = int.Parse(pPeriod);
+            var result = db.SP_getAllCoursesPerProf(period, pProfessor).ToList();
+
+            return result;
+        }
+
+        public List<ProjectCommissionWSModel> getProjectsPerProfe(string pPeriod, string pProfessor)
+        {
+            var period = int.Parse(pPeriod);
+            var result = db.SP_getAllProjectsPerProf(period, pProfessor).ToList();
+
+            return result;
+        }
+
+        public List<ProjectCommissionWSModel> getCommissionsPerProfe(string pPeriod, string pProfessor)
+        {
+            var period = int.Parse(pPeriod);
+            var result = db.SP_getAllCommissionsPerProf(period, pProfessor).ToList();
 
             return result;
         }

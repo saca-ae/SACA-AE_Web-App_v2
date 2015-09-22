@@ -1,5 +1,15 @@
 ﻿namespace SACAAE.WebService_Models
 {
+    public class GroupScheduleWSModel
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public int Number { get; set; }
+        public string StartHour { get; set; }
+        public string EndHour { get; set; }
+        public string Day { get; set; }
+    }
+
     public class NameWSModel
     {
         public string Name { get; set; }

@@ -170,6 +170,16 @@ namespace SACAAE.Data_Access
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_getAllCourses  @periodID",
                                                                                                                     vPeriodParameter);
         }
+        public virtual ObjectResult<GroupScheduleWSModel> SP_getAllCoursesPerProf(int? periodID, string profID)
+        {
+            var vPeriodParameter = periodID.HasValue ?
+                 new SqlParameter("periodID", periodID) :
+                 new SqlParameter("periodID", periodID);
+            var vProfeParameter = new SqlParameter("profID", profID);
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<GroupScheduleWSModel>("SP_getAllCoursesPerProf  @periodID, @profID",
+                                                                                                            vPeriodParameter, vProfeParameter);
+        }
 
         public virtual ObjectResult<BasicInfoWSModel> SP_getAllProjects(int? periodID)
         {
@@ -180,6 +190,16 @@ namespace SACAAE.Data_Access
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_getAllProjects  @periodID",
                                                                                                         vPeriodParameter);
         }
+        public virtual ObjectResult<ProjectCommissionWSModel> SP_getAllProjectsPerProf(int? periodID, string profID)
+        {
+            var vPeriodParameter = periodID.HasValue ?
+                 new SqlParameter("periodID", periodID) :
+                 new SqlParameter("periodID", periodID);
+            var vProfeParameter = new SqlParameter("profID", profID);
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ProjectCommissionWSModel>("SP_getAllProjectsPerProf  @periodID, @profID",
+                                                                                                                vPeriodParameter, vProfeParameter);
+        }
 
         public virtual ObjectResult<BasicInfoWSModel> SP_getAllCommissions(int? periodID)
         {
@@ -189,6 +209,16 @@ namespace SACAAE.Data_Access
 
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_getAllCommissions  @periodID",
                                                                                                         vPeriodParameter);
+        }
+        public virtual ObjectResult<ProjectCommissionWSModel> SP_getAllCommissionsPerProf(int? periodID, string profID)
+        {
+            var vPeriodParameter = periodID.HasValue ?
+                 new SqlParameter("periodID", periodID) :
+                 new SqlParameter("periodID", periodID);
+            var vProfeParameter = new SqlParameter("profID", profID);
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ProjectCommissionWSModel>("SP_getAllCommissionsPerProf  @periodID, @profID",
+                                                                                                                vPeriodParameter, vProfeParameter);
         }
 
         public virtual ObjectResult<BasicInfoWSModel> SP_getAllGroups(int? periodID, int? courseID)
