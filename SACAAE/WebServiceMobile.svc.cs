@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.Web.Mvc;
 using System.Net;
 using Newtonsoft.Json;
+using SACAAE.Models.ViewModels;
 
 namespace SACAAE
 {
@@ -44,11 +45,13 @@ namespace SACAAE
             return result;
         }
 
-        public List<PeriodWSModel> getPeriods()
+        public IQueryable<PeriodoViewModel> getPeriods()
         {
-            var result = db.SP_getAllPeriod().ToList();
-
-            return result;
+            return db.Periods.Select(p => new PeriodoViewModel
+            {
+                ID = p.ID,
+                Name = (p.Year + " - " + p.Number.Type.Name + " " + p.Number.Number)
+            });
         }
 
         public List<BasicInfoWSModel> getCourses(string pPeriod)
@@ -124,9 +127,7 @@ namespace SACAAE
         {
             var period = int.Parse(pPeriod);
             var blockLevel = int.Parse(pBlockLevel);
-            var result = db.SP_GetPeriodInformation(period, pStudyPlan, blockLevel, pCourse, pProfessor).ToList();
-
-            return result;
+            return db.SP_GetPeriodInformation(period, pStudyPlan, blockLevel, pCourse, pProfessor).ToList();
         }
 
         public List<NameWSModel> getStudyPlan()
@@ -136,19 +137,15 @@ namespace SACAAE
             return result;
         }
 
-        public List<NameWSModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel)
-        {
-            var blockLevel = int.Parse(pBlockLevel);
-            var result = db.SP_GetCoursesXBlockXPlan(pStudyPlan, blockLevel).ToList();
-
-            return result;
-        }
-
         public List<NameWSModel> getProfessors(string pCourse)
         {
-            var result = db.SP_GetProfessor(pCourse).ToList();
+            return db.SP_GetProfessor(pCourse).ToList();
+        }
 
-            return result;
+        public List<PeriodInformationViewModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel)
+        {
+            var blockLevel = int.Parse(pBlockLevel);
+            return db.SP_GetCoursesXBlockXPlan(pStudyPlan, blockLevel).ToList();
         }
     }
 }
