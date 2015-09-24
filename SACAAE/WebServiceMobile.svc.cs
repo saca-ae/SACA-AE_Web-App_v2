@@ -142,7 +142,8 @@ namespace SACAAE
         public List<NameWSModel> getCoursesName(string pStudyPlan, string pBlockNumber)
         {
             var blockNumber = int.Parse(pBlockNumber);
-            var result = db.SP_GetCourses(pStudyPlan, blockNumber).ToList();
+            var StudyPlan = int.Parse(pStudyPlan);
+            var result = db.SP_GetCourses(StudyPlan, blockNumber).ToList();
 
             return result;
         }
@@ -151,7 +152,10 @@ namespace SACAAE
         {
             var period = int.Parse(pPeriod);
             var blockLevel = int.Parse(pBlockLevel);
-            return db.SP_GetPeriodInformation(period, pStudyPlan, blockLevel, pCourse, pProfessor).ToList();
+            var vStudyPlan = int.Parse(pStudyPlan);
+            var vCourse = int.Parse(pCourse);
+            var vProfessor = int.Parse(pProfessor);
+            return db.SP_GetPeriodInformation(period, vStudyPlan, blockLevel, vCourse, vProfessor).ToList();
         }
 
         public List<NameWSModel> getStudyPlan()
