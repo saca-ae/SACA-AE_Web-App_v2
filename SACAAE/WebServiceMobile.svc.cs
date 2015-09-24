@@ -16,7 +16,7 @@ namespace SACAAE
     public class WebServiceMobile : IWebServiceMobile
     {
         private SACAAEContext db = new SACAAEContext();
-        private const string MOVIL_CODE = "SACAAE.Profesor";
+        private const string MOVIL_CODE = "SACAAEProfesor";
 
         public bool LogIn(string pPassword)
         {
