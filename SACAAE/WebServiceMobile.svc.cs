@@ -171,7 +171,7 @@ namespace SACAAE
             return db.SP_GetProfessor(vCourse).ToList();
         }
 
-        public List<NameWSModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel)
+        public List<BasicInfoWSModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel)
         {
             var blockLevel = int.Parse(pBlockLevel);
             var vStudyPlan = int.Parse(pStudyPlan);

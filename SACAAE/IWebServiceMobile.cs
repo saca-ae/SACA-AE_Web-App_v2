@@ -76,7 +76,7 @@ namespace SACAAE
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "getCoursesXBlockXPlan/{pStudyPlan}/{pBlockLevel}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-        List<NameWSModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel);
+        List<BasicInfoWSModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel);
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "getCoursesName/{pStudyPlan}/{pBlockNumber}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
