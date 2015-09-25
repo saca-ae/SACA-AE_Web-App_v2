@@ -64,11 +64,11 @@ namespace SACAAE
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "getStudyPlan", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-        List<NameWSModel> getStudyPlan();
+        List<BasicInfoWSModel> getStudyPlan();
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "getProfessors/{pCourse}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-        List<NameWSModel> getProfessors(string pCourse);
+        List<BasicInfoWSModel> getProfessors(string pCourse);
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "getPeriods", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
@@ -76,7 +76,7 @@ namespace SACAAE
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "getCoursesXBlockXPlan/{pStudyPlan}/{pBlockLevel}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-        List<PeriodInformationViewModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel);
+        List<NameWSModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel);
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "getCoursesName/{pStudyPlan}/{pBlockNumber}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]

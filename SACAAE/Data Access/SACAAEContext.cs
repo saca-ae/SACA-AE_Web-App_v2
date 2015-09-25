@@ -310,27 +310,33 @@ namespace SACAAE.Data_Access
                                                                                                                 vPeriodParameter, vStudyPlanParameter, vBlockLevelParameter, vCourseParameter, vProfParameter);
         }
 
-        public virtual ObjectResult<NameWSModel> SP_GetStudyPlan()
+        public virtual ObjectResult<BasicInfoWSModel> SP_GetStudyPlan()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<NameWSModel>("SP_GetStudyPlan");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_GetStudyPlan");
         }
 
-        public virtual ObjectResult<PeriodInformationViewModel> SP_GetCoursesXBlockXPlan(string pStudyPlan, int? pBlockLevel)
+        public virtual ObjectResult<NameWSModel> SP_GetCoursesXBlockXPlan(int? pStudyPlan, int? pBlockLevel)
         {
-            var vStudyPlanParameter = new SqlParameter("pStudyPlan", pStudyPlan);
+            var vStudyPlanParameter = pStudyPlan.HasValue ?
+                 new SqlParameter("pStudyPlan", pStudyPlan) :
+                 new SqlParameter("pStudyPlan", pStudyPlan);
+
             var vBlockLevelParameter = pBlockLevel.HasValue ?
                  new SqlParameter("pBlockLevel", pBlockLevel) :
                  new SqlParameter("pBlockLevel", pBlockLevel);
 
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<PeriodInformationViewModel>("SP_GetCoursesXBlockXPlan @pStudyPlan, @pBlockLevel",
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<NameWSModel>("SP_GetCoursesXBlockXPlan @pStudyPlan, @pBlockLevel",
                                                                                                         vStudyPlanParameter, vBlockLevelParameter);
         }
 
-        public virtual ObjectResult<NameWSModel> SP_GetProfessor(string pCourse)
+        public virtual ObjectResult<BasicInfoWSModel> SP_GetProfessor(int? pCourse)
         {
-            var vCourseParameter = new SqlParameter("pCourse", pCourse);
+            var vCourseParameter = pCourse.HasValue ?
+                 new SqlParameter("pCourse", pCourse) :
+                 new SqlParameter("pCourse", pCourse);
 
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<NameWSModel>("SP_GetProfessor @pCourse", vCourseParameter);
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_GetProfessor @pCourse", vCourseParameter);
         }
     }
 }

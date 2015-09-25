@@ -158,22 +158,24 @@ namespace SACAAE
             return db.SP_GetPeriodInformation(period, vStudyPlan, blockLevel, vCourse, vProfessor).ToList();
         }
 
-        public List<NameWSModel> getStudyPlan()
+        public List<BasicInfoWSModel> getStudyPlan()
         {
             var result = db.SP_GetStudyPlan().ToList();
             
             return result;
         }
 
-        public List<NameWSModel> getProfessors(string pCourse)
+        public List<BasicInfoWSModel> getProfessors(string pCourse)
         {
-            return db.SP_GetProfessor(pCourse).ToList();
+            var vCourse = int.Parse(pCourse);
+            return db.SP_GetProfessor(vCourse).ToList();
         }
 
-        public List<PeriodInformationViewModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel)
+        public List<NameWSModel> getCoursesXBlockXPlan(string pStudyPlan, string pBlockLevel)
         {
             var blockLevel = int.Parse(pBlockLevel);
-            return db.SP_GetCoursesXBlockXPlan(pStudyPlan, blockLevel).ToList();
+            var vStudyPlan = int.Parse(pStudyPlan);
+            return db.SP_GetCoursesXBlockXPlan(vStudyPlan, blockLevel).ToList();
         }
     }
 }
