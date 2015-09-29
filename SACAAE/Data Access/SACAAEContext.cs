@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using SACAAE.Models;
 using SACAAE.Models.StoredProcedures;
+using SACAAE.Models.ViewModels;
 using SACAAE.WebService_Models;
 using System;
 using System.Collections.Generic;
@@ -170,6 +171,16 @@ namespace SACAAE.Data_Access
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_getAllCourses  @periodID",
                                                                                                                     vPeriodParameter);
         }
+        public virtual ObjectResult<GroupScheduleWSModel> SP_getAllCoursesPerProf(int? periodID, string profID)
+        {
+            var vPeriodParameter = periodID.HasValue ?
+                 new SqlParameter("periodID", periodID) :
+                 new SqlParameter("periodID", periodID);
+            var vProfeParameter = new SqlParameter("profID", profID);
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<GroupScheduleWSModel>("SP_getAllCoursesPerProf  @periodID, @profID",
+                                                                                                            vPeriodParameter, vProfeParameter);
+        }
 
         public virtual ObjectResult<BasicInfoWSModel> SP_getAllProjects(int? periodID)
         {
@@ -180,6 +191,16 @@ namespace SACAAE.Data_Access
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_getAllProjects  @periodID",
                                                                                                         vPeriodParameter);
         }
+        public virtual ObjectResult<ProjectCommissionWSModel> SP_getAllProjectsPerProf(int? periodID, string profID)
+        {
+            var vPeriodParameter = periodID.HasValue ?
+                 new SqlParameter("periodID", periodID) :
+                 new SqlParameter("periodID", periodID);
+            var vProfeParameter = new SqlParameter("profID", profID);
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ProjectCommissionWSModel>("SP_getAllProjectsPerProf  @periodID, @profID",
+                                                                                                                vPeriodParameter, vProfeParameter);
+        }
 
         public virtual ObjectResult<BasicInfoWSModel> SP_getAllCommissions(int? periodID)
         {
@@ -189,6 +210,16 @@ namespace SACAAE.Data_Access
 
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_getAllCommissions  @periodID",
                                                                                                         vPeriodParameter);
+        }
+        public virtual ObjectResult<ProjectCommissionWSModel> SP_getAllCommissionsPerProf(int? periodID, string profID)
+        {
+            var vPeriodParameter = periodID.HasValue ?
+                 new SqlParameter("periodID", periodID) :
+                 new SqlParameter("periodID", periodID);
+            var vProfeParameter = new SqlParameter("profID", profID);
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ProjectCommissionWSModel>("SP_getAllCommissionsPerProf  @periodID, @profID",
+                                                                                                                vPeriodParameter, vProfeParameter);
         }
 
         public virtual ObjectResult<BasicInfoWSModel> SP_getAllGroups(int? periodID, int? courseID)
@@ -243,9 +274,11 @@ namespace SACAAE.Data_Access
                                                                                                     vPeriodParameter, vGroupParameter);
         }
 
-        public virtual ObjectResult<NameWSModel> SP_GetCourses(string pStudyPlan, int? PLevel)
+        public virtual ObjectResult<NameWSModel> SP_GetCourses(int? pStudyPlan, int? PLevel)
         {
-            var vStudyPlanParameter = new SqlParameter("pStudyPlan", pStudyPlan);
+            var vStudyPlanParameter = pStudyPlan.HasValue ?
+                 new SqlParameter("pStudyPlan", pStudyPlan) :
+                 new SqlParameter("pStudyPlan", pStudyPlan);
 
             var vLevelParameter = PLevel.HasValue ?
                  new SqlParameter("PLevel", PLevel) :
@@ -255,43 +288,55 @@ namespace SACAAE.Data_Access
                                                                                                         vStudyPlanParameter, vLevelParameter);
         }
 
-        public virtual ObjectResult<PeriodInformationWSModel> SP_GetPeriodInformation(int? periodID, string pStudyPlan, int? pBlockLevel, string pCourse, string pProf)
+        public virtual ObjectResult<PeriodInformationWSModel> SP_GetPeriodInformation(int? periodID, int? pStudyPlan, int? pBlockLevel, int? pCourse, int? pProf)
         {
             var vPeriodParameter = periodID.HasValue ?
                  new SqlParameter("periodID", periodID) :
                  new SqlParameter("periodID", periodID);
-            var vStudyPlanParameter = new SqlParameter("pStudyPlan", pStudyPlan);
+            var vStudyPlanParameter = pStudyPlan.HasValue ?
+                 new SqlParameter("pStudyPlan", pStudyPlan) :
+                 new SqlParameter("pStudyPlan", pStudyPlan);
             var vBlockLevelParameter = pBlockLevel.HasValue ?
                  new SqlParameter("pBlockLevel", pBlockLevel) :
                  new SqlParameter("pBlockLevel", pBlockLevel);
-            var vCourseParameter = new SqlParameter("pCourse", pCourse);
-            var vProfParameter = new SqlParameter("pProf", pProf);
+            var vCourseParameter = pCourse.HasValue ?
+                 new SqlParameter("pCourse", pCourse) :
+                 new SqlParameter("pCourse", pCourse);
+            var vProfParameter = pProf.HasValue ?
+                 new SqlParameter("pProf", pProf) :
+                 new SqlParameter("pProf", pProf);
 
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<PeriodInformationWSModel>("SP_GetPeriodInformation @periodID, @pStudyPlan, @pBlockLevel, @pCourse, @pProf",
                                                                                                                 vPeriodParameter, vStudyPlanParameter, vBlockLevelParameter, vCourseParameter, vProfParameter);
         }
 
-        public virtual ObjectResult<NameWSModel> SP_GetStudyPlan()
+        public virtual ObjectResult<BasicInfoWSModel> SP_GetStudyPlan()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<NameWSModel>("SP_GetStudyPlan");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_GetStudyPlan");
         }
 
-        public virtual ObjectResult<NameWSModel> SP_GetCoursesXBlockXPlan(string pStudyPlan, int? pBlockLevel)
+        public virtual ObjectResult<BasicInfoWSModel> SP_GetCoursesXBlockXPlan(int? pStudyPlan, int? pBlockLevel)
         {
-            var vStudyPlanParameter = new SqlParameter("pStudyPlan", pStudyPlan);
+            var vStudyPlanParameter = pStudyPlan.HasValue ?
+                 new SqlParameter("pStudyPlan", pStudyPlan) :
+                 new SqlParameter("pStudyPlan", pStudyPlan);
+
             var vBlockLevelParameter = pBlockLevel.HasValue ?
                  new SqlParameter("pBlockLevel", pBlockLevel) :
                  new SqlParameter("pBlockLevel", pBlockLevel);
 
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<NameWSModel>("SP_GetCoursesXBlockXPlan @pStudyPlan, @pBlockLevel",
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_GetCoursesXBlockXPlan @pStudyPlan, @pBlockLevel",
                                                                                                         vStudyPlanParameter, vBlockLevelParameter);
         }
 
-        public virtual ObjectResult<NameWSModel> SP_GetProfessor(string pCourse)
+        public virtual ObjectResult<BasicInfoWSModel> SP_GetProfessor(int? pCourse)
         {
-            var vCourseParameter = new SqlParameter("pCourse", pCourse);
+            var vCourseParameter = pCourse.HasValue ?
+                 new SqlParameter("pCourse", pCourse) :
+                 new SqlParameter("pCourse", pCourse);
 
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<NameWSModel>("SP_GetProfessor @pCourse", vCourseParameter);
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_GetProfessor @pCourse", vCourseParameter);
         }
     }
 }

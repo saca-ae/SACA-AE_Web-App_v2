@@ -236,10 +236,12 @@
     <Compile Include="Models\EntityType.cs" />
     <Compile Include="Models\PeriodType.cs" />
     <Compile Include="Models\ViewModels\AsignacionCursoProfesorViewModel.cs" />
+    <Compile Include="Models\ViewModels\CompletePeriodInformationViewModel.cs" />
     <Compile Include="Models\ViewModels\CursoViewModel.cs" />
     <Compile Include="Models\ViewModels\GroupAssignmentCSVViewModel.cs" />
     <Compile Include="Models\ViewModels\GroupsCreatedViewModel.cs" />
     <Compile Include="Models\ViewModels\NewScheduleViewModel.cs" />
+    <Compile Include="Models\ViewModels\PeriodInformationViewModel.cs" />
     <Compile Include="Models\ViewModels\PeriodoViewModel.cs" />
     <Compile Include="Models\ViewModels\PlazaViewModel.cs" />
     <Compile Include="Models\ViewModels\ProfesorViewModel.cs" />
