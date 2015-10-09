@@ -4,33 +4,7 @@
     Layout = "~/Views/Shared/Privado.cshtml";
 }
 
-<head>
-    @Styles.Render("~/Content/custom")
-
-    @section Scripts {
-        <script src="@Url.Content("~/Scripts/SiteScripts/scheduleChart.js")"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                var entidadid = "#" + getCookie("Entidad");
-                if (entidadid == "#") { Load('TEC'); }
-                $(entidadid).addClass('active');
-
-                var route = "/Professor/Schedules/" + get_id(3);
-                $.getJSON(route, function (data) {
-                    datos = datos_matriz(data);
-                    obtener_dias(datos);
-
-                });
-            });
-
-
-
-
-
-        </script>
-    }
-</head>
-<body onload="load_window('@(Model.ID)')">
+<div class="col-lg-12">
 
     <h2> Horario de Profesor </h2>
     <h4>
@@ -40,18 +14,13 @@
         </span>
     </h4>
     <div id="div_tabla">
-
-        <div>
-            <p>
-                <br />
-                <br />
-                |  @Html.ActionLink("Regresar", "Index")  |
-
-                <br />
-            </p>
-
-        </div>
     </div>
 
-</body>
+    |  @Html.ActionLink("Regresar", "Index")  |
 
+</div>
+
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/SiteScripts/scheduleChart.js")"></script>
+    <script src="@Url.Content("~/Scripts/date.js")"></script>
+}
