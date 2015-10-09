@@ -315,7 +315,7 @@ namespace SACAAE.Data_Access
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_GetStudyPlan");
         }
 
-        public virtual ObjectResult<NameWSModel> SP_GetCoursesXBlockXPlan(int? pStudyPlan, int? pBlockLevel)
+        public virtual ObjectResult<BasicInfoWSModel> SP_GetCoursesXBlockXPlan(int? pStudyPlan, int? pBlockLevel)
         {
             var vStudyPlanParameter = pStudyPlan.HasValue ?
                  new SqlParameter("pStudyPlan", pStudyPlan) :
@@ -325,7 +325,7 @@ namespace SACAAE.Data_Access
                  new SqlParameter("pBlockLevel", pBlockLevel) :
                  new SqlParameter("pBlockLevel", pBlockLevel);
 
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<NameWSModel>("SP_GetCoursesXBlockXPlan @pStudyPlan, @pBlockLevel",
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<BasicInfoWSModel>("SP_GetCoursesXBlockXPlan @pStudyPlan, @pBlockLevel",
                                                                                                         vStudyPlanParameter, vBlockLevelParameter);
         }
 
