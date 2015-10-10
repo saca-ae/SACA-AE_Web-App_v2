@@ -177,33 +177,12 @@ namespace SACAAE.Controllers
                                  join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
                                   join period in db.Periods on grupo.PeriodID equals period.ID
                                  where (profesor.ID==idProfesor) && (horario.StartHour != "700" && horario.StartHour != "900")&&(period.ID==periodo_actual)
-                                select new{curso.Name,grupo.Number,
-                                            StartHour = 
-                                            horario.StartHour=="07:30 am"?1:
-                                            horario.StartHour == "08:30 am" ? 2:
-                                            horario.StartHour == "09:30 am" ? 3 :
-                                            horario.StartHour == "10:30 am" ? 4 :
-                                            horario.StartHour == "11:30 am" ? 5 :
-                                            horario.StartHour == "12:30 pm" ? 6 :
-                                            horario.StartHour == "01:00 pm" ? 7 :
-                                            horario.StartHour == "02:00 pm" ? 8 :
-                                            horario.StartHour == "03:00 pm" ? 9 :
-                                            horario.StartHour == "04:00 pm" ? 10 :
-                                            horario.StartHour == "05:00 pm" ? 11 :
-                                            horario.StartHour == "06:00 pm" ? 12 :
-                                            horario.StartHour == "07:00 pm" ? 13 :
-                                            horario.StartHour == "08:00 pm" ? 14 :
-                                            horario.StartHour == "09:00 pm" ? 15 :
-                                            0,
-
-                                            horario.EndHour,
-
-                                            Day = horario.Day == "Lunes" ? 1 :
-                                            horario.Day == "Martes" ? 2 :
-                                            horario.Day == "Miércoles" ? 3 : 
-                                            horario.Day == "Jueves" ? 4 :
-                                            horario.Day == "Viernes" ? 5 :
-                                            horario.Day == "Sábado" ? 6 :0
+                                select new{
+                                    curso.Name,
+                                    grupo.Number,
+                                    horario.StartHour,
+                                    horario.EndHour,
+                                    horario.Day
                                   };
                 //listaPlanes.Where(p => p.Day == "lunes").OrderBy().ToList();
                 listaPlanes = listaPlanes.OrderBy(c => c.StartHour).ThenBy(c => c.StartHour).ThenBy(c => c.Day);

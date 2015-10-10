@@ -284,7 +284,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\DataTables\dataTables.responsive.scss" />
     <Content Include="Content\DataTables\Spanish.json" />
-    <Content Include="Scripts\SiteScripts\editProfessorCourse.js" />
+    <Content Include="Scripts\date.js" />
     <Content Include="WebServiceMobile.svc" />
     <None Include="Properties\PublishProfiles\saca-ae.net - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\saca-ae.net - Web Deploy.pubxml" />
