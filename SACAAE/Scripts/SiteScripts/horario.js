@@ -1,11 +1,11 @@
 ﻿$(function () {
     /* Deshabilitar componentes que no tienen datos cargados */
-    $("#sltCurso").prop("disabled", "disabled");
-    $("#sltGrupo").prop("disabled", "disabled");
+    $("#Course").prop("disabled", "disabled");
+    $("#Group").prop("disabled", "disabled");
     /* Funcion llamada cuando se cambien los valores de las sedes o las modalidades */
-    $("#sltBloque").change(function () {
+    $("#Block").change(function () {
         var plan = getCookie("SelPlanDeEstudio");
-        var route = "/CursoProfesor/Cursos/List/" + plan + "/" + $('select[name="sltBloque"]').val();
+        var route = "/CursoProfesor/Cursos/List/" + plan + "/" + $('select[name="Block"]').val();
         setCookie("Grupo", "");
         $.getJSON(route, function (data) {
             var items = "";
@@ -14,33 +14,33 @@
             });
 
 
-            $("#sltCurso").prop("disabled", false);
-            $("#sltGrupo").html("");
-            $("#sltGrupo").prop("disabled", "disabled");
-            $("#sltCurso").html(items);
-            $("#sltCurso").prepend("<option value='' selected='selected'>-- Seleccionar Curso --</option>");
+            $("#Course").prop("disabled", false);
+            $("#Group").html("");
+            $("#Group").prop("disabled", "disabled");
+            $("#Course").html(items);
+            $("#Course").prepend("<option value='' selected='selected'>-- Seleccionar Curso --</option>");
 
         });
     });
-    $("#sltCurso").change(function () {
+    $("#Course").change(function () {
         var plan = getCookie("SelPlanDeEstudio");
         var sede = getCookie("SelSede");
-        var route = "/CursoProfesor/Grupos/List/" + $('select[name="sltCurso"]').val() + "/" + plan + "/" + sede + "/" + $('select[name="sltBloque"]').val() + "/" + getCookie("PeriodoHorario");
+        var route = "/CursoProfesor/Grupos/List/" + $('select[name="Course"]').val() + "/" + plan + "/" + sede + "/" + $('select[name="Block"]').val() + "/" + getCookie("PeriodoHorario");
         $.getJSON(route, function (data) {
             var items = "";
             $.each(data, function (i, grupo) {
                 items += "<option value='" + grupo.ID + "'>" + grupo.Number + "</option>";
             });
 
-            $("#sltGrupo").prop("disabled", false);
-            $("#sltGrupo").html(items);
-            $("#sltGrupo").prepend("<option value='' selected='selected'>-- Seleccionar Grupo --</option>");
+            $("#Group").prop("disabled", false);
+            $("#Group").html(items);
+            $("#Group").prepend("<option value='' selected='selected'>-- Seleccionar Grupo --</option>");
 
         });
     });
 
-    $("#sltGrupo").change(function () {
-        if ($('#sltGrupo option:selected').text() != getCookie("Grupo")) {
+    $("#Group").change(function () {
+        if ($('#Group option:selected').text() != getCookie("Grupo")) {
             setCookie("Grupo", $('#sltGrupo option:selected').text())
             borrarTabla();
             Cargar();
@@ -163,7 +163,7 @@ function Cargar() {
             var Aula = Horario.Aula;
             var HoraInicioCookie = Horario.Hora_Inicio;
             var HoraFinCookie = Horario.Hora_Fin;
-            if (GrupoText == $('#sltGrupo option:selected').text() && BloqueText == $('#sltBloque option:selected').text()) {
+            if (GrupoText == $('#Group option:selected').text() && BloqueText == $('#Block option:selected').text()) {
                 var Inicio = parseInt(HoraInicioCookie);
                 var Fin = parseInt(HoraFinCookie);
                 var i = Inicio;
@@ -225,10 +225,10 @@ function AgregarCursos(pDia) {
     try {
 
         var table = document.getElementById("Resultado");
-        var Curso = document.getElementById("sltCurso").options[document.getElementById("sltCurso").selectedIndex].text;
-        var Bloque = document.getElementById("sltBloque").options[document.getElementById("sltBloque").selectedIndex].value;
-        var Grupo = document.getElementById("sltGrupo").options[document.getElementById("sltGrupo").selectedIndex].value;
-        var GrupoText = document.getElementById("sltGrupo").options[document.getElementById("sltGrupo").selectedIndex].text;
+        var Curso = document.getElementById("Course").options[document.getElementById("sltCurso").selectedIndex].text;
+        var Bloque = document.getElementById("Block").options[document.getElementById("sltBloque").selectedIndex].value;
+        var Grupo = document.getElementById("Group").options[document.getElementById("sltGrupo").selectedIndex].value;
+        var GrupoText = document.getElementById("Group").options[document.getElementById("sltGrupo").selectedIndex].text;
         var Aula = document.getElementById("sltAula").options[document.getElementById("sltAula").selectedIndex].text;
         var HoraInicioTemp = document.getElementById(IdHoraInicioSeleccionada).options[document.getElementById(IdHoraInicioSeleccionada).selectedIndex].value;
         var HoraFinTemp = document.getElementById(IdHoraFinSeleccionada).options[document.getElementById(IdHoraFinSeleccionada).selectedIndex].value;

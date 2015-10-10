@@ -83,7 +83,10 @@ namespace SACAAE.Controllers
             CommissionXProfessor vCommissionProfessor = new CommissionXProfessor();
             vCommissionProfessor.CommissionID = Convert.ToInt32(vCommission);
             vCommissionProfessor.ProfessorID = Convert.ToInt32(vProfessor);
-            vCommissionProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourCharge);
+            if (vHourCharge.Equals("1"))
+            {
+                vCommissionProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourCharge);
+            }
             vCommissionProfessor.PeriodID = vIDPeriod;
             vCommissionProfessor.Schedule = new List<Schedule>();
            

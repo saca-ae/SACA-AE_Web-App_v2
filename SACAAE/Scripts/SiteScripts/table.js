@@ -137,6 +137,10 @@ function generate_table(route)
                         "<td></td> " +
                     "</tr>";
 
+            tabla = tabla + "</tbody> </table>";
+
+            document.getElementById('table_information_group').innerHTML = tabla;
+
         }
     });
 
