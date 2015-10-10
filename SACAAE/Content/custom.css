@@ -178,6 +178,26 @@ ul.alert-dropdown {
     font-size: 15px;
     margin-left: 5px !important;
 }
+
+.table-course{
+    border-color: #9FC6E7;
+    background-color: #E4EFF8;
+    vertical-align: middle !important;
+    text-align: center !important;
+}
+.table-commission{
+    border-color: #9FC6E7;
+    background-color: #ffdbd7;
+    vertical-align: middle !important;
+    text-align: center !important;
+}
+.table-project{
+    border-color: #9FC6E7;
+    background-color: #dcf1db;
+    vertical-align: middle !important;
+    text-align: center !important;
+}
+
 /*Global Esteban Segura Beanvides*/
 .header {
         padding: 10px;
@@ -216,6 +236,7 @@ ul.alert-dropdown {
     #seleccion_td {
         background-color: #5BC0DE;
         text-align: center;
+        vertical-align: middle;
     }
 
     .tabla_horario_th {
