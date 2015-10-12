@@ -44,9 +44,9 @@ function obtener_dias()
                                   "<option>Lunes</option>" +
                                   "<option>Martes</option>" +
                                   "<option>Miercoles</option>" +
-                                  "<option>Jueves</a></option>" +
-                                  "<option><a href=\"#\">Viernes</a></option>" +
-                                 " <option><a href=\"#\">Sabado</a></option>" +
+                                  "<option>Jueves</option>" +
+                                  "<option>Viernes</option>" +
+                                 " <option>Sabado</option>" +
                               "</select>";
         celda_StarHour.innerHTML = "<select id=\"tdRow" + (contador - 1) + "StartHour\" onchange=\"onchangeStartHourSelection(" + (contador - 1) + ")\">" +
                                   "<option>07:30 am</option>" +

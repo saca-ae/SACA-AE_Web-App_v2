@@ -224,6 +224,7 @@
     <Compile Include="Models\Period.cs" />
     <Compile Include="Models\PeriodNumber.cs" />
     <Compile Include="Models\StoredProcedures\resultadoStoredProcedure.cs" />
+    <Compile Include="Models\StoredProcedures\ScheduleAssign.cs" />
     <Compile Include="Models\StudyPlan.cs" />
     <Compile Include="Models\StudyPlanXSede.cs" />
     <Compile Include="Models\Plaza.cs" />
@@ -244,6 +245,7 @@
     <Compile Include="Models\ViewModels\PeriodoViewModel.cs" />
     <Compile Include="Models\ViewModels\PlazaViewModel.cs" />
     <Compile Include="Models\ViewModels\ProfesorViewModel.cs" />
+    <Compile Include="Models\ViewModels\ProfessorAssignViewModel.cs" />
     <Compile Include="Models\ViewModels\ScheduleComissionViewModel.cs" />
     <Compile Include="Models\ViewModels\ScheduleProjectViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -285,6 +287,8 @@
     <Content Include="Content\DataTables\dataTables.responsive.scss" />
     <Content Include="Content\DataTables\Spanish.json" />
     <Content Include="Scripts\date.js" />
+    <Content Include="Scripts\SiteScripts\assignProfesorCommission.js" />
+    <Content Include="Scripts\SiteScripts\assignProfesorProject.js" />
     <Content Include="WebServiceMobile.svc" />
     <None Include="Properties\PublishProfiles\saca-ae.net - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\saca-ae.net - Web Deploy.pubxml" />
@@ -434,6 +438,12 @@
     </Content>
     <Content Include="Views\BloqueXPlan\CrearBloqueXPlan.cshtml" />
     <Content Include="Views\BloqueXPlanXCurso\CrearBloqueXPlanXCurso.cshtml" />
+    <Content Include="Views\Comision\AsignarProfesorComision.cshtml" />
+    <Content Include="Views\Comision\DetalleAsignacion.cshtml" />
+    <Content Include="Views\Comision\EditarAsignacion.cshtml" />
+    <Content Include="Views\Proyecto\AsignarProfesorProyecto.cshtml" />
+    <Content Include="Views\Proyecto\DetalleAsignacion.cshtml" />
+    <Content Include="Views\Proyecto\EditarAsignacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

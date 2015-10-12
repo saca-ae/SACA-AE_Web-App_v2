@@ -1,0 +1,117 @@
+﻿@model SACAAE.Models.ProjectXProfessor
+
+@{
+    ViewBag.Title = "EditarAsignacion";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<link href="~/Content/custom.css" rel="stylesheet" />
+<script>
+    window.onload = function () {
+        var professors = document.getElementById("Professors");
+        var hourType = document.getElementById("editHourCharge");
+        var table = document.getElementById('assign_project_schedule').getElementsByTagName('tbody')[0];
+        var route = "/Proyecto/" + get_id(3) + "/Profesor"
+
+        $.getJSON(route, function (data) {
+            for (i = 0; i < data.length; i++) {
+                professors.value = data[i].professorID;
+                if (data[i].HourAllocatedTypeID == 1) {
+                    hourType.value = 1;
+                }
+                else {
+                    hourType.value = 0;
+                }
+
+            }
+        });
+        var route = "/Proyecto/getScheduleProfesor/" + get_id(3);
+        $.getJSON(route, function (data) {
+
+            for (i = 0; i < data.length; i++) {
+                var row = table.insertRow(table.rows.length);
+                var day_cell = row.insertCell(0);
+                var start_cell = row.insertCell(1);
+                var end_cell = row.insertCell(2);
+
+                day_cell.innerHTML = "<p>" + data[i].Day + "</p>";
+                day_cell.style.textAlign = "center";
+                day_cell.getElementsByTagName("p")[0].style.marginTop = "10px";
+
+                start_cell.innerHTML = "<p>" + data[i].StartHour + "</p>";
+                start_cell.style.textAlign = "center";
+                start_cell.getElementsByTagName("p")[0].style.marginTop = "10px";
+
+                end_cell.innerHTML = "<p>" + data[i].EndHour + "</p>";
+                end_cell.style.textAlign = "center";
+                end_cell.getElementsByTagName("p")[0].style.marginTop = "10px";
+            }
+        });
+    }
+
+
+    function get_id(number) {
+        var url = window.location.pathname.split('/');
+        return url[number];
+    }
+</script>
+
+<h2>EditarAsignacion</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <br />
+    <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-lg-4">
+        <div>
+            <div class="editor-label">
+                @Html.Label("Proyecto")
+                <br />
+                @Html.DisplayFor(model => model.Project.Name)
+            </div>
+            <br />
+            <div class="editor-label">
+                @Html.Label("Profesor")
+                <br />
+                <div class="editor-field">
+                    @Html.DropDownList("Professors", null, htmlAttributes: new { @class = "form-control" })
+                </div>
+
+            </div>
+            <br />
+            <div class="editor-field">
+                @Html.Label("Hora Reconocimiento")
+
+                <select onchange="changeHourCharge()" id="editHourCharge" name="editHourCharge" class="form-control ">
+
+                    <option selected="selected" value="1">Si</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <br />
+            <div class="editor-label">
+                @Html.Label("Horario de Asignacion")
+                <table id="assign_project_schedule">
+                    <thead>
+                        <tr>
+                            <th>Dia</th>
+                            <th>Inicio</th>
+                            <th>Fin</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+    <div class="col-sm-2"></div>
+    
+    </div>
+
+    <p>
+        <input type="submit" value="Editar" class="btn" id="Editar_Asignacion" /> |
+        <a href="@ViewBag.returnUrl">Cancelar</a>
+    </p>
+}

@@ -437,3 +437,225 @@ ul.alert-dropdown {
 {
     border: 1px;
 }
+
+/*******************************Comision Details.cshtml********************************/
+ #commission_information  {
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        width: 400px;
+        margin-left: 260px;
+    }
+
+    #commission_information td, #commission_information th {
+        border: 2px solid #4800ff;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .static_info {
+        background-color:#999999;
+    }
+
+    .dynamic_info {
+        background-color: #CCCCCC;
+    }
+
+    #table_assign_commision {
+        width: 300px;
+        margin-left:50px;
+    }
+
+    #professor_assign_commission {
+        width: 1000px;
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+
+/********************************** Comision DetalleAsignacion.cshtml ***************/
+     #assign_comission_schedule table {
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    #assign_comission_schedule thead {
+        background-color: #939699;
+        height: 40px;
+        width: 50px;
+        vertical-align: middle;
+        text-align: center;
+        color: #2C5B8C;
+    }
+
+    #assign_comission_schedule th {
+        font-weight: normal;
+        text-align: center;
+    }
+
+
+    #assign_comission_schedule table, #assign_comission_schedule td, #assign_comission_schedule th {
+        border: 1px solid black;
+        width: 100px;
+        empty-cells: hide;
+    }
+
+    #assign_comission_schedule td {
+        padding: 0px;
+    }
+
+    #assign_comission_schedule select {
+        border: none;
+        padding: 10px;
+        text-align: center;
+        width: 120px;
+        height: 40px;
+    }
+
+/******************************** Comision EditarAsignacion.cshtml **********************/
+ #assign_comission_schedule table {
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    #assign_comission_schedule thead {
+        background-color: #939699;
+        height: 40px;
+        width: 50px;
+        vertical-align: middle;
+        text-align: center;
+        color: #2C5B8C;
+    }
+
+    #assign_comission_schedule th {
+        font-weight: normal;
+        text-align: center;
+    }
+
+
+    #assign_comission_schedule table, #assign_comission_schedule td, #assign_comission_schedule th {
+        border: 1px solid black;
+        width: 100px;
+        empty-cells: hide;
+    }
+
+    #assign_comission_schedule td {
+        padding: 0px;
+    }
+
+    #assign_comission_schedule select {
+        border: none;
+        padding: 10px;
+        text-align: center;
+        width: 120px;
+        height: 40px;
+    }
+
+/**************************************** Details.cshtml *******************************/
+#project_information {
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        width: 400px;
+        margin-left: 260px;
+    }
+
+        #project_information td, #project_information th {
+            border: 2px solid #4800ff;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+    .static_info {
+        background-color: #999999;
+    }
+
+    .dynamic_info {
+        background-color: #CCCCCC;
+    }
+
+    #table_assign_commision {
+        width: 300px;
+        margin-left: 50px;
+    }
+
+    #professor_assign_commission {
+        width: 1000px;
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+
+    /*********************************** Proyecto DetalleAsignacion.cshtml ***************************/
+    #assign_project_schedule table {
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    #assign_project_schedule thead {
+        background-color: #939699;
+        height: 40px;
+        width: 50px;
+        vertical-align: middle;
+        text-align: center;
+        color: #2C5B8C;
+    }
+
+    #assign_project_schedule th {
+        font-weight: normal;
+        text-align: center;
+    }
+
+
+    #assign_project_schedule table, #assign_project_schedule td, #assign_project_schedule th {
+        border: 1px solid black;
+        width: 100px;
+        empty-cells: hide;
+    }
+
+    #assign_project_schedule td {
+        padding: 0px;
+    }
+
+    #assign_project_schedule select {
+        border: none;
+        padding: 10px;
+        text-align: center;
+        width: 120px;
+        height: 40px;
+    }
+
+    /*************************** Proyecto EditarAsignacion.cshtml **********************/
+    #assign_project_schedule table {
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    #assign_project_schedule thead {
+        background-color: #939699;
+        height: 40px;
+        width: 50px;
+        vertical-align: middle;
+        text-align: center;
+        color: #2C5B8C;
+    }
+
+    #assign_project_schedule th {
+        font-weight: normal;
+        text-align: center;
+    }
+
+
+    #assign_project_schedule table, #assign_project_schedule td, #assign_project_schedule th {
+        border: 1px solid black;
+        width: 100px;
+        empty-cells: hide;
+    }
+
+    #assign_project_schedule td {
+        padding: 0px;
+    }
+
+    #assign_project_schedule select {
+        border: none;
+        padding: 10px;
+        text-align: center;
+        width: 120px;
+        height: 40px;
+    }

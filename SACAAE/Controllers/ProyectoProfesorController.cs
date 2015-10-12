@@ -71,7 +71,10 @@ namespace SACAAE.Controllers
             ProjectXProfessor vProjectProfessor = new ProjectXProfessor();
             vProjectProfessor.ProjectID = Convert.ToInt32(vProjects);
             vProjectProfessor.ProfessorID = Convert.ToInt32(vProfessor);
-            vProjectProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourCharge);
+            if (vHourCharge.Equals("1"))
+            {
+                vProjectProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourCharge);
+            }
             vProjectProfessor.PeriodID = vIDPeriod;
             vProjectProfessor.Schedule = new List<Schedule>();
 
@@ -87,141 +90,16 @@ namespace SACAAE.Controllers
 
                 }
 
-                /******/
-                //var HoraInicio = DateTime.Parse(vDay.StartHour);
-                //var HoraFin = DateTime.Parse(vDay.EndHour);
+                //Convert StartHour to DateTime
+                var HoraInicio = DateTime.Parse(vSchedule.StartHour);
+                //Convert EndHour to DateTime
+                var HoraFin = DateTime.Parse(vSchedule.EndHour);
 
-                //var CargaC = Math.Ceiling(HoraFin.Subtract(HoraInicio).TotalHours);
-                //if (HoraInicio <= DateTime.Parse("12:00 PM") && HoraFin >= DateTime.Parse("01:00 PM"))
-                //{
-                //    CargaC = CargaC - 1;
-                //}
-                /*****/
-
-                int vIntStartHour = 0;
-                int vIntEndHour = 0;
-
-                switch (vSchedule.StartHour)
-                {
-                    case "07:30 am":
-                        vIntStartHour = 730;
-                        break;
-                    case "08:30 am":
-                        vIntStartHour = 830;
-                        break;
-                    case "09:30 am":
-                        vIntStartHour = 930;
-                        break;
-                    case "10:30 am":
-                        vIntStartHour = 1030;
-                        break;
-                    case "11:30 am":
-                        vIntStartHour = 1130;
-                        break;
-                    case "12:30 pm":
-                        vIntStartHour = 1230;
-                        break;
-
-                    case "01:00 pm":
-                        vIntStartHour = 1300;
-                        break;
-                    case "02:00 pm":
-                        vIntStartHour = 1400;
-                        break;
-
-                    case "03:00 pm":
-                        vIntStartHour = 1500;
-                        break;
-                    case "04:00 pm":
-                        vIntStartHour = 1600;
-                        break;
-
-                    case "05:00 pm":
-                        vIntStartHour = 1700;
-                        break;
-                    case "06:00 pm":
-                        vIntStartHour = 1800;
-                        break;
-
-                    case "07:00 pm":
-                        vIntStartHour = 1900;
-                        break;
-                    case "08:00 pm":
-                        vIntStartHour = 2000;
-                        break;
-
-                    case "09:00 pm":
-                        vIntStartHour = 2100;
-                        break;
-                }
-
-                switch (vSchedule.EndHour)
-                {
-                    case "08:20 am":
-                        vIntEndHour = 820;
-                        break;
-                    case "09:20 am":
-                        vIntEndHour = 920;
-                        break;
-                    case "10:20 am":
-                        vIntEndHour = 1020;
-                        break;
-                    case "11:20 am":
-                        vIntEndHour = 1120;
-                        break;
-                    case "12:20 pm":
-                        vIntEndHour = 1220;
-                        break;
-
-                    case "01:50 pm":
-                        vIntEndHour = 1350;
-                        break;
-                    case "02:50 pm":
-                        vIntEndHour = 1450;
-                        break;
-
-                    case "03:50 pm":
-                        vIntEndHour = 1550;
-                        break;
-                    case "04:50 pm":
-                        vIntEndHour = 1650;
-                        break;
-
-                    case "05:50 pm":
-                        vIntEndHour = 1750;
-                        break;
-                    case "06:50 pm":
-                        vIntEndHour = 1850;
-                        break;
-
-                    case "07:50 pm":
-                        vIntEndHour = 1950;
-                        break;
-                    case "08:50 pm":
-                        vIntEndHour = 2050;
-                        break;
-
-                    case "09:50 pm":
-                        vIntEndHour = 2150;
-                        break;
-                }
-
-                int vDiferencia = (vIntEndHour - vIntStartHour);
-
-                if (vIntStartHour < 1300)
-                {
-                    vDiferencia = vDiferencia + 10;
-                }
-                else if (vIntStartHour < 1300 & vIntEndHour > 1300)
-                {
-                    vDiferencia = vDiferencia + 110;
-                }
-                else
-                {
-                    vDiferencia = vDiferencia + 50;
-                }
-
-                vDiferencia = vDiferencia / 100;
+                //Get the difference between StartHour and EndHour
+                var CargaC = Math.Ceiling(HoraFin.Subtract(HoraInicio).TotalHours);
+                
+                
+                int vDiferencia = Convert.ToInt32(CargaC);
 
                 totalHourAssign = totalHourAssign + vDiferencia;
             }
