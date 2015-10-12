@@ -10,6 +10,7 @@ using SACAAE.Models;
 using SACAAE.Data_Access;
 using SACAAE.Models.ViewModels;
 using Newtonsoft.Json;
+using SACAAE.WebService_Models;
 
 namespace SACAAE.Controllers
 {
@@ -158,7 +159,44 @@ namespace SACAAE.Controllers
             {
                 return HttpNotFound();
             }
-            return View(profesor);
+
+            var actualPeriod = int.Parse(Request.Cookies["Periodo"].Value);
+            var data = new ScheduleDataList();
+            var courses = db.SP_getAllCoursesPerProf(actualPeriod, profesor.Name).ToList();
+            var commissions = db.SP_getAllCommissionsPerProf(actualPeriod, profesor.Name).ToList();
+            var projects = db.SP_getAllProjectsPerProf(actualPeriod, profesor.Name).ToList();
+
+            courses.ForEach(p => data.add(
+                p.Day,
+                (p.Name + "\nGrupo: " + p.Number),
+                DateTime.Parse(p.StartHour),
+                DateTime.Parse(p.EndHour),
+                "Curso")
+            );
+
+            commissions.ForEach(p => data.add(
+                p.Day,
+                p.Name,
+                DateTime.Parse(p.StartHour),
+                DateTime.Parse(p.EndHour),
+                "Comisión")
+            );
+
+            projects.ForEach(p => data.add(
+                p.Day,
+                p.Name,
+                DateTime.Parse(p.StartHour),
+                DateTime.Parse(p.EndHour),
+                "Proyecto")
+            );
+
+            var viewModel = new ScheduleProfessorViewModel()
+            {
+                Name = profesor.Name,
+                ScheduleData = data.getData()
+            };
+
+            return View(viewModel);
         }
 
         #region Ajax
@@ -193,6 +231,78 @@ namespace SACAAE.Controllers
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
+        }
+        #endregion
+
+        #region Helpers
+        private class ScheduleDataList
+        {
+            private List<List<ScheduleData>> data;
+
+            public ScheduleDataList()
+            {
+                this.data = new List<List<ScheduleData>>();
+                for(int i=0; i<6; i++)
+                {
+                    this.data.Add(new List<ScheduleData>());
+                }
+            }
+
+            public void add(string day, string name, DateTime startHour, DateTime endHour, string type)
+            {
+                var index = 0;
+                switch (day)
+                {
+                    case "Lunes":   index = 0; break;
+                    case "Martes":  index = 1; break;
+                    case "Miercoles": index = 2; break;
+                    case "Jueves":  index = 3; break;
+                    case "Viernes": index = 4; break;
+                    case "Sabado":  index = 5; break;
+                }
+
+                this.data[index].Add(new ScheduleData()
+                {
+                    Name = name,
+                    Type = type,
+                    Difference = getDifference(startHour, endHour),
+                    StartBlock = getHourBlock(startHour)
+                });
+            }
+
+            public List<List<ScheduleData>> getData()
+            {
+                return this.data;
+            }
+
+            private int getDifference(DateTime startHour, DateTime endHour)
+            {
+                return (int)Math.Ceiling(endHour.Subtract(startHour).TotalHours);
+            }
+
+            private int getHourBlock(DateTime time)
+            {
+                var hh = 7;
+                var mm = 00;
+                var tt = "am";
+
+                for (int i = 0; i < 16; i++)
+                {
+                    var start = DateTime.Parse(hh + ":" + mm + tt);
+                    var end = DateTime.Parse((hh + 1) + ":" + mm + tt);
+
+                    if (betweenDates(start, end, time)) return i;
+
+                    hh++;
+                    if (hh == 12) tt = "pm";
+                }
+                return 0;
+            }
+
+            private bool betweenDates(DateTime beginDate, DateTime endDate, DateTime date)
+            {
+                return (beginDate <= date && date < endDate);
+            }
         }
         #endregion
     }
