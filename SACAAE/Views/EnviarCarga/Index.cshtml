@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+s
+@section Scripts {
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#indexTable').DataTable({
+            "language": {
+                url: "/Content/DataTables/Spanish.json",
+            },
+            responsive: true
+        });
+    });
+    </script>
+}
+<head>
+    <link rel="stylesheet" href="../Content/themes/blue/style.css" type="text/css" media="print, projection, screen">
+</head>
+
+<body>
+    <h1 class="page-header">Enviar Carga Académica a Profesor</h1>
+    @if (TempData.ContainsKey("MessageError"))
+    {
+        <p class="text-danger">@TempData["MessageError"].ToString()</p>
+    }
+    @if (TempData.ContainsKey("MessageSuccess"))
+    {
+        <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+    }
+    <div class="dataTables_wrapper">
+        <table id="indexTable" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        
+                    </th>
+                    <th class="text-center">
+                        Profesor
+                    </th>
+                    <th class="text-center">
+                        Cursos
+                    </th>
+                    <th class="text-center">
+                        Comisiones
+                    </th>
+                    <th class="text-center">
+                        Proyectos
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+</body>

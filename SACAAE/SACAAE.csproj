@@ -182,6 +182,7 @@
     <Compile Include="Controllers\CSVController.cs" />
     <Compile Include="Controllers\CursoController.cs" />
     <Compile Include="Controllers\CursoProfesorController.cs" />
+    <Compile Include="Controllers\EnviarCargaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HorariosController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -434,6 +435,7 @@
     </Content>
     <Content Include="Views\BloqueXPlan\CrearBloqueXPlan.cshtml" />
     <Content Include="Views\BloqueXPlanXCurso\CrearBloqueXPlanXCurso.cshtml" />
+    <Content Include="Views\EnviarCarga\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
