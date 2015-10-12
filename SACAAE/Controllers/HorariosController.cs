@@ -114,107 +114,169 @@ namespace SACAAE.Controllers
         // POST: Horario/Horarios
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Horarios(NewScheduleViewModel vNewSchedule)
+        public ActionResult Horarios(NewScheduleViewModel pNewSchedule)
         {
             //*****************************************************************************************************
             //******************************* Se obtienen los datos del formulario ********************************
             //*****************************************************************************************************
-            /*int Cantidad;
-            int PlanDeEstudio;
-            try
-            {
-                 Cantidad = Convert.ToInt32(Request.Cookies["Cantidad"].Value);
-            }
-            catch (Exception e)
-            {
-                Cantidad = 0;
-            }
+            int vGroupID = Convert.ToInt32(pNewSchedule.Group);
+            
+            // 1 Find the group in the database
+            Group vGroup = db.Groups.Find(vGroupID);
 
-            try
-           {
-                PlanDeEstudio = Int32.Parse(Request.Cookies["SelPlanDeEstudio"].Value);
-            }
-            catch (Exception e)
-            {
-                throw new ArgumentException("No se detecto ningun Grupo o Plan de Estudio" + e.Message);
-            }
-            //*****************************************************************************************************
+            // 2.1 Remove GroupClassroom fields asociate with the Group
+            removeGroupclassroomByGroupID(vGroupID);
 
-            //En caso de que el horario este vacio se asume que se desea borrar por lo que se limpian los dias y se termina, este return evita que falle el programa cuando no hay cookies
-            if (Cantidad == 0) 
-            { 
-                return RedirectToAction("Horarios"); 
-             }
-            //Eliminar Horarios Viejos
-            //for (int i = 1; i <= Cantidad; i++)
-            //{
-            //   String Detalles= Request.Cookies["Cookie" + i].Value;
-            //   string[] Partes = Detalles.Split('|');
-            //   int Grupo = Int32.Parse(Partes[5]);
-            //    int IdHorario = IdHorarioCurso(Grupo);
-            //    if(IdHorario!=0)
-            //    {
-            //        Horario.EliminarDias(IdHorario);
-            //    }
-            //}
+            // 2.2 new GroupClassrooms asociated with Group
+                //Get the list of schedules and classrooms from the View
+            List<NewSchedule> vNewSchedule = pNewSchedule.NewSchedule;
 
-            //Guardar Datos
-            for (int i = 1; i <= Cantidad; i++)
+            bool vIsValidateClassroom = isInternScheduleValid(vNewSchedule);
+
+            if (vIsValidateClassroom)
             {
-                String Detalles = Request.Cookies["Cookie" + i].Value;//Obtiene los datos de la cookie
-                string[] Partes = Detalles.Split('|');
-                String Curso = Partes[0];
-                String Dia = Partes[1];
-                String HoraInicio = Partes[2];
-                String HoraFin = Partes[3];
-                String Bloque = Partes[4];
-                int Grupo = Int32.Parse(Partes[5]);
-                String Aula = Partes[6];
-                if (Curso != "d")
+                //Iterate the list of schedules
+                foreach (NewSchedule tempSchedule in vNewSchedule)
                 {
-                    //Curso segun el ID y el Plan de Estudio
-                    int IdCurso = IdCursos(Curso, PlanDeEstudio);
+                    Schedule vTempSchedule = existSchedule(tempSchedule.Day, tempSchedule.StartHour, tempSchedule.EndHour);
+                    string vClassroomID = tempSchedule.Classroom;
 
-                    //Se obtiene el id del horario del grupo
-                    int IdHorario = IdHorarioCurso(Grupo);
-
-                    //Si existe Que hace aqui????
-                    //if (IdHorario != 0)
-                    //{
-                    //    Horario.AgregarDia(Dia, IdHorario, Convert.ToInt32(HoraInicio), Convert.ToInt32(HoraFin));
-                    //}
-
-                    //En caso de que no exista se crea el nuevo horario y se retorna el id
-                    //else
-                    //{
-                    if (IdHorario == null)
+                    if (isValidScheduleClassroom(vTempSchedule, vClassroomID))
                     {
-                        //Se agrega el horario nuevo
-                        IdHorario = NuevoHorario(Dia, HoraInicio, HoraFin);
+                        GroupClassroom vNewGroupClassroom = new GroupClassroom();
+
+                        //REMEBER VERIFY CLASSROOM DISPONIBILITY
+                        vNewGroupClassroom.ClassroomID = Convert.ToInt32(tempSchedule.Classroom);
+
+                        vNewGroupClassroom.ScheduleID = vTempSchedule.ID;
+
+                        vNewGroupClassroom.GroupID = vGroup.ID;
+
+                        vGroup.GroupsClassroom.Add(vNewGroupClassroom);
+
                     }
-                    //Horario.AgregarDia(Dia, HorarioNuevo, Convert.ToInt32(HoraInicio), Convert.ToInt32(HoraFin));
+                    else
+                    {
+                        vIsValidateClassroom = false;
+                    }
 
-                    //Se retorna el id del Aula de acuerdo al codigo Porque no se busca por id y se valida si es valido o no???
-                    int vIDAula = idAula(Aula);
 
-                    //Se obtiene el cupo del aula INNECESARIO
-                    //int cupo = repoAulas.ObtenerAula(idAula).Espacio;
-
-                    //Se almacena la relacion
-                    GroupClassroom vNewGroupClassroom = new GroupClassroom();
-                    vNewGroupClassroom.ClassroomID = vIDAula;
-                    vNewGroupClassroom.ScheduleID = IdHorario;
-                    vNewGroupClassroom.GroupID = Grupo;
-                    //GroupClassroom(GroupID,ClassroomID, ScheduleID)
-                    //Cursos.GuardarDetallesCurso(Grupo, HorarioNuevo, Aula, 5, cupo);
-                    // }
-                    //}
 
                 }
+                if (vIsValidateClassroom)
+                {
+                    db.SaveChanges();
+
+                    /*int Cantidad;
+                    int PlanDeEstudio;
+                    try
+                    {
+                         Cantidad = Convert.ToInt32(Request.Cookies["Cantidad"].Value);
+                    }
+                    catch (Exception e)
+                    {
+                        Cantidad = 0;
+                    }
+
+                    try
+                   {
+                        PlanDeEstudio = Int32.Parse(Request.Cookies["SelPlanDeEstudio"].Value);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new ArgumentException("No se detecto ningun Grupo o Plan de Estudio" + e.Message);
+                    }
+                    //*****************************************************************************************************
+
+                    //En caso de que el horario este vacio se asume que se desea borrar por lo que se limpian los dias y se termina, este return evita que falle el programa cuando no hay cookies
+                    if (Cantidad == 0) 
+                    { 
+                        return RedirectToAction("Horarios"); 
+                     }
+                    //Eliminar Horarios Viejos
+                    //for (int i = 1; i <= Cantidad; i++)
+                    //{
+                    //   String Detalles= Request.Cookies["Cookie" + i].Value;
+                    //   string[] Partes = Detalles.Split('|');
+                    //   int Grupo = Int32.Parse(Partes[5]);
+                    //    int IdHorario = IdHorarioCurso(Grupo);
+                    //    if(IdHorario!=0)
+                    //    {
+                    //        Horario.EliminarDias(IdHorario);
+                    //    }
+                    //}
+
+                    //Guardar Datos
+                    for (int i = 1; i <= Cantidad; i++)
+                    {
+                        String Detalles = Request.Cookies["Cookie" + i].Value;//Obtiene los datos de la cookie
+                        string[] Partes = Detalles.Split('|');
+                        String Curso = Partes[0];
+                        String Dia = Partes[1];
+                        String HoraInicio = Partes[2];
+                        String HoraFin = Partes[3];
+                        String Bloque = Partes[4];
+                        int Grupo = Int32.Parse(Partes[5]);
+                        String Aula = Partes[6];
+                        if (Curso != "d")
+                        {
+                            //Curso segun el ID y el Plan de Estudio
+                            int IdCurso = IdCursos(Curso, PlanDeEstudio);
+
+                            //Se obtiene el id del horario del grupo
+                            int IdHorario = IdHorarioCurso(Grupo);
+
+                            //Si existe Que hace aqui????
+                            //if (IdHorario != 0)
+                            //{
+                            //    Horario.AgregarDia(Dia, IdHorario, Convert.ToInt32(HoraInicio), Convert.ToInt32(HoraFin));
+                            //}
+
+                            //En caso de que no exista se crea el nuevo horario y se retorna el id
+                            //else
+                            //{
+                            if (IdHorario == null)
+                            {
+                                //Se agrega el horario nuevo
+                                IdHorario = NuevoHorario(Dia, HoraInicio, HoraFin);
+                            }
+                            //Horario.AgregarDia(Dia, HorarioNuevo, Convert.ToInt32(HoraInicio), Convert.ToInt32(HoraFin));
+
+                            //Se retorna el id del Aula de acuerdo al codigo Porque no se busca por id y se valida si es valido o no???
+                            int vIDAula = idAula(Aula);
+
+                            //Se obtiene el cupo del aula INNECESARIO
+                            //int cupo = repoAulas.ObtenerAula(idAula).Espacio;
+
+                            //Se almacena la relacion
+                            GroupClassroom vNewGroupClassroom = new GroupClassroom();
+                            vNewGroupClassroom.ClassroomID = vIDAula;
+                            vNewGroupClassroom.ScheduleID = IdHorario;
+                            vNewGroupClassroom.GroupID = Grupo;
+                            //GroupClassroom(GroupID,ClassroomID, ScheduleID)
+                            //Cursos.GuardarDetallesCurso(Grupo, HorarioNuevo, Aula, 5, cupo);
+                            // }
+                            //}
+
+                        }
+                    }
+                    Response.Cookies.Clear();*/
+                    TempData["Message"] = "Cambios guardados satisfactoriamente";
+                    return RedirectToAction("Index");
+
+                }
+                else
+                {
+                    TempData["Message"] = "Error: Choque de horario";
+                    return RedirectToAction("Index");
+                }
             }
-            Response.Cookies.Clear();
-            TempData["Message"] = "Cambios guardados satisfactoriamente";*/
-            return RedirectToAction("Horarios");
+            else
+            {
+                TempData["Message"] = "Error: Choque de horario interno";
+                return RedirectToAction("Index");
+            }
+           
         }
             
         /*public ActionResult ObtenerHorarios(int plan, int periodo)
@@ -240,6 +302,7 @@ namespace SACAAE.Controllers
         }
 
         #region Ajax
+
         [Route("Horarios/Plan/{pPlanID:int}/Bloques")]
         public ActionResult ListarBloquesXPlan(int pPlanID)
         {
@@ -250,21 +313,33 @@ namespace SACAAE.Controllers
             var json = JsonConvert.SerializeObject(ListaBloquexPlan);
             return Content(json);
         }
-        #endregion
-        #region Helpers
-        
+
         [Route("Horarios/Sedes/{pSedeID:int}/Aulas")]
         public ActionResult ListarAulasXSedeCompleta(int pSedeID)
         {
-            var ListaAulasXSede =  from Aulas in db.Classrooms
-                   where Aulas.SedeID == pSedeID
-                   select new{Aulas.ID, Aulas.Code};
+            var ListaAulasXSede = from Aulas in db.Classrooms
+                                  where Aulas.SedeID == pSedeID
+                                  select new { Aulas.ID, Aulas.Code };
 
             var json = JsonConvert.SerializeObject(ListaAulasXSede);
             return Content(json);
         }
+        #endregion
+        #region Helpers
 
+        public bool removeGroupclassroomByGroupID(int pGroupID)
+        {
+            var list = (from gc in db.GroupClassrooms
+                    where gc.GroupID == pGroupID
+                    select gc).ToList();
 
+            foreach (var element in list)
+            {
+                db.GroupClassrooms.Remove(element);
+                
+            }
+            return true;
+        }
         public int IdPlanDeEstudioXSede(int sede, int plan)
         {
             return (from planXSede in db.StudyPlansXSedes
@@ -330,7 +405,7 @@ namespace SACAAE.Controllers
                 vNewSchedule.Day = pDay;
                 vNewSchedule.StartHour = pStartHour;
                 vNewSchedule.EndHour = pEndHour;
-                vNewSchedule.CommissionsXProfessors = new List<CommissionXProfessor>();
+                vNewSchedule.GroupsClassroom = new List<GroupClassroom>();
 
                 db.Schedules.Add(vNewSchedule);
                 //db.SaveChanges();
@@ -363,6 +438,77 @@ namespace SACAAE.Controllers
             return (from Aulas in db.Classrooms
                     where Aulas.Code == pCodigoAula
                     select Aulas).FirstOrDefault().ID;
+        }
+
+        public bool isValidScheduleClassroom(Schedule pNewSchedule, string pClassroomID)
+        {
+            int vClassroomID = Convert.ToInt32(pClassroomID);
+            var scehdules = (from schedule in db.Schedules
+            join groupclass in db.GroupClassrooms on  schedule.ID equals groupclass.ScheduleID
+            where (groupclass.ClassroomID == vClassroomID && schedule.Day == pNewSchedule.Day)
+            select schedule).ToList();
+
+            foreach (Schedule tempSchedule in scehdules)
+            {
+                if (DateTime.Parse(tempSchedule.StartHour) <= DateTime.Parse(pNewSchedule.StartHour) && 
+                    DateTime.Parse(pNewSchedule.StartHour) <= DateTime.Parse(tempSchedule.EndHour))
+                {
+                    return false;
+                }
+                else if (DateTime.Parse(tempSchedule.StartHour) <= DateTime.Parse(pNewSchedule.EndHour) && 
+                    DateTime.Parse(pNewSchedule.EndHour) <= DateTime.Parse(tempSchedule.EndHour))
+                {
+                    return false;
+                }
+                else if (DateTime.Parse(pNewSchedule.StartHour) <= DateTime.Parse(tempSchedule.StartHour) && 
+                    DateTime.Parse(tempSchedule.StartHour) <= DateTime.Parse(pNewSchedule.EndHour))
+                {
+                    return false;
+                }
+                else if (DateTime.Parse(pNewSchedule.StartHour) <= DateTime.Parse(tempSchedule.EndHour) && 
+                    DateTime.Parse(tempSchedule.EndHour) <= DateTime.Parse(pNewSchedule.EndHour))
+                {
+                    return false;
+                }
+                
+            }
+
+            return true;
+        }
+
+        public bool isInternScheduleValid( List<NewSchedule> pNewSchedule)
+        {
+            foreach (NewSchedule vTempSchedule in pNewSchedule)
+            {
+                pNewSchedule.Remove(vTempSchedule);
+                foreach (NewSchedule vNTempSchedule in pNewSchedule)
+                {
+                    if (vTempSchedule.Day.Equals(vNTempSchedule.Day))
+                    {
+                        if (DateTime.Parse(vTempSchedule.StartHour) <= DateTime.Parse(vNTempSchedule.StartHour) &&
+                            DateTime.Parse(vNTempSchedule.StartHour) <= DateTime.Parse(vTempSchedule.EndHour))
+                        {
+                            return false;
+                        }
+                        else if (DateTime.Parse(vTempSchedule.StartHour) <= DateTime.Parse(vNTempSchedule.EndHour) &&
+                            DateTime.Parse(vNTempSchedule.EndHour) <= DateTime.Parse(vTempSchedule.StartHour))
+                        {
+                            return false;
+                        }
+                        else if (DateTime.Parse(vNTempSchedule.StartHour) <= DateTime.Parse(vTempSchedule.StartHour) &&
+                            DateTime.Parse(vTempSchedule.StartHour) <= DateTime.Parse(vNTempSchedule.EndHour))
+                        {
+                            return false;
+                        }
+                        else if (DateTime.Parse(vNTempSchedule.StartHour) <= DateTime.Parse(vTempSchedule.EndHour) &&
+                                DateTime.Parse(vTempSchedule.EndHour) <= DateTime.Parse(vNTempSchedule.EndHour))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
         }
         #endregion
     }

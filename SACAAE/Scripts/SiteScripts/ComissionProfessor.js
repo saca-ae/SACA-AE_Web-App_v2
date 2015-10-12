@@ -17,11 +17,6 @@
     });
 });
 
-//Function validate the correct structure of StartHour and EndHour
-function validar_hora_inicio_hora_fin()
-{
-    
-}
 
 var contador = 2;
 function obtener_dias() {
@@ -274,5 +269,10 @@ function onchangeEndHourSelection(identificador) {
        // alert("Error");
     }
    
+}
+
+function get_id(number) {
+    var url = window.location.pathname.split('/');
+    return url[number];
 }
 
