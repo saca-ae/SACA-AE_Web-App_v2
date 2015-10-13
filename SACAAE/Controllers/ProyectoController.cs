@@ -323,7 +323,8 @@ namespace SACAAE.Controllers
             var temp = db.Projects.Find(proyecto.ID);
             if (temp != null)
             {
-                db.Entry(temp).Property(p => p.StateID).CurrentValue = 2;
+                //db.Entry(temp).Property(p => p.StateID).CurrentValue = 2;
+                db.Projects.Remove(proyecto);
             }
             TempData[TempDataMessageKeyError] = "Proyecto eliminado correctamente.";
             db.SaveChanges();

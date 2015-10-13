@@ -315,7 +315,8 @@ namespace SACAAE.Controllers
             Commission commission = db.Commissions.Find(id);
             if (commission != null)
             {
-                db.Entry(commission).Property(c => c.StateID).CurrentValue = 2;
+                //db.Entry(commission).Property(c => c.StateID).CurrentValue = 2;
+                db.Commissions.Remove(commission);
             }
             db.SaveChanges();
             TempData[TempDataMessageKeySuccess] = "Comisión eliminada correctamente.";

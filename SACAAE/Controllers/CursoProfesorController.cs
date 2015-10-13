@@ -82,9 +82,6 @@ namespace SACAAE.Controllers
                         ViewBag.Modalidades = obtenerTodasModalidades().ToList<Modality>(); 
                         return View();
                     }
-                    
-
-
                 }
                 return View();
             }
