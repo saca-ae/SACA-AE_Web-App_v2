@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿loadAlerts();
+
+$(document).ready(function () {
     var entidadid = "#" + getCookie("Entidad");
     if (entidadid == "#") { Load('TEC'); }
     $(entidadid).addClass('active');
@@ -31,3 +33,25 @@ function getCookie(cname) {
     return "";
 }
 
+function loadAlerts() {
+    var lastCheckedTime = getCookie("alertTime");
+    var now = new Date();
+    if (lastCheckedTime != "") {
+        var lastDate = new Date(lastCheckedTime);
+        if (lastDate.getDay() < now.getDay()) {
+            setAlert(now);
+        }
+    }
+    else {
+        setAlert(now);
+    }
+}
+
+function setAlert(date) {
+    setCookie("alertTime", date.toDateString(), "/");
+    var route = "/Alerts/Expired";
+    $.getJSON(route, function (data) {
+        setCookie("alerts", data, "/");
+        location.reload();
+    });
+}

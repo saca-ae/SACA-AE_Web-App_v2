@@ -100,6 +100,18 @@ ul.alert-dropdown {
     width: 200px;
 }
 
+.badge-danger {
+    background-color: #f76c51;
+}
+.badge-header {
+    position: absolute;
+    top: 50%;
+    margin-top: -1.3em;
+    min-width: 1.50em;
+    padding: 2px 0px;
+    right: 0px;
+}
+
 /* Side Navigation */
 
 .side-nav {
