@@ -1,9 +1,10 @@
-﻿
+﻿@model IEnumerable<SACAAE.Models.ViewModels.ProfesorViewModel>
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
-s
+
 @section Scripts {
     <script type="text/javascript">
     $(document).ready(function () {
@@ -34,8 +35,7 @@ s
         <table id="indexTable" class="table table-hover">
             <thead>
                 <tr>
-                    <th>
-                        
+                    <th>                  
                     </th>
                     <th class="text-center">
                         Profesor
@@ -52,8 +52,32 @@ s
                 </tr>
             </thead>
             <tbody>
-                
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.CheckBox("select1")
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td class="text-center">
+                            @Html.CheckBox("selectCurso")
+                        </td>
+                        <td class="text-center">
+                            @Html.CheckBox("selectComision")
+                        </td>
+                        <td class="text-center">
+                            @Html.CheckBox("selectProyectos")
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
+
+    <div style="margin: 0 auto;">
+        <button type="button" class="btn btn-default" id="btnSend"> @Html.ActionLink("Enviar", "SendAcademicLoad") </button>
+    </div>
+
 </body>
