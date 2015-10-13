@@ -1,0 +1,188 @@
+﻿@model SACAAE.Models.ViewModels.AlertViewModel
+
+@{
+    ViewBag.Title = "Alertas";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/SiteScripts/alerts.js")"></script>
+}
+
+<div class="container-fluid">
+    <div class="header">
+        <h1>Alertas</h1>
+    </div>
+    <div class="col-md-6">
+    @using (Html.BeginForm("ResolveCommissions", "Alerts", FormMethod.Post, new { id = "commissionForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Comisiones</h3>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Fin</th>
+                        <th class="text-center">Cantidad Profesores</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for (var i = 0; i < Model.Commissions.Count; i++)
+                {
+                    @Html.HiddenFor(m => m.Commissions[i].ID)
+                    <tr>
+                        <td>
+                            @Model.Commissions[i].Name
+                        </td>
+                        <td>
+                            @getDate(Model.Commissions[i].End)
+                        </td>
+                        <td class="text-center">
+                            @Model.Commissions[i].CommissionsXProfessors.Count
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            <div class="panel-footer text-center">
+                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#commissionModal">Resolver</button>
+            </div>
+        </div>
+    }
+    </div>
+    <div class="col-md-6">
+    @using (Html.BeginForm("ResolveProjects", "Alerts", FormMethod.Post, new { id = "projectForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Proyectos</h3>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Fin</th>
+                        <th class="text-center">Cantidad Profesores</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for (var i = 0; i < Model.Projects.Count; i++)
+                {
+                    @Html.HiddenFor(m => m.Projects[i].ID)
+                    <tr>
+                        <td>
+                            @Model.Projects[i].Name
+                        </td>
+                        <td>
+                            @getDate(Model.Projects[i].End)
+                        </td>
+                        <td class="text-center">
+                            @Model.Projects[i].ProjectsXProfessors.Count
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            <div class="panel-footer text-center">
+                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#projectModal">Resolver</button>
+            </div>
+        </div>
+    }
+    </div>
+</div>
+<!-- Modals -->
+<!-- commission modal -->
+<div class="modal fade" id="commissionModal" tabindex="-1" role="dialog" aria-labelledby="commissionModalLabel">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="commissionModalLabel">Solucionar Comisiones</h4>
+            </div>
+            <div class="modal-body">
+                <h3>¿Esta seguro que desea revocar a los profesores de las comisiones, y dar por finalizado las comisiones?</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="addBtn" onclick="resolveCommission()">Solucionar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- project modal -->
+<div class="modal fade" id="projectModal" tabindex="-1" role="dialog" aria-labelledby="projectModalLabel">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="projectModalLabel">Solucionar Proyectos</h4>
+            </div>
+            <div class="modal-body">
+                <h3>¿Esta seguro que desea revocar a los profesores de los proyectos, y dar por finalizado los proyectos?</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="addBtn" onclick="resolveProjects()">Solucionar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions{
+    public string getDate(DateTime? time)
+    {
+        return (time.HasValue) ? time.Value.ToShortDateString() : "indefinido";
+    }
+}
+
+@*<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.EntityType.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.State.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Start)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.End)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.EntityType.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.State.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Start)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.End)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>*@

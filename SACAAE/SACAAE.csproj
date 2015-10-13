@@ -173,6 +173,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AlertsController.cs" />
     <Compile Include="Controllers\AulaController.cs" />
     <Compile Include="Controllers\BloqueController.cs" />
     <Compile Include="Controllers\BloqueXPlanController.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="Models\HourAllocatedType.cs" />
     <Compile Include="Models\EntityType.cs" />
     <Compile Include="Models\PeriodType.cs" />
+    <Compile Include="Models\ViewModels\AlertViewModel.cs" />
     <Compile Include="Models\ViewModels\AsignacionCursoProfesorViewModel.cs" />
     <Compile Include="Models\ViewModels\CursoViewModel.cs" />
     <Compile Include="Models\ViewModels\GroupAssignmentCSVViewModel.cs" />
@@ -286,6 +288,7 @@
     <Content Include="Content\DataTables\dataTables.responsive.scss" />
     <Content Include="Content\DataTables\Spanish.json" />
     <Content Include="Scripts\date.js" />
+    <Content Include="Scripts\SiteScripts\alerts.js" />
     <Content Include="WebServiceMobile.svc" />
     <None Include="Properties\PublishProfiles\saca-ae.net - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\saca-ae.net - Web Deploy.pubxml" />
@@ -435,6 +438,7 @@
     </Content>
     <Content Include="Views\BloqueXPlan\CrearBloqueXPlan.cshtml" />
     <Content Include="Views\BloqueXPlanXCurso\CrearBloqueXPlanXCurso.cshtml" />
+    <Content Include="Views\Alerts\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
