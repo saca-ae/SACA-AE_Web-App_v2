@@ -30,37 +30,19 @@
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
-                @*<li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-bell" aria-hidden="true"></span> <b class="caret"></b></a>
-                    <ul class="dropdown-menu alert-dropdown">
-                        @if (SACAAE.Models.AlertaProyectoProfesor.getProyectosAtrasados(100).Count > 0)
-                        {
-                            <li>
-                                <a href="@Url.Action("Index", "AlertaProyectoProfesor", new  { Dias = "100" })"><span class="label label-danger">@SACAAE.Models.AlertaProyectoProfesor.getProyectosAtrasados(100).Count+ Proyectos Vencidos/O vencer</span></a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li>
-                                <a href="@Url.Action("Index", "AlertaProyectoProfesor", new  { Dias = "100" })">Alert Name <span class="label label-success">No hay proyectos vencidos</span></a>
-                            </li>
-                        }
-                        <li class="divider"></li>
-                        @if (SACAAE.Models.AlertaComisionProfesor.getComisionesAtrasados(100).Count > 0)
-                        {
-                            <li>
-                                <a href="@Url.Action("Index", "AlertaComisionProfesor", new  { Dias = "100" })"><span class="label label-danger">@SACAAE.Models.AlertaComisionProfesor.getComisionesAtrasados(100).Count+ Comisiones Vencidas/O vencer</span></a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li>
-                                <a href="@Url.Action("Index", "AlertaComisionProfesor", new  { Dias = "100" })">Alert Name <span class="label label-success">No hay comisiones vencidas</span></a>
-                            </li>
-                        }
-
-                    </ul>
-                </li>*@
+                <li>
+                @{
+                    var alerts = (Request.Cookies["alerts"] != null) ? Request.Cookies["alerts"].Value : "false";
+                    if (Convert.ToBoolean(alerts))
+                    {
+                        <a href="@Url.Action("Index", "Alerts")"><span class="glyphicon glyphicon-bell"></span><b class="badge badge-header badge-danger">!</b></a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Index", "Alerts")"><span class="glyphicon glyphicon-bell"></span></a>
+                    }
+                }
+                </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> amasis <b class="caret"></b></a>
                     <ul class="dropdown-menu">

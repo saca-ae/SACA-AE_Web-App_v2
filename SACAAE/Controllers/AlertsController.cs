@@ -4,6 +4,7 @@ using SACAAE.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -24,6 +25,12 @@ namespace SACAAE.Controllers
                 Commissions = db.Commissions.Where(p => p.End < today && p.State.Name == "En proceso").ToList(),
                 Projects = db.Projects.Where(p => p.End < today && p.State.Name == "En proceso").ToList()
             };
+
+            if ((viewModel.Commissions.Count + viewModel.Projects.Count) == 0)
+            {
+                Request.Cookies["alerts"].Value = "false";
+                Response.Cookies["alerts"].Value = "false";
+            }
 
             return View(viewModel);
         }
@@ -81,5 +88,29 @@ namespace SACAAE.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        #region Ajax Post
+        /// <author>Adonis Mora Angulo</author>
+        /// <summary>
+        /// Ajax post method for commissions and projects expired
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
+        [Route("Alerts/Expired")]
+        public ActionResult thereExpired()
+        {
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                var today = DateTime.Now;
+                today.AddDays(1);
+                var count = 0;
+                count += db.Commissions.Where(p => p.End < today && p.State.Name == "En proceso").ToList().Count;
+                count += db.Projects.Where(p => p.End < today && p.State.Name == "En proceso").ToList().Count;
+
+                return Json((count > 0), JsonRequestBehavior.AllowGet);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+        #endregion
     }
 }

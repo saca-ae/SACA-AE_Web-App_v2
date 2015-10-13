@@ -29,6 +29,12 @@
                     </tr>
                 </thead>
                 <tbody>
+                @if(Model.Commissions.Count == 0)
+                {
+                    <tr>
+                        <td colspan="3">No hay comisiones vencidas</td>
+                    </tr>
+                }
                 @for (var i = 0; i < Model.Commissions.Count; i++)
                 {
                     @Html.HiddenFor(m => m.Commissions[i].ID)
@@ -69,6 +75,12 @@
                     </tr>
                 </thead>
                 <tbody>
+                @if (Model.Commissions.Count == 0)
+                {
+                    <tr>
+                        <td colspan="3">No hay proyectos vencidos</td>
+                    </tr>
+                }
                 @for (var i = 0; i < Model.Projects.Count; i++)
                 {
                     @Html.HiddenFor(m => m.Projects[i].ID)
@@ -139,50 +151,3 @@
         return (time.HasValue) ? time.Value.ToShortDateString() : "indefinido";
     }
 }
-
-@*<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.EntityType.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.State.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Start)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.End)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.EntityType.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.State.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Start)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.End)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
-}
-
-</table>*@
