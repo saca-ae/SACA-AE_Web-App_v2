@@ -462,7 +462,7 @@ namespace SACAAE.Controllers
                                    where grupo.ID == pIDGrupo 
 
                                    select new
-                                   {curso_id = curso.ID,curso_name = curso.Name,curso.TheoreticalHours,grupo.Number,profesor_name = profesor.Name,horario.StartHour,horario.EndHour,horario.Day,
+                                   {curso_id = curso.ID,curso_name = curso.Name,curso.TheoreticalHours,grupo.Number,profesor_id = profesor.ID,profesor_name = profesor.Name,horario.StartHour,horario.EndHour,horario.Day,
                                        aula.Code,aula.Capacity,sede_id = sede.ID,sede_name = sede.Name,plan_id = plan_estudio.ID,plan_name = plan_estudio.Name,bloque_id = bloque_academico.ID,
                                        descripcion_bloque = bloque_academico.Description, modalidad_id=modalidad.ID,modalidad_name = modalidad.Name, asignacion_id=grupo.HourAllocatedTypeID
                                    });

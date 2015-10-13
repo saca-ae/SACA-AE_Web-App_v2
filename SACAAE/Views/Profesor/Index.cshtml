@@ -64,9 +64,9 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
-                    <td class="text-center"></td>
-                    <td class="text-center"></td>
-                    <td></td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.TECHours) </td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.FundaTECHours) </td>
+                    <td>@Html.DisplayFor(modelItem => item.TotalHours)</td>
                     <td class="text-center">
                         @Html.ActionLink("Comisión", "Asignar", "ComisionProfesor") |
                         @Html.ActionLink("Proyecto", "Asignar", "ProfesoresProyectos") |

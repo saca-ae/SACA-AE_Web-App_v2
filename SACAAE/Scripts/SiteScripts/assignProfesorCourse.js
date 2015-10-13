@@ -6,6 +6,36 @@ function editar_asignacion_grupo(id_grupo) {
 }
 
 /***************************************************** Function use in Details.cshtml***************************************************/
+window.onload = function ()
+{
+    //the function get_id(number) is in the JS file assignProfesorCourse.js, value of sede default = 1 (Cartago)
+    var route = "/CursoProfesor/Cursos/" + get_id(3) + "/1";
+    //the function generate_table(route) is in the JS file table.js
+    generate_table(route);
+
+    route = "/CursoProfesor/Cursos/" + get_id(3) + "/Sedes/";
+    $.getJSON(route, function (data) {
+        var items = "";
+
+
+        $.each(data, function (i, sede) {
+            if (sede.ID == 1)
+                items += "<option selected='selected' value='" + sede.ID + "'>" + sede.Name + "</option>";
+            else
+                items += "<option  value='" + sede.ID + "'>" + sede.Name + "</option>";
+        });
+
+
+        if (items != "") {
+            $("#sedes").html(items);
+
+        }
+        else {
+            $("#table_information_group").html("<p>No hay sedes relacionadas al grupo.</p>")
+
+        }
+    });
+}
 /// <summary>
 ///  Return view for a detail group according a id group
 /// </summary>
@@ -283,36 +313,11 @@ $("#HourCharge").change(function () {
     
 });
 /*********************************************************************************************************************************************/
-/***************************************************** Function use in EditarAsignacion.cshtml***************************************************/
-function changeHourCharge() {
-    var HourSelection = document.getElementById("editHourCharge").value;
 
-    if (HourSelection == '1')
-    {
-        document.getElementById("divHorasEstimadas").innerHTML = "<p>0</p>"
-    }
-    else if (HourSelection != '1')
-    {
-        var horas_estimadas = 11 - TheoricalHour;
+    /*********************************************************************************************************************************************/
 
-        document.getElementById("divHorasEstimadas").innerHTML = "<p>" + horas_estimadas + "</p>"
+    function get_id(number) {
+        var url = window.location.pathname.split('/');
+        return url[number];
     }
-};
-/*********************************************************************************************************************************************/
 
-function get_id(number) {
-    var url = window.location.pathname.split('/');
-    return url[number];
-}
-
-function adjust_hour(hour)
-{
-    
-    if (hour > '1000')
-    {
- 
-    }
-    else
-    {
-    }
-}

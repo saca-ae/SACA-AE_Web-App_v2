@@ -291,7 +291,7 @@ namespace SACAAE.Controllers
                 var listaCursos = db.AcademicBlocksXStudyPlans
                                     .Where(p => p.BlockID == pBloque && p.PlanID == pPlan).FirstOrDefault()
                                     .BlocksXPlansXCourses.Select(p => new { p.Course.ID, p.Course.Code, p.Course.Name });
-
+               
                 return Json(listaCursos, JsonRequestBehavior.AllowGet);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

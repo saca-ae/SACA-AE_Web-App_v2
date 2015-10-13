@@ -79,6 +79,7 @@ namespace SACAAE.Data_Access
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<resultadoStoredProcedure>("SPGetIDSchedule @pDay, @pHStart, @pHEnd", vDay, vHStart, vHEnd);
         }
 
+        
         public virtual ObjectResult<DataCSV> SP_GetGroupsPeriod(Nullable<int> pIdPeriod, Nullable<int> pIdEntity)
         {
             var vIdPeriodParameter = pIdPeriod.HasValue ?
@@ -90,6 +91,65 @@ namespace SACAAE.Data_Access
                 new SqlParameter("pIDEntity", typeof(int));
 
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<DataCSV>("SP_GetGroupsPeriod @pIdPeriod, @pIDEntity", vIdPeriodParameter, vIdEntityParameter);
+        }
+
+        //Get schedule from commission assign
+        public virtual ObjectResult<ScheduleAssign> SP_getScheduleCommissionProfessor(Nullable<int> pCommissionProfessorID)
+        {
+            var vCommissionProfessorIDParameter = pCommissionProfessorID.HasValue ?
+                new SqlParameter("pCommissionProfessorID", pCommissionProfessorID) :
+                new SqlParameter("pCommissionProfessorID", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ScheduleAssign>("SP_getScheduleCommissionProfessor @PCommissionProfessorID", vCommissionProfessorIDParameter);
+        }
+
+        public virtual ObjectResult<ScheduleAssign> SP_getScheduleProjectProfessor(Nullable<int> pProjectProfessorID)
+        {
+            var vProjectProfessorIDParameter = pProjectProfessorID.HasValue ?
+                new SqlParameter("pProjectProfessorID", pProjectProfessorID) :
+                new SqlParameter("pProjectProfessorID", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ScheduleAssign>("SP_getScheduleProjectProfessor @pProjectProfessorID", vProjectProfessorIDParameter);
+        }
+
+        //Get Schedule of Professor assign in commission
+        public virtual ObjectResult<ScheduleAssign> SP_getProfessorScheduleCommission(Nullable<int> pProfessorID, Nullable<int> pPeriodID)
+        {
+            var vProfessorIDParameter = pProfessorID.HasValue ?
+                new SqlParameter("pProfessorID", pProfessorID) :
+                new SqlParameter("pProfessorID", typeof(int));
+
+            var vPeriodIDParameter = pPeriodID.HasValue ?
+                new SqlParameter("pPeriodID", pPeriodID) :
+                new SqlParameter("pPeriodID", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ScheduleAssign>("SP_getProfessorScheduleCommission @pProfessorID, @pPeriodID", vProfessorIDParameter, vPeriodIDParameter);
+        }
+        //Get Schedule of Professor assign in project
+        public virtual ObjectResult<ScheduleAssign> SP_getProfessorScheduleProject(Nullable<int> pProfessorID, Nullable<int> pPeriodID)
+        {
+            var vProfessorIDParameter = pProfessorID.HasValue ?
+                new SqlParameter("pProfessorID", pProfessorID) :
+                new SqlParameter("pProfessorID", typeof(int));
+
+            var vPeriodIDParameter = pPeriodID.HasValue ?
+                new SqlParameter("pPeriodID", pPeriodID) :
+                new SqlParameter("pPeriodID", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ScheduleAssign>("SP_getProfessorScheduleProject @pProfessorID, @pPeriodID", vProfessorIDParameter, vPeriodIDParameter);
+        }
+        //Get Schedule of Professor assign in group
+        public virtual ObjectResult<ScheduleAssign> SP_getProfessorScheduleGroup(Nullable<int> pProfessorID, Nullable<int> pPeriodID)
+        {
+            var vProfessorIDParameter = pProfessorID.HasValue ?
+                new SqlParameter("pProfessorID", pProfessorID) :
+                new SqlParameter("pProfessorID", typeof(int));
+
+            var vPeriodIDParameter = pPeriodID.HasValue ?
+                new SqlParameter("pPeriodID", pPeriodID) :
+                new SqlParameter("pPeriodID", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteStoreQuery<ScheduleAssign>("SP_getProfessorScheduleGroup @pProfessorID, @pPeriodID", vProfessorIDParameter, vPeriodIDParameter);
         }
 
         //Ejemplo SP
