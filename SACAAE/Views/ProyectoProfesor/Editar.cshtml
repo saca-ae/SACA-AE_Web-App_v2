@@ -1,0 +1,41 @@
+﻿@model SACAAE.Models.Project
+
+@{
+    ViewBag.Title = "Editar";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<style>
+    #Projects {
+        width: 600px;
+    }
+</style>
+<script src="~/Scripts/jquery-2.1.4.min.js"></script>
+<script src="~/Scripts/SiteScripts/editAssigProject.js"></script>
+<br />
+<h2>Editar Proyectos</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <br />
+    <div class="editor-label">
+        @Html.Label("Proyectos")
+        <br />
+        @Html.DropDownList("Projects", null, htmlAttributes: new { @class = "form-control" })
+    </div>
+    <hr />
+    <table id="professor_assign_project" class="table">
+        <thead>
+        <th>Nombre</th>
+        <th>Horas Dedicadas</th>
+        <th>Acciones</th>
+        </thead>
+
+        <tbody></tbody>
+    </table>
+}
+
+<div>
+    @Html.ActionLink("Lista de Proyectos", "Index","Proyecto")
+</div>
