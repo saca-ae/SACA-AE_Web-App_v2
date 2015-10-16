@@ -296,6 +296,11 @@
     <Content Include="Scripts\SiteScripts\alerts.js" />
     <Content Include="Scripts\SiteScripts\assignProfesorCommission.js" />
     <Content Include="Scripts\SiteScripts\assignProfesorProject.js" />
+    <Content Include="Scripts\SiteScripts\commissionDetails.js" />
+    <Content Include="Scripts\SiteScripts\editAssignCommission.js" />
+    <Content Include="Scripts\SiteScripts\editAssignCourse.js" />
+    <Content Include="Scripts\SiteScripts\editAssigProject.js" />
+    <Content Include="Scripts\SiteScripts\projectDetails.js" />
     <Content Include="WebServiceMobile.svc" />
     <None Include="Properties\PublishProfiles\saca-ae.net - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\saca-ae.net - Web Deploy.pubxml" />
@@ -453,6 +458,9 @@
     <Content Include="Views\Proyecto\AsignarProfesorProyecto.cshtml" />
     <Content Include="Views\Proyecto\DetalleAsignacion.cshtml" />
     <Content Include="Views\Proyecto\EditarAsignacion.cshtml" />
+    <Content Include="Views\CursoProfesor\Editar.cshtml" />
+    <Content Include="Views\ComisionProfesor\Editar.cshtml" />
+    <Content Include="Views\ProyectoProfesor\Editar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

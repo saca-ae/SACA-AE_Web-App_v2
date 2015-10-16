@@ -1,0 +1,62 @@
+﻿@model SACAAE.Models.Commission
+
+@{
+    ViewBag.Title = "Editar";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+<script src="~/Scripts/jquery-2.1.4.min.js"></script>
+<script src="@Url.Content("~/Scripts/SiteScripts/editAssignCommission.js")"></script>
+
+<style>
+    #Commission {
+        width: 600px;
+    }
+</style>
+<br />
+<h2>Editar Comisiones</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <br />
+    <div class="editor-label">
+        @Html.Label("Comisiones")
+        <br />
+        @Html.DropDownList("Commission", null, htmlAttributes: new { @class = "form-control" })
+    </div>
+    <hr />
+    <table id="professor_assign_commission" class="table">
+        <thead>
+        <th>Nombre</th>
+        <th>Horas Dedicadas</th>
+        <th>Acciones</th>
+        </thead>
+
+        <tbody id="body_table"></tbody>
+    </table>
+
+     <!-- Delete professor -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Remover Profesor</h4>
+                </div>
+                <div class="modal-body">
+                    <h2>¿Esta seguro que desea remover al profesor del proyecto?</h2>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="deleteBtn" onclick="eliminar_asignacion_proyecto()">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Lista de Comisiones", "Index", "Comision")
+</div>

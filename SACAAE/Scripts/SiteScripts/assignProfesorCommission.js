@@ -97,54 +97,6 @@ function onchangeEndHourSelection(identificador) {
   
 }
 
-//******************************** Details ****************************************************************
-/// <summary>
-///  Return view for a detail group according a id group
-/// </summary>
-/// <autor> Esteban Segura Benavides </autor>
-/// <param name="vIDGroup"> ID of Group to delete/param>
-/// <returns>None</returns>
-function ver_detalle_comision(vIDComision) {
-    var route_temporal = "/Comision/DetalleAsignacion/" + vIDComision;
-    window.location = route_temporal;
-}
-
-function editar_asignacion_comision(vIDComision)
-{
-    var route_temporal = "/Comision/EditarAsignacion/" + vIDComision;
-    window.location = route_temporal;
-}
-/// <summary>
-///  Get the element select for delete
-/// </summary>
-/// <autor> Esteban Segura Benavides </autor>
-/// <param name="vIDGroup"> ID of assign to delete/param>
-/// <returns>None</returns>
-
-
-function init_delete(vIDProfessor) {
-    tempIndex = vIDProfessor;
-}
-
-/// <summary>
-/// Remove profesor from a group
-/// </summary>
-/// <autor> Esteban Segura Benavides </autor>
-/// <returns> If not have problem, return message 'success' to a View, else return message 'Error'</returns>
-function eliminar_asignacion_commission() {
-    var route_temporal = "/Commission/"+get_id(3)+"/Professor/" + tempIndex + "/removeProfesor";
-    $.getJSON(route_temporal, function (data) {
-        if (data.respuesta = 'success') {
-            
-                location.reload();
-         
-        }
-        else {
-            alert('Error');
-        }
-    });
-}
-
 function get_id(number) {
     var url = window.location.pathname.split('/');
     return url[number];

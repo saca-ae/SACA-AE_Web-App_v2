@@ -19,9 +19,13 @@
     <h2 class="page-header">Asignar Profesor a Proyecto</h2>
     <div class="col-lg-4">
         <div class="span12">
-            @if (TempData.ContainsKey("Message"))
+            @if (TempData.ContainsKey("MessageSuccess"))
             {
-                <p class="text-success">@TempData["Message"].ToString()</p>
+                <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+            }
+            @if (TempData.ContainsKey("MessageError"))
+            {
+                <p class="text-danger">@TempData["MessageError"].ToString()</p>
             }
             @using (Html.BeginForm("Asignar", "ProyectoProfesor", FormMethod.Post, new { @id = "formPost" }))
             {

@@ -5,37 +5,21 @@
     Layout = "~/Views/Shared/Privado.cshtml";
 }
 <link href="~/Content/custom.css" rel="stylesheet" />
-<script src="~/Scripts/SiteScripts/assignProfesorCommission.js"></script>
-<script>
-    var tempIndex = 0;
-    window.onload = function () {
-        var table = document.getElementById('professor_assign_commission').getElementsByTagName('tbody')[0];
-        var route = "/Commission/"+get_id(3)+"/Professors"
-        $.getJSON(route, function (data)
-        {
-            for (i = 0; i < data.length; i++)
-            {
-                var row = table.insertRow(table.rows.length);
-                var name_profesor_cell = row.insertCell(0);
-                var hour_cell = row.insertCell(1);
-                var action_cell = row.insertCell(2);
-                name_profesor_cell.innerHTML = data[i].Name;
-                hour_cell.innerHTML = "<p style=\"margin-left:20px;\">"+data[i].Hours+"</p>";
-                action_cell.innerHTML = "<a onclick=ver_detalle_comision(" + data[i].commissionProfessorID + ") title=\"Ver Detalle Curso\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                        "<a onclick=editar_asignacion_comision(" + data[i].commissionProfessorID + ") title=\"Editar\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a> &nbsp" +
-                                         "<a href=\"\"  onclick = init_delete(" + data[i].professorID + ") data-toggle=\"modal\" data-target=\"#deleteModal\" title=\"Eliminar\"><span class=\"glyphicon  glyphicon-trash\" aria-hidden=\"true\"></span></a>"; 
-                }
-        });
-    }
+<script src="@Url.Content("~/Scripts/SiteScripts/commissionDetails.js")"></script>
 
-    function get_id(number) {
-        var url = window.location.pathname.split('/');
-        return url[number];
-    }
-</script>
-
+<br />
     <h2>Detalles de la Comisi&oacute;n</h2>
     <hr />
+<!--Show success message-->
+@if (TempData.ContainsKey("MessageSuccess"))
+{
+    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+}
+<!--Show error message-->
+@if (TempData.ContainsKey("MessageError"))
+{
+    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+}
         <table id="commission_information">
             <thead>
             </thead>

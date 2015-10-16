@@ -82,16 +82,32 @@ namespace SACAAE.Controllers
                         ViewBag.Modalidades = obtenerTodasModalidades().ToList<Modality>(); 
                         return View();
                     }
-                    
-
-
                 }
                 return View();
             }
             return View();
 
         }
-        //
+
+        //GET: CursoProfesor/Editar
+        public ActionResult Editar()
+        {
+            if (Request.UrlReferrer != null)
+            {
+                ViewBag.returnUrl = Request.UrlReferrer.ToString();
+            }
+            else
+            {
+                ViewBag.returnUrl = null;
+            }
+
+            /* get List of all courses */
+            ViewBag.Courses = new SelectList(db.Courses, "ID", "Name");
+            /*get List of all 'sedes' */
+            ViewBag.Sedes = new SelectList(db.Sedes, "ID", "Name");
+
+            return View();
+        }
 
         // GET: CursoProfesor/revocar
         public ActionResult Revocar()

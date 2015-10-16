@@ -119,7 +119,7 @@
 
     <p>
         <input type="submit" value="Editar" class="btn" id="Editar_Asignacion" /> |
-        <a href="@ViewBag.returnUrl">Cancelar</a>
+        @Html.ActionLink("Cancelar", "Details", new { id = Model.CommissionID })
     </p>
 }
 

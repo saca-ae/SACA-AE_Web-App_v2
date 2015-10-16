@@ -213,87 +213,92 @@ namespace SACAAE.Controllers
             string vProjectID = pSchedule.Projects;
             string vProfessorID = pSchedule.Professors;
             List<ScheduleProject> vSchedules = pSchedule.ScheduleProject;
-
-            //Check the schedule of the commissions related with the professor
-            bool isCommissionShock = existShockScheduleCommission(Convert.ToInt32(vProfessorID),vSchedules);
-            //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-            if (!isCommissionShock)
+            bool vIsProfessorAssign = isProfessorAssign(Convert.ToInt32(vProjectID), Convert.ToInt32(vProfessorID));
+            if (!vIsProfessorAssign)
             {
+                //Check the schedule of the commissions related with the professor
+                bool isCommissionShock = existShockScheduleCommission(Convert.ToInt32(vProfessorID), vSchedules);
                 //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                bool isProjectShock = existShockScheduleProject(Convert.ToInt32(vProfessorID), vSchedules);
-                if (!isProjectShock)
+                if (!isCommissionShock)
                 {
                     //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                    bool isGroupShock = existShockScheduleGroup(Convert.ToInt32(vProfessorID), vSchedules);
-                    if(!isGroupShock)
-                    { 
-                        int totalHourAssign = 0;
-
-                        //Save Projectvbg Professor
-                        ProjectXProfessor vProjectProfessor = new ProjectXProfessor();
-                        vProjectProfessor.ProjectID = Convert.ToInt32(vProjectID);
-                        vProjectProfessor.ProfessorID = Convert.ToInt32(vProfessorID);
-                        if (vHourCharge.Equals("1"))
+                    bool isProjectShock = existShockScheduleProject(Convert.ToInt32(vProfessorID), vSchedules);
+                    if (!isProjectShock)
+                    {
+                        //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+                        bool isGroupShock = existShockScheduleGroup(Convert.ToInt32(vProfessorID), vSchedules);
+                        if (!isGroupShock)
                         {
-                            vProjectProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourCharge);
-                        }
-                        vProjectProfessor.PeriodID = vIDPeriod;
-                        vProjectProfessor.Schedule = new List<Schedule>();
+                            int totalHourAssign = 0;
 
-
-
-                        //Calculate the total hour assign
-                        foreach (ScheduleProject vSchedule in vSchedules)
-                        {
-                            Schedule vTempSchedule = existSchedule(vSchedule.Day, vSchedule.StartHour, vSchedule.EndHour);
-                            if (vTempSchedule != null)
+                            //Save Projectvbg Professor
+                            ProjectXProfessor vProjectProfessor = new ProjectXProfessor();
+                            vProjectProfessor.ProjectID = Convert.ToInt32(vProjectID);
+                            vProjectProfessor.ProfessorID = Convert.ToInt32(vProfessorID);
+                            if (vHourCharge.Equals("1"))
                             {
-                                //Get id schedule
+                                vProjectProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourCharge);
+                            }
+                            vProjectProfessor.PeriodID = vIDPeriod;
+                            vProjectProfessor.Schedule = new List<Schedule>();
 
-                                vTempSchedule.ProjectsXProfessors.Add(vProjectProfessor);
+                            //Calculate the total hour assign
+                            foreach (ScheduleProject vSchedule in vSchedules)
+                            {
+                                Schedule vTempSchedule = existSchedule(vSchedule.Day, vSchedule.StartHour, vSchedule.EndHour);
+                                if (vTempSchedule != null)
+                                {
+                                    //Get id schedule
 
+                                    vTempSchedule.ProjectsXProfessors.Add(vProjectProfessor);
+
+                                }
+
+                                //Convert StartHour to DateTime
+                                var vStartHour = DateTime.Parse(vSchedule.StartHour);
+                                var vEndHour = DateTime.Parse(vSchedule.EndHour);
+
+                                var vSTRDiffHours = Math.Ceiling(vEndHour.Subtract(vStartHour).TotalHours);
+
+                                int vDiffHours = Convert.ToInt32(vSTRDiffHours);
+
+
+                                totalHourAssign = totalHourAssign + vDiffHours;
                             }
 
-                            //Convert StartHour to DateTime
-                            var vStartHour = DateTime.Parse(vSchedule.StartHour);
-                            var vEndHour = DateTime.Parse(vSchedule.EndHour);
 
-                            var CargaC = Math.Ceiling(vEndHour.Subtract(vStartHour).TotalHours);
+                            vProjectProfessor.Hours = totalHourAssign;
 
-                            int vDiferencia = Convert.ToInt32(CargaC);
+                            db.ProjectsXProfessors.Add(vProjectProfessor);
 
+                            db.SaveChanges();
+                            TempData[TempDataMessageKeySuccess] = "El profesor fue asignado correctamente.";
 
-                            totalHourAssign = totalHourAssign + vDiferencia;
+                            return RedirectToAction("Details", new { id = vProjectID });
                         }
-
-
-                        vProjectProfessor.Hours = totalHourAssign;
-
-                        db.ProjectsXProfessors.Add(vProjectProfessor);
-
-                        db.SaveChanges();
-                        TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente.";
-
-                        return RedirectToAction("AsignarProfesorProyecto");
+                        else
+                        {
+                            TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al proyecto";
+                            return RedirectToAction("AsignarProfesorProyecto");
+                        }
                     }
                     else
                     {
-                        TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al proyecto";
+                        TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor al proyecto";
                         return RedirectToAction("AsignarProfesorProyecto");
                     }
                 }
                 else
                 {
-                    TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor al proyecto";
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor al proyecto";
                     return RedirectToAction("AsignarProfesorProyecto");
                 }
             }
             else
             {
-                TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor al proyecto";
+                TempData[TempDataMessageKeyError] = "El profesor ya esta asignado a este proyecto, no se permite asignar dos veces a un profesor a un proyecto ";
                 return RedirectToAction("AsignarProfesorProyecto");
             }
-
 
         }
         // GET: /Proyecto/Delete/5
@@ -323,7 +328,8 @@ namespace SACAAE.Controllers
             var temp = db.Projects.Find(proyecto.ID);
             if (temp != null)
             {
-                db.Entry(temp).Property(p => p.StateID).CurrentValue = 2;
+                //db.Entry(temp).Property(p => p.StateID).CurrentValue = 2;
+                db.Projects.Remove(proyecto);
             }
             TempData[TempDataMessageKeyError] = "Proyecto eliminado correctamente.";
             db.SaveChanges();
@@ -456,7 +462,7 @@ namespace SACAAE.Controllers
         }
 
         /// <summary>
-        /// Esteban Segura Benavides
+        /// <autor>Esteban Segura Benavides</autor>
         /// Check posibles conflicts with the new project schedule and the all commission schedule related with determinated professor
         /// </summary>
         /// <param name="pProfessorID"></param>
@@ -483,19 +489,10 @@ namespace SACAAE.Controllers
                         var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
 
                         //Check the range of the schedule
-                        if (vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour)
-                        {
-                            return true;
-                        }
-                        else if (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour)
-                        {
-                            return true;
-                        }
-                        else if (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour)
-                        {
-                            return true;
-                        }
-                        else if (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour)
+                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
+                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
+                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
+                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
                         {
                             return true;
                         }
@@ -533,19 +530,10 @@ namespace SACAAE.Controllers
                         var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
 
                         //Check the range of the schedule
-                        if (vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour)
-                        {
-                            return true;
-                        }
-                        else if (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour)
-                        {
-                            return true;
-                        }
-                        else if (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour)
-                        {
-                            return true;
-                        }
-                        else if (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour)
+                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
+                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
+                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
+                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
                         {
                             return true;
                         }
@@ -583,28 +571,45 @@ namespace SACAAE.Controllers
                         var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
 
                         //Check the range of the schedule
-                        if (vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour)
+                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour)||
+                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
+                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
+                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
                         {
                             return true;
                         }
-                        else if (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour)
-                        {
-                            return true;
-                        }
-                        else if (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour)
-                        {
-                            return true;
-                        }
-                        else if (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour)
-                        {
-                            return true;
-                        }
+                        
                     }
                 }
             }
             return false;
         }
 
+        /// <summary>
+        /// Check if a professor is already assig in a project
+        /// </summary>
+        /// <param name="pProjectID"></param>
+        /// <param name="pProfessorID"></param>
+        /// <returns>if professor is already assign return true el return false</returns>
+        public bool isProfessorAssign(int pProjectID, int pProfessorID)
+        {
+            var vPeriod = Request.Cookies["Periodo"].Value;
+            var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
+
+            var getAssign = (from project_profesor in db.ProjectsXProfessors
+                             join professor in db.Professors on project_profesor.ProfessorID equals professor.ID
+                             join period in db.Periods on project_profesor.PeriodID equals period.ID
+                             where project_profesor.ProjectID == pProjectID & period.ID == vIDPeriod
+                             select new { professorID = professor.ID }).ToList();
+            foreach (var professor in getAssign)
+            {
+                if (pProfessorID == professor.professorID)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         #endregion
 
         #region Ajax

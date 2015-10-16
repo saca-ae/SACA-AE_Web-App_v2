@@ -1,0 +1,67 @@
+﻿@model SACAAE.Models.Course
+
+@{
+    ViewBag.Title = "Editar";
+    Layout = "~/Views/Shared/Privado.cshtml";
+}
+
+<head>
+    @Styles.Render("~/Content/custom")
+</head>
+<style>
+    #Courses {
+        width: 400px;
+    }
+
+    #Sedes {
+        width: 400px;
+    }
+</style>
+<script src="~/Scripts/jquery-2.1.4.min.js"></script>
+<script src="@Url.Content("~/Scripts/SiteScripts/table.js")"></script>
+<script src="@Url.Content("~/Scripts/SiteScripts/editAssignCourse.js")"></script>
+<h2 class="page-header">Editar Asignacion</h2>
+@using (Html.BeginForm())
+{
+
+
+    @Html.AntiForgeryToken()
+    <div class="editor-label">
+        @Html.Label("Cursos")
+        <br />
+        @Html.DropDownList("Courses", null, htmlAttributes: new { @class = "form-control" })
+    </div>
+
+    <div class="editor-label">
+        @Html.Label("Sedes")
+        <br />
+        @Html.DropDownList("Sedes", null, htmlAttributes: new { @class = "form-control" })
+    </div>
+
+    <div id="table_information_group">
+
+    </div>
+
+
+
+    <!-- Delete professor -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Remover Profesor</h4>
+                </div>
+                <div class="modal-body">
+                    <h2>¿Esta seguro que desea remover al profesor del grupo?</h2>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="deleteBtn" onclick="eliminar_asignacion_grupo()">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
