@@ -55,9 +55,6 @@ namespace SACAAE.Controllers
             {
                 return HttpNotFound();
             }
-
-            
-
             ViewBag.Sedes = new SelectList(db.Sedes, "ID", "Name");
             return View(curso);
         }
