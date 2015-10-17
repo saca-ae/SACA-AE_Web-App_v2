@@ -19,83 +19,131 @@ namespace SACAAE.Controllers
     public class EnviarCargaController : Controller
     {
         private SACAAEContext db = new SACAAEContext();
+        private const string TempDataMessageKeySuccess = "MessageSuccess";
+        ReporteInfo vReportInfo = new ReporteInfo();
+        Profesor[] vAcademicLoad;
+
         // GET: EnviarCarga
         public ActionResult Index()
         {
-            var Professors = db.Professors.ToList();
-            var viewModel = new List<ProfesorViewModel>();
-
-            Professors.ForEach(p => viewModel.Add(
-                new ProfesorViewModel()
-                {
-                    ID = p.ID,
-                    Name = p.Name,
-                    Link = p.Link,
-                    Tel1 = p.Tel1,
-                    Tel2 = p.Tel2,
-                    StateID = p.StateID.GetValueOrDefault(),
-                    Email = p.Email
-                }));
-
-            return View(viewModel);
-        }
-
-        public ActionResult SendAcademicLoad() 
-        {
-            ReporteInfo vReportInfo = new ReporteInfo();
             vReportInfo = setCourses(vReportInfo);
             vReportInfo = setProjects(vReportInfo);
             vReportInfo = setCommissions(vReportInfo);
-
-            Profesor[] vAcademicLoad = vReportInfo.todo_profesores.ToArray();
-            string profe_actual = "";
-
-            Array.Sort(vAcademicLoad, delegate(Profesor user1, Profesor user2)
-            {
-                return user1.Profesor_Nombre.CompareTo(user2.Profesor_Nombre);
-            });
+            vAcademicLoad = vReportInfo.todo_profesores.ToArray();
 
             var Professors = db.Professors.ToList();
+            var viewModel = new ListLoadViewModel();
+            viewModel.Items = new List<LoadViewModel>();
 
-            String vMessageSubject = "Carga Académica";
             for (int vCont = 0; vCont < Professors.Count(); vCont++)
             {
                 Professor vProf = Professors.ElementAt(vCont);
-                String vMessageBody = "Carga Académica del Semestre \n Profesor: " + vProf.Name + "\n";
+                int vActiveProfessor = 0; 
+                bool vCourses = false, vProjects = false, vComission = false ;
+                for (int vElement = 0; vElement < vAcademicLoad.Count(); vElement++)
+                {
+                    if (vAcademicLoad[vElement].Profesor_Nombre == vProf.Name)
+                    {
+                        vActiveProfessor = 1;
+                        if (vAcademicLoad[vElement].Tipo == "Carga docente") { vCourses = true; }
+                        if (vAcademicLoad[vElement].Tipo == "Carga Investigación Extensión") { vProjects = true; }
+                        if (vAcademicLoad[vElement].Tipo == "Carga Académico Administrativo") { vComission = true; }
+                    }
+                }
+                if (vActiveProfessor == 1)
+                {
+                    viewModel.Items.Add(
+                        new LoadViewModel()
+                        {
+                            Selected = true,
+                            Name = vProf.Name,
+                            Course = vCourses,
+                            Project = vProjects,
+                            Comission = vComission
+                        });
+                }
+            }
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// Sends all academy load from the actual period
+        /// </summary>
+        /// <author> Cristian Araya Fuentes </author> 
+        /// <returns></returns>
+        public void SendAcademicLoad(ListLoadViewModel pSelectedList) 
+        {
+            var Professors = db.Professors.ToList();
+            int vPeriod = int.Parse(Request.Cookies["Periodo"].Value);
+            String vMessageSubject = "Carga Académica";
+            vReportInfo = setCourses(vReportInfo);
+            vReportInfo = setProjects(vReportInfo);
+            vReportInfo = setCommissions(vReportInfo);
+            vAcademicLoad = vReportInfo.todo_profesores.ToArray();
+            for (int vCont = 0; vCont < Professors.Count(); vCont++)
+            {
+                Professor vProf = Professors.ElementAt(vCont);
+                String vMessageBody = "<html> <body>";
+                vMessageBody += "<h2> Carga Académica del siguiente periodo lectivo </h2> \n<h3>Profesor: " + vProf.Name + "</h3>\n";
+                vMessageBody += "<table rules='all' style='border-color: #666;' cellpadding='10'>";
+                vMessageBody += "<tr style='background: #eee;'> <td><strong>Nombre</strong> </td>   <td><strong>Aula</strong></td> <td><strong>Dia</strong></td>  <td><strong>Hora Inicio</strong></td> <td><strong>Hora Fin</strong></td> <td><strong>Grupo</strong></td> <td><strong>Sede</strong></td> <td><strong>Tipo</strong></td></tr>";
                 int vActiveProfessor = 0;
                 for (int vElement = 0; vElement < vAcademicLoad.Count(); vElement++)
                 {
                     if (vAcademicLoad[vElement].Profesor_Nombre == vProf.Name)
                     {
-                        vMessageBody += "Nombre: " + vAcademicLoad[vElement].Nombre + " Aula: " + vAcademicLoad[vElement].Aula 
-                            + " Día:" + vAcademicLoad[vElement].Dia +" Hora Inicio: " + vAcademicLoad[vElement].HoraInicio 
-                            +" Hora Fin:"+ vAcademicLoad[vElement].HoraFin + " Grupo: " + vAcademicLoad[vElement].Grupo + " Sede: " 
-                            + vAcademicLoad[vElement].Sede + "\n";
+                        if (pSelectedList.Items.Exists(match => match.Name == vProf.Name && match.Selected == true))
+                        {
+                            vMessageBody += "<tr><td>" + vAcademicLoad[vElement].Nombre + "</td><td>" + vAcademicLoad[vElement].Aula
+                                + "</td><td>" + vAcademicLoad[vElement].Dia + "</td><td>" + vAcademicLoad[vElement].HoraInicio
+                                + "</td><td>" + vAcademicLoad[vElement].HoraFin + "</td><td>" + vAcademicLoad[vElement].Grupo + "</td><td>"
+                                + vAcademicLoad[vElement].Sede + "</td><td>" + vAcademicLoad[vElement].Tipo + "</td></tr>";
                             vActiveProfessor = 1;
+                        }
                      }
                 }
+                vMessageBody += "</table> </body> </html>";
                 if ((vProf.Email != null) && (vActiveProfessor == 1)) 
                 {
                     sendEmail("cristian.arayaf@gmail.com",vMessageSubject,vMessageBody);
                 }
             }
-            return null;
         }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(ListLoadViewModel model)
+        {
+            if (model != null)
+            {
+                SendAcademicLoad(model);
+                TempData[TempDataMessageKeySuccess] = "Se ha enviado la carga académica correctamente";
+            }
+            return View(model);
+        }
+
+       /// <summary>
+       /// This function sends an email
+       /// </summary>
+       /// <author> Cristian Araya Fuentes </author> 
+       /// <param name="pEmail"> Email To </param>
+       /// <param name="pSubject"> Email's Subject </param>
+       /// <param name="pBody"> Email's Body </param>
         public void sendEmail(String pEmail, String pSubject, String pBody) 
         {
-            string from = "cargaacademica@saca-ae.net";
-            MailMessage message = new MailMessage(from, pEmail);
-            message.Subject = pSubject;
-            message.Body = pBody;
-            SmtpClient client = new SmtpClient("mail.saca-ae.net", 587);
-            client.UseDefaultCredentials = true;
-            client.Credentials = new System.Net.NetworkCredential("cargaacademica@saca-ae.net", "sacapassword4_");
+            string vFrom = "cargaacademica@saca-ae.net";
+            MailMessage vMail = new MailMessage(vFrom, pEmail);
+            vMail.Subject = pSubject;
+            vMail.Body = pBody;
+            vMail.IsBodyHtml = true;
+            SmtpClient vSMTPClient = new SmtpClient("mail.saca-ae.net", 587);
+            vSMTPClient.UseDefaultCredentials = true;
+            vSMTPClient.Credentials = new System.Net.NetworkCredential("cargaacademica@saca-ae.net", "sacapassword4_");
 
-            client.Send(message);
-
+            try { vSMTPClient.Send(vMail); }
+            catch { }
         }
-
 
         #region Helpers
 

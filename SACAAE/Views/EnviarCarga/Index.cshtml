@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SACAAE.Models.ViewModels.ProfesorViewModel>
+﻿@model SACAAE.Models.ViewModels.ListLoadViewModel
 
 @{
     ViewBag.Title = "Index";
@@ -7,14 +7,15 @@
 
 @section Scripts {
     <script type="text/javascript">
-    $(document).ready(function () {
-        $('#indexTable').DataTable({
-            "language": {
-                url: "/Content/DataTables/Spanish.json",
-            },
-            responsive: true
-        });
-    });
+        function SetAllCheckBoxes(obj) {
+            var c = new Array();
+            c = document.getElementsByTagName('input');
+            for (var i = 0; i < c.length; i++) {
+                if (c[i].id == 'select') {
+                    c[i].checked = obj.checked;
+                }
+            }
+        }
     </script>
 }
 <head>
@@ -22,62 +23,78 @@
 </head>
 
 <body>
-    <h1 class="page-header">Enviar Carga Académica a Profesor</h1>
-    @if (TempData.ContainsKey("MessageError"))
-    {
-        <p class="text-danger">@TempData["MessageError"].ToString()</p>
-    }
-    @if (TempData.ContainsKey("MessageSuccess"))
-    {
-        <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
-    }
-    <div class="dataTables_wrapper">
-        <table id="indexTable" class="table table-hover">
-            <thead>
-                <tr>
-                    <th>                  
-                    </th>
-                    <th class="text-center">
-                        Profesor
-                    </th>
-                    <th class="text-center">
-                        Cursos
-                    </th>
-                    <th class="text-center">
-                        Comisiones
-                    </th>
-                    <th class="text-center">
-                        Proyectos
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+        <h1 class="page-header">Enviar Carga Académica a Profesor</h1>
+        @if (TempData.ContainsKey("MessageError"))
+        {
+            <p class="text-danger">@TempData["MessageError"].ToString()</p>
+        }
+        @if (TempData.ContainsKey("MessageSuccess"))
+        {
+            <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+        }
+        
+        @using (Html.BeginForm())
+        { 
+        @Html.AntiForgeryToken()
+        <div class="dataTables_wrapper">
+            <table id="indexTable" class="table table-hover">
+                <thead>
                     <tr>
-                        <td>
-                            @Html.CheckBox("select1")
-                        </td>
-                        <td class="text-center">
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td class="text-center">
-                            @Html.CheckBox("selectCurso")
-                        </td>
-                        <td class="text-center">
-                            @Html.CheckBox("selectComision")
-                        </td>
-                        <td class="text-center">
-                            @Html.CheckBox("selectProyectos")
-                        </td>
+                        <th>
+                            @Html.CheckBox("checkboxId",true,
+                                  new Dictionary<string, object>{
+                                     {"id", "checkboxId"},
+                                     {"onclick","SetAllCheckBoxes(this)"},
+                                     {"data-role", "flipswitch"},
+                                     {"data-on-text", "complete"},
+                                     {"data-off-text", "incomplete"},
+                                     {"data-wrapper-class", "custom-size-flipswitch"}})
+                        </th>
+                        <th class="text-center">
+                            Profesor
+                        </th>
+                        <th class="text-center">
+                            Cursos
+                        </th>
+                        <th class="text-center">
+                            Comisiones
+                        </th>
+                        <th class="text-center">
+                            Proyectos
+                        </th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.Items.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.CheckBoxFor(modelItem => modelItem.Items[i].Selected,
+                                new Dictionary<string, object>
+                                    {{"id", "select"}})
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => modelItem.Items[i].Name)
+                                @Html.HiddenFor(modelItem => modelItem.Items[i].Name)
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => modelItem.Items[i].Course)
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => modelItem.Items[i].Comission)
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => modelItem.Items[i].Project)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-    <div style="margin: 0 auto;">
-        <button type="button" class="btn btn-default" id="btnSend"> @Html.ActionLink("Enviar", "SendAcademicLoad") </button>
-    </div>
+        <div style="margin: 0 auto;">
 
+            <input id="Submit1" type="submit" class="btn btn-primary" value="Enviar Carga Académica" />
+        </div>
+    }
 </body>
