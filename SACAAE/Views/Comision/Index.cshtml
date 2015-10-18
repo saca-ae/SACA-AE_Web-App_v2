@@ -22,10 +22,15 @@
         Comisiones
     </h1>
 
-    @if (TempData.ContainsKey("Message"))
+   @if (TempData.ContainsKey("MessageError"))
+   {
+    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+   }
+   
+    @if (TempData.ContainsKey("MessageSuccess"))
     {
-        <p class="text-success">@TempData["Message"].ToString()</p>
-    }
+        <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+    }   
     
     <p>
         <a href="@Url.Action("Create", "Comision")"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>  Agregar Comisión</a>

@@ -81,7 +81,7 @@ namespace SACAAE.Controllers
 
             int vPlanXSedeID = tomarIDPlanXSede(vSedeID, vPlanID).ID;
             int vBloqueXPlanID = obtenerIdBloqueXPlan(vPlanID, vBloqueID);
-            int vBloqueXPlanXCursoID = obtenerBloqueXPlanXCursoID(vBloqueXPlanID, vCursoID);
+            int vBloqueXPlanXCursoID = obtenerBloqueXPlanXCursoID(vBloqueXPlanID, vCursoID,vSedeID);
             for (int vContadorGrupos = 0; vContadorGrupos < cantidadGrupos; vContadorGrupos++)
             {
                 int vNumeroGrupo = ObtenerUltimoNumeroGrupo(vPlanXSedeID, vPeriodoID, vBloqueXPlanXCursoID) + 1;
@@ -145,6 +145,11 @@ namespace SACAAE.Controllers
             return (gvDatabase.BlocksXPlansXCourses.SingleOrDefault(relacion => relacion.BlockXPlanID == pBloqueXPlanID && relacion.CourseID == pCursoID).ID);
         }
 
+        public int obtenerBloqueXPlanXCursoID(int pBloqueXPlanID, int pCursoID, int pSede)
+        {
+            return (gvDatabase.BlocksXPlansXCourses.SingleOrDefault(relacion => relacion.BlockXPlanID == pBloqueXPlanID && relacion.CourseID == pCursoID && relacion.SedeID == pSede).ID);
+        }
+
         public Group obtenerUnGrupo(int id)
         {
             return gvDatabase.Groups.SingleOrDefault(grupo => grupo.ID == id);
@@ -192,10 +197,10 @@ namespace SACAAE.Controllers
         }
         
 
-        [Route("OfertaAcademica/Ofertas/List/{pSede:int}/{pModalidad:int}/{pPeriodo:int}")]
-        public ActionResult ObtenerOfertasAcademicas(int sede, int plan, int periodo)
+        [Route("OfertaAcademica/Ofertas/List/{pSede:int}/{pPlan:int}/{pPeriodo:int}")]
+        public ActionResult ObtenerOfertasAcademicas(int pSede, int pPlan, int pPeriodo)
         {
-            IQueryable listaOfertas = ListarGruposXSedeXPeriodo(plan, periodo);
+            IQueryable listaOfertas = ListarGruposXSedeXPeriodo(pPlan, pPeriodo);
             if (HttpContext.Request.IsAjaxRequest())
             {
                 return Json(listaOfertas, JsonRequestBehavior.AllowGet);

@@ -88,7 +88,6 @@ namespace SACAAE.Controllers
 
             var vEndHour = commission.End.ToString("dd/MM/yyyy");
 
-
             commissionViewModel.End = vEndHour;
             
             return View(commissionViewModel);
@@ -408,7 +407,7 @@ namespace SACAAE.Controllers
             {
                 return from comision in db.Commissions
                        orderby comision.Name
-                       where comision.StateID == 1 && comision.EntityType.ID == 1 || //TEC
+                       where comision.EntityType.ID == 1 || //TEC
                        comision.EntityType.ID == 2 || comision.EntityType.ID == 3 || //TEC-VIC TEC-REC
                        comision.EntityType.ID == 4 || comision.EntityType.ID == 10 //TEC-MIXTO TEC-Académico
                        select comision;
@@ -417,7 +416,7 @@ namespace SACAAE.Controllers
             {
                 return from comision in db.Commissions
                        orderby comision.Name
-                       where comision.StateID == 1 && comision.EntityType.ID == entidad
+                       where comision.EntityType.ID == entidad
                        select comision;
 
             }
