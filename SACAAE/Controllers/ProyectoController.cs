@@ -346,38 +346,141 @@ namespace SACAAE.Controllers
         //GET: Comision / EditarAsignacion/5
         public ActionResult EditarAsignacion(int id)
         {
-            ProjectXProfessor project_profesor = db.ProjectsXProfessors.Find(id);
+            if (Request.UrlReferrer != null)
+            {
+                ViewBag.returnUrl = Request.UrlReferrer.ToString();
+            }
+            else
+            {
+                ViewBag.returnUrl = null;
+            }
+            var project_professor = db.ProjectsXProfessors.Find(id);
+            var projectID = project_professor.ProjectID;
+
+            Project project = db.Projects.Find(projectID);
+
+            ScheduleProjectViewModel projectViewModel = new ScheduleProjectViewModel();
+            projectViewModel.Projects = project.Name;
 
             ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
 
-            return View(project_profesor);
+            return View(projectViewModel);
         }
 
         // POST: /Comision/EditarAsignacion/5
         [HttpPost, ActionName("EditarAsignacion")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditarAsignacion(String ID, int Professors, String editHourCharge)
+        public ActionResult EditarAsignacion(ScheduleProjectViewModel pSchedule)
         {
+            var vPeriod = Request.Cookies["Periodo"].Value;
+            var vIDPeriod = db.Periods.Find(int.Parse(vPeriod)).ID;
 
-            int ProjectXProfesorID = Convert.ToInt32(ID);
-            int vHourChange = Convert.ToInt32(editHourCharge);
+            var vProjectXProfessorID = Convert.ToInt32(pSchedule.Projects);
+            var vHourChange = Convert.ToInt32(pSchedule.HourCharge);
+            var vProfessorID = Convert.ToInt32(pSchedule.Professors);
+
             if (ModelState.IsValid)
             {
-               
-                ProjectXProfessor project_profesor = db.ProjectsXProfessors.Find(ProjectXProfesorID);
-                project_profesor.ProfessorID = Professors;
-                if (vHourChange == 1)
-                {
-                    project_profesor.HourAllocatedTypeID = 1;
-                }
-                else
-                {
-                    project_profesor.HourAllocatedTypeID = null;
-                }
-                db.SaveChanges();
 
-                TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
-                return RedirectToAction("Details", new { id = project_profesor.ProjectID });
+                ProjectXProfessor vProjectXProfessor = db.ProjectsXProfessors.Find(vProjectXProfessorID);
+                var vProjectID = vProjectXProfessor.ProjectID;
+
+                List<ScheduleProject> vSchedules = pSchedule.ScheduleProject;
+                string validate = validationsEdit(vProjectID, vProfessorID, vSchedules);
+                if (validate.Equals("true"))
+                {
+                    vProjectXProfessor.ProfessorID = vProfessorID;
+                    if (vHourChange == 1)
+                    {
+                        vProjectXProfessor.HourAllocatedTypeID = 1;
+                    }
+                    else
+                    {
+                        vProjectXProfessor.HourAllocatedTypeID = null;
+                    }
+                    var totalHourAssign = 0;
+                    vProjectXProfessor.Schedule.Clear();
+
+                    //Calculate the total hour assign
+                    foreach (ScheduleProject vSchedule in vSchedules)
+                    {
+                        Schedule vTempSchedule = existSchedule(vSchedule.Day, vSchedule.StartHour, vSchedule.EndHour);
+
+
+                        if (vTempSchedule != null)
+                        {
+                            //Get id schedule
+
+                            vTempSchedule.ProjectsXProfessors.Add(vProjectXProfessor);
+                            vProjectXProfessor.Schedule.Add(vTempSchedule);
+                        }
+
+
+                        //Convert StartHour to DateTime
+                        var vStartHour = DateTime.Parse(vSchedule.StartHour);
+                        var vEndHour = DateTime.Parse(vSchedule.EndHour);
+
+                        var CargaC = Math.Ceiling(vEndHour.Subtract(vStartHour).TotalHours);
+
+                        int vDiferencia = Convert.ToInt32(CargaC);
+
+
+                        totalHourAssign = totalHourAssign + vDiferencia;
+                    }
+
+
+                    vProjectXProfessor.Hours = totalHourAssign;
+                    db.SaveChanges();
+
+                    TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
+                    return RedirectToAction("Details", new { id = vProjectXProfessor.ProjectID });
+                }
+                else if (validate.Equals("falseIsGroupSchock"))
+                {
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al comisión";
+                    /* Get the list of professor related with commission */
+                    if (Request.UrlReferrer != null)
+                    {
+                        ViewBag.returnUrl = Request.UrlReferrer.ToString();
+                    }
+                    else
+                    {
+                        ViewBag.returnUrl = null;
+                    }
+
+                    var ProjectsXProfessors = db.ProjectsXProfessors.Find(vProjectXProfessorID);
+                    var projectID = ProjectsXProfessors.ProjectID;
+                    Project project = db.Projects.Find(projectID);
+                    ScheduleProjectViewModel projectViewModel = new ScheduleProjectViewModel();
+                    projectViewModel.Projects = project.Name;
+
+                    ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
+
+                    return View(projectViewModel);
+                }
+                else if (validate.Equals("falseIsCommissionSchock"))
+                {
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor al comisión";
+                    /* Get the list of professor related with commission */
+                    if (Request.UrlReferrer != null)
+                    {
+                        ViewBag.returnUrl = Request.UrlReferrer.ToString();
+                    }
+                    else
+                    {
+                        ViewBag.returnUrl = null;
+                    }
+
+                    var ProjectsXProfessors = db.ProjectsXProfessors.Find(vProjectXProfessorID);
+                    var projectID = ProjectsXProfessors.ProjectID;
+                    Project project = db.Projects.Find(projectID);
+                    ScheduleProjectViewModel projectViewModel = new ScheduleProjectViewModel();
+                    projectViewModel.Projects = project.Name;
+
+                    ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
+
+                    return View(projectViewModel);
+                }
             }
             else
             {
@@ -385,10 +488,11 @@ namespace SACAAE.Controllers
                 TempData[TempDataMessageKeyError] = "No se puede asignar al profesor al curso\n porque existe choque de horario";
 
                 /* Get list of professor related a  project*/
-                ProjectXProfessor project_profesor = db.ProjectsXProfessors.Find(ProjectXProfesorID);
+                ProjectXProfessor project_profesor = db.ProjectsXProfessors.Find(vProjectXProfessorID);
                 ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
                 return View(project_profesor);
             }
+            return View();
         }
 
 
@@ -609,6 +713,31 @@ namespace SACAAE.Controllers
                 }
             }
             return false;
+        }
+
+        public string validationsEdit(int vCommissionID, int vProfessorID, List<ScheduleProject> pSchedules)
+        {
+
+            //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+            bool isProjectShock = existShockScheduleCommission(vProfessorID, pSchedules);
+            if (!isProjectShock)
+            {
+                //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+                bool isGroupShock = existShockScheduleGroup(vProfessorID, pSchedules);
+                if (!isGroupShock)
+                {
+                    return "true";
+                }
+                else
+                {
+                    return "falseIsGroupSchock";
+                }
+            }
+            else
+            {
+                return "falseIsProjectSchock";
+            }
+
         }
         #endregion
 

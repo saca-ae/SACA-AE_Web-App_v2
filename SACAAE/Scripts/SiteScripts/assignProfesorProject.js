@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿var contador = 2;
+var acumulador = 2;
+$(document).ready(function () {
 
 
     $("#buttonPost").on("click", function () {
@@ -17,25 +19,93 @@
     });
 });
 
+function submit_form() {
+    //validate = true -> the table is correct
+    var validate = validate_schedule();
+    if (validate) {
+        var listName = "ScheduleProject";
 
-var contador = 2;
+        var i = 0;
+        $("#schedule_project > tbody > tr").each(function () {
+            var day = $(this).data("day");
+            var starthour = $(this).data("starthour");
+            var endhour = $(this).data("endhour");
+            $("#formPost").prepend("<input type='hidden' name='" + listName + "[" + i + "].Day' value='" + day + "'>");
+            $("#formPost").prepend("<input type='hidden' name='" + listName + "[" + i + "].StartHour' value='" + starthour + "'>");
+            $("#formPost").prepend("<input type='hidden' name='" + listName + "[" + i + "].EndHour' value='" + endhour + "'>");
+            i = i + 1;
+        });
+        $("#formPost").submit();
+    }
+    else {
+        alert("Existe choque de horario en el horrario de asignacion")
+    }
+}
+
+function validate_schedule() {
+    var table = document.getElementById("schedule_project");
+    var rowCount = table.rows.length;
+    var contador = 1;
+    while (contador < rowCount) {
+        var vDay = $('#trRow' + contador).attr('data-day');
+        var vstrStartHour = $('#trRow' + contador).attr('data-starthour');
+        var vstrEndHour = $('#trRow' + contador).attr('data-endhour');
+        var vStartHour = new Date("1/1/2015 " + vstrStartHour);
+        var vEndHour = new Date("1/1/2015 " + vstrEndHour);
+
+        var problems = false;
+        for (var i = contador; i < rowCount ; i++) {
+
+            var vNextDay = "";
+            var vstrNextStartHour = "";
+            var vstrNextEndHour = "";
+            if (i != rowCount - 1) {
+                vNextDay = $('#trRow' + (i + 1)).attr('data-day');
+                vstrNextStartHour = $('#trRow' + (i + 1)).attr('data-starthour');
+                vstrNextEndHour = $('#trRow' + (i + 1)).attr('data-endhour');
+
+                var vNextStartHour = new Date("1/1/2015 " + vstrNextStartHour);
+                var vNextEndHour = new Date("1/1/2015 " + vstrNextEndHour);
+
+                if (vDay == vNextDay) {
+                    if ((vStartHour <= vNextStartHour && vNextStartHour <= vEndHour) ||
+                        (vStartHour <= vNextEndHour && vNextEndHour <= vEndHour) ||
+                        (vNextStartHour <= vStartHour && vStartHour <= vNextEndHour) ||
+                        (vNextStartHour <= vEndHour && vEndHour <= vNextEndHour) ||
+                        (vStartHour >= vNextStartHour && vNextStartHour >= vEndHour) ||
+                        (vStartHour >= vNextEndHour && vNextEndHour >= vEndHour) ||
+                        (vNextStartHour >= vStartHour && vStartHour >= vNextEndHour) ||
+                        (vNextStartHour >= vEndHour && vEndHour >= vNextEndHour)) {
+                        //is inconsistency in the schedule
+                        return false;
+                    }
+                }
+                break;
+            }
+        }
+        contador++;
+    }
+    return true;
+
+}
+
 function obtener_dias() {
     var table = document.getElementById("schedule_project");
-    //var row_count = table.rows.length
-    //alert(contador);
     if (contador < 11) {
         var row = table.insertRow(contador);
-        row.setAttribute("id", "trRow" + contador);
+        row.setAttribute("id", "trRow" + acumulador);
         row.setAttribute("data-day", "Lunes");
         row.setAttribute("data-starthour", "07:30 am");
         row.setAttribute("data-endhour", "08:20 am");
-        contador++;
 
-        var celda_Day = row.insertCell(0);
+        contador += 1;
 
-        var celda_StarHour = row.insertCell(1);
-        var celda_EndHour = row.insertCell(2);
-        celda_Day.innerHTML = "<select id=\"tdRow" + (contador - 1) + "Day\" onchange=\"onchangeDaySelection(" + (contador - 1) + ")\">" +
+        var day_cell = row.insertCell(0);
+
+        var starhour_cell = row.insertCell(1);
+        var endhour_cell = row.insertCell(2);
+        var delete_cell = row.insertCell(3);
+        day_cell.innerHTML = "<select id=\"tdRow" + acumulador + "Day\" onchange=\"onchangeDaySelection(" + acumulador + ")\">" +
                                   "<option>Lunes</option>" +
                                   "<option>Martes</option>" +
                                   "<option>Miercoles</option>" +
@@ -43,7 +113,7 @@ function obtener_dias() {
                                   "<option>Viernes</option>" +
                                  " <option>Sabado</option>" +
                               "</select>";
-        celda_StarHour.innerHTML = "<select id=\"tdRow" + (contador - 1) + "StartHour\" onchange=\"onchangeStartHourSelection(" + (contador - 1) + ")\">" +
+        starhour_cell.innerHTML = "<select id=\"tdRow" + acumulador + "StartHour\" onchange=\"onchangeStartHourSelection(" + acumulador + ")\">" +
                                   "<option>07:30 am</option>" +
                                   "<option>08:30 am</option>" +
                                   "<option>09:30 am</option>" +
@@ -60,7 +130,7 @@ function obtener_dias() {
                                   "<option>08:00 pm</option>" +
                                   "<option>09:00 pm</option>" +
                               "</select>";
-        celda_EndHour.innerHTML = "<select id=\"tdRow" + (contador - 1) + "EndHour\" onchange=\"onchangeEndHourSelection(" + (contador - 1) + ")\">" +
+        endhour_cell.innerHTML = "<select id=\"tdRow" + acumulador + "EndHour\" onchange=\"onchangeEndHourSelection(" + acumulador + ")\">" +
                                       "<option>08:20 am</option>" +
                                       "<option>09:20 am</option>" +
                                       "<option>10:20 am</option>" +
@@ -76,10 +146,36 @@ function obtener_dias() {
                                       "<option>08:50 pm</option>" +
                                       "<option>09:50 pm</option>" +
                                     "</select>";
+        delete_cell.innerHTML = "<a  onclick = \"delete_row(" + acumulador + ")\" title=\"Eliminar\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a>";
+        delete_cell.style.textAlign = "center";
+        delete_cell.getElementsByTagName("a")[0].style.marginTop = "10px";
 
+        acumulador += 1;
     }
 
 
+}
+
+window.onload = function () {
+    document.getElementById("Projects").value = get_id(3);
+
+}
+
+
+function delete_row(i) {
+    var table = document.getElementById("schedule_project");
+    var trRow = table.getElementsByTagName("tr");
+    var rowCount = table.rows.length;
+    if (rowCount > 2) {
+
+
+        for (var j = 0; j < trRow.length; j++) {
+            if (trRow[j].id == "trRow" + i) {
+                table.deleteRow(j);
+                contador -= 1;
+            }
+        }
+    }
 }
 
 
@@ -89,13 +185,39 @@ function onchangeDaySelection(identificador) {
 }
 
 function onchangeStartHourSelection(identificador) {
-    var pStartHour = $('#tdRow' + identificador + 'StartHour').val();
-    $('#trRow' + identificador).attr('data-starthour', pStartHour);
+    var vStartHour = $('#tdRow' + identificador + 'StartHour').val();
+    var vLastStartHour = $('#trRow' + identificador).attr('data-starthour');
+    var vEndHour = $('#tdRow' + identificador + 'EndHour').val();
+
+    var date1 = new Date('1/1/2015 ' + vStartHour);
+    var date2 = new Date('1/1/2015 ' + vEndHour);
+
+    if (date1 < date2) {
+        $('#trRow' + identificador).attr('data-starthour', vStartHour);
+    }
+    else {
+        alert("Horario no permitido ");
+        $('#tdRow' + identificador + 'StartHour option:contains(' + vLastStartHour + ')').prop({ selected: true });
+    }
 }
 
 function onchangeEndHourSelection(identificador) {
+    var vStartHour = $('#tdRow' + identificador + 'StartHour').val();
+    var vLastEndHour = $('#trRow' + identificador).attr('data-endhour');
     var vEndHour = $('#tdRow' + identificador + 'EndHour').val();
-    $('#trRow' + identificador).attr('data-endhour', vEndHour);
+
+    var date1 = new Date('1/1/2015 ' + vStartHour);
+    var date2 = new Date('1/1/2015 ' + vEndHour);
+
+    if (date1 < date2) {
+        $('#trRow' + identificador).attr('data-endhour', vEndHour);
+    }
+
+    else {
+        alert("Horario no permitido ");
+        $('#tdRow' + identificador + 'EndHour option:contains(' + vLastEndHour + ')').prop({ selected: true });
+
+    }
 
 }
 

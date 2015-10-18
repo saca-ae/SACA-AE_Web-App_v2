@@ -32,13 +32,6 @@ function clear_table()
     for (var x = rowCount - 1; x > 0; x--) {
         table.deleteRow(x);
     }
-   /*var table = document.getElementById('professor_assign_commission');
-    var tableRows = table.getElementsByTagName('tr');
-    var rowCount = tableRows.length;
-    alert(rowCount);
-    for (var x = table.rows.length ; x > 0; x--) {
-        table.deleteRow(x);
-    }*/
 }
 /// <summary>
 ///  Return view for a detail group according a id group

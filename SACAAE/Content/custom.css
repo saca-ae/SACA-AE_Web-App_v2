@@ -305,14 +305,14 @@ ul.alert-dropdown {
     }
 
     /*Asignar comision a curso*/
-#schedule_comission table 
+#schedule_commission table 
 {
     border-collapse: collapse;
     margin-bottom: 20px;
     
 }
 
-#schedule_comission thead
+#schedule_commission thead
 {
 		background-color: #939699;
 		height: 40px;
@@ -322,7 +322,7 @@ ul.alert-dropdown {
     	color: #2C5B8C;
 }
 
-#schedule_comission th 
+#schedule_commission th 
 {
 	 font-weight: normal;
      text-align: center;
@@ -330,19 +330,19 @@ ul.alert-dropdown {
 }
 
 
-#schedule_comission table, #schedule_comission td,#schedule_comission th
+#schedule_commission table, #schedule_commission td,#schedule_commission th
 {
 	border: 1px solid black;
     width: 100px;
     empty-cells: hide;
 	
 }
-#schedule_comission td
+#schedule_commission td
 {
     padding: 0px;
    
 }
-#schedule_comission select
+#schedule_commission select
 {
     border: none;
     padding: 10px;
@@ -351,7 +351,7 @@ ul.alert-dropdown {
     height: 40px;
 }
 
-#schedule_comission option
+#schedule_commission option
 {
     text-align: left;
 }
@@ -547,6 +547,7 @@ ul.alert-dropdown {
  #assign_comission_schedule table {
         border-collapse: collapse;
         margin-bottom: 20px;
+        width: 150px;
     }
 
     #assign_comission_schedule thead {

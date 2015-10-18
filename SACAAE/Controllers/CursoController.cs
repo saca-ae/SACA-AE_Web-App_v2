@@ -333,6 +333,7 @@ namespace SACAAE.Controllers
                     if (vHourChange == 1)
                     {
                         grupo.HourAllocatedTypeID = 1;
+                        
                     }
                     else
                     {

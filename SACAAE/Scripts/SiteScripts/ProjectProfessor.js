@@ -1,4 +1,21 @@
-﻿$(document).ready(function () 
+﻿window.onload = function ()
+{
+    var route = "/Proyecto/14/Profesor"
+
+    $.getJSON(route, function (data) {
+        for (i = 0; i < data.length; i++) {
+            professors.value = data[i].professorID;
+            if (data[i].HourAllocatedTypeID == 1) {
+                hourType.value = 1;
+            }
+            else {
+                hourType.value = 0;
+            }
+
+        }
+    });
+}
+$(document).ready(function ()
 {
 
 
@@ -103,171 +120,4 @@ function onchangeStartHourSelection(identificador)
 function onchangeEndHourSelection(identificador) {
     var vStartHour = $('#tdRow' + identificador + 'StartHour').val();
     var vEndHour = $('#tdRow' + identificador + 'EndHour').val();
-    var int_hora_entrada;
-    var int_hora_salida;
-    switch (vStartHour) {
-        case "07:30 am":
-            int_hora_entrada = 730;
-            break;
-        case "08:30 am":
-            int_hora_entrada = 830;
-            break;
-        case "09:30 am":
-            int_hora_entrada = 930;
-            break;
-        case "10:30 am":
-            int_hora_entrada = 1030;
-            break;
-        case "11:30 am":
-            int_hora_entrada = 1130;
-            break;
-        case "12:30 pm":
-            int_hora_entrada = 1230;
-            break;
-
-        case "01:00 pm":
-            int_hora_entrada = 1300;
-            break;
-        case "02:00 pm":
-            int_hora_entrada = 1400;
-            break;
-
-        case "03:00 pm":
-            int_hora_entrada = 1500;
-            break;
-        case "04:00 pm":
-            int_hora_entrada = 1600;
-            break;
-
-        case "05:00 pm":
-            int_hora_entrada = 1700;
-            break;
-        case "06:00 pm":
-            int_hora_entrada = 1800;
-            break;
-
-        case "07:00 pm":
-            int_hora_entrada = 1900;
-            break;
-        case "08:00 pm":
-            int_hora_entrada = 2000;
-            break;
-
-        case "09:00 pm":
-            int_hora_entrada = 2100;
-            break;
-    }
-    /*
-    switch (vEndHour)
-    {
-        case "07:30 am":
-            int_hora_entrada = 730;
-            break;
-        case "08:30 am":
-            int_hora_entrada = 830;
-            break;
-        case "09:30 am":
-            int_hora_entrada = 930;
-            break;
-        case "10:30 am":
-            int_hora_entrada = 1030;
-            break;
-        case "11:30 am":
-            int_hora_entrada = 1130;
-            break;
-        case "12:30 pm":
-            int_hora_entrada = 1230;
-            break;
-
-        case "01:00 pm":
-            int_hora_entrada = 1300;
-            break;
-        case "02:00 pm":
-            int_hora_entrada = 1400;
-            break;
-
-        case "03:00 pm":
-            int_hora_entrada = 1500;
-            break;
-        case "04:00 pm":
-            int_hora_entrada = 1600;
-            break;
-
-        case "05:00 pm":
-            int_hora_entrada = 1700;
-            break;
-        case "06:00 pm":
-            int_hora_entrada = 1800;
-            break;
-
-        case "07:00 pm":
-            int_hora_entrada = 1900;
-            break;
-        case "08:00 pm":
-            int_hora_entrada = 2000;
-            break;
-
-        case "09:00 pm":
-            int_hora_entrada = 2100;
-            break;
-    }
-    */
-    switch (vEndHour) {
-        case "08:20 am":
-            int_hora_salida = 820;
-            break;
-        case "09:20 am":
-            int_hora_salida = 920;
-            break;
-        case "10:20 am":
-            int_hora_salida = 1020;
-            break;
-        case "11:20 am":
-            int_hora_salida = 1120;
-            break;
-        case "12:20 pm":
-            int_hora_salida = 1220;
-            break;
-
-        case "01:50 pm":
-            int_hora_salida = 1350;
-            break;
-        case "02:50 pm":
-            int_hora_salida = 1450;
-            break;
-
-        case "03:50 pm":
-            int_hora_salida = 1550;
-            break;
-        case "04:50 pm":
-            int_hora_salida = 1650;
-            break;
-
-        case "05:50 pm":
-            int_hora_salida = 1750;
-            break;
-        case "06:50 pm":
-            int_hora_salida = 1850;
-            break;
-
-        case "07:50 pm":
-            int_hora_salida = 1950;
-            break;
-        case "08:50 pm":
-            int_hora_salida = 2050;
-            break;
-
-        case "09:50 pm":
-            int_hora_salida = 2150;
-            break;
-    }
-
-    //********************************************************************************
-    if (int_hora_salida > int_hora_entrada) {
-        $('#trRow' + identificador).attr('data-endhour', vEndHour);
-    }
-    else {
-        // alert("Error");
-    }
-
 }
