@@ -512,7 +512,7 @@ namespace SACAAE.Controllers
             {
                 return from proyecto in db.Projects
                        orderby proyecto.Name
-                       where proyecto.StateID == 1 && proyecto.EntityTypeID == 1 || //TEC
+                       where proyecto.EntityTypeID == 1 || //TEC
                        proyecto.EntityTypeID == 2 || proyecto.EntityTypeID== 3 || //TEC-VIC TEC-REC
                        proyecto.EntityTypeID == 4 || proyecto.EntityTypeID == 10 //TEC-MIXTO TEC Acádemico
                        select proyecto;
@@ -521,7 +521,7 @@ namespace SACAAE.Controllers
             {
                 return from proyecto in db.Projects
                        orderby proyecto.Name
-                       where proyecto.StateID== 1 && proyecto.EntityTypeID == entidad
+                       where proyecto.EntityTypeID == entidad
                        select proyecto;
             }
         }

@@ -33,10 +33,7 @@
                 });
             });
             $("#sltPlan").change(function () {
-
                 var route = "/OfertaAcademica/Ofertas/List/" + $('select[name="sltSede"]').val() + "/" + $('select[name="sltPlan"]').val() + "/" + $('select[name="sltPeriodo"]').val();
-                //alert(route);
-
                 $.getJSON(route, function (data) {
                     var items = "<tr><th>Número Grupo</th><th>Curso</th></tr>  ";
                     $.each(data, function (i, oferta) {
