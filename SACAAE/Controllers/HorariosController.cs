@@ -131,10 +131,10 @@ namespace SACAAE.Controllers
                 //Get the list of schedules and classrooms from the View
             List<NewSchedule> vNewSchedule = pNewSchedule.NewSchedule;
 
-            bool vIsValidateClassroom = isInternScheduleValid(vNewSchedule);
+            bool vIsValidateClassroom=true;// = isInternScheduleValid(vNewSchedule);
 
-            if (vIsValidateClassroom)
-            {
+            //if (vIsValidateClassroom)
+            //{
                 //Iterate the list of schedules
                 foreach (NewSchedule tempSchedule in vNewSchedule)
                 {
@@ -270,12 +270,12 @@ namespace SACAAE.Controllers
                     TempData["Message"] = "Error: Choque de horario";
                     return RedirectToAction("Index");
                 }
-            }
+            /*}
             else
             {
                 TempData["Message"] = "Error: Choque de horario interno";
                 return RedirectToAction("Index");
-            }
+            }*/
            
         }
             
@@ -475,12 +475,12 @@ namespace SACAAE.Controllers
 
             return true;
         }
-
+         
         public bool isInternScheduleValid( List<NewSchedule> pNewSchedule)
         {
             foreach (NewSchedule vTempSchedule in pNewSchedule)
             {
-                pNewSchedule.Remove(vTempSchedule);
+                //pNewSchedule.Remove(vTempSchedule);
                 foreach (NewSchedule vNTempSchedule in pNewSchedule)
                 {
                     if (vTempSchedule.Day.Equals(vNTempSchedule.Day))

@@ -23,11 +23,17 @@
 
 @if (TempData.ContainsKey("MessageError"))
 {
-    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+    <div class="alert alert-danger" role="alert">
+        <p class="text-danger">@TempData["MessageError"].ToString()</p>
+    </div>
+    
 }
 @if (TempData.ContainsKey("MessageSuccess"))
 {
-    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+    <div class="alert alert-success" role="alert">
+        <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+    </div>
+
 }
 
 <p>

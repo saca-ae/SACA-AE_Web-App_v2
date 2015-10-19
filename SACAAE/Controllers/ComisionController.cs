@@ -277,18 +277,18 @@ namespace SACAAE.Controllers
             }
             else if(validate.Equals("falseIsGroupSchock"))
             {
-                TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al comisión";
+                TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor a la comisión";
                 return RedirectToAction("AsignarProfesorComision");
             }
             else if(validate.Equals("falseIsProjectSchock"))
             {
-                TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor al comisión";
+                TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor a la comisión";
                 return RedirectToAction("AsignarProfesorComision");
             }
                 
             else if(validate.Equals("falseIsCommissionSchock"))
             {
-                TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor al comisión";
+                TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor a la comisión";
                 return RedirectToAction("AsignarProfesorComision");
             }
             else if (validate.Equals("falseIsProfessorSchock"))
@@ -568,12 +568,12 @@ namespace SACAAE.Controllers
             var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
 
             //Get the day, starthour and endhour where professor was assign in commission
-            var commission_schedule = db.SP_getProfessorScheduleProject(pProfessorID, vPeriodID).ToList();
+            var project_schedule = db.SP_getProfessorScheduleProject(pProfessorID, vPeriodID).ToList();
 
             //Verify each scheedule with the new assign information
             foreach (var vNewSchedule in pSchedules)
             {
-                foreach (var vActualScheduleCommission in commission_schedule)
+                foreach (var vActualScheduleCommission in project_schedule)
                 {
                     if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
                     {
@@ -609,12 +609,12 @@ namespace SACAAE.Controllers
             var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
 
             //Get the day, starthour and endhour where professor was assign in commission
-            var commission_schedule = db.SP_getProfessorScheduleGroup(pProfessorID, vPeriodID).ToList();
+            var group_schedule = db.SP_getProfessorScheduleGroup(pProfessorID, vPeriodID).ToList();
 
             //Verify each scheedule with the new assign information
             foreach (var vNewSchedule in pSchedules)
             {
-                foreach (var vActualScheduleCommission in commission_schedule)
+                foreach (var vActualScheduleCommission in group_schedule)
                 {
                     if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
                     {
@@ -664,6 +664,13 @@ namespace SACAAE.Controllers
             return false;
         }
 
+        /// <summary>
+        /// <autor>Esteban Segura Benavides</autor>
+        /// Check all posibles shocks in all schedules of the professor
+        /// </summary>
+        /// <param name="vProfessorID"></param>
+        /// <param name="pGroupID"></param>
+        /// <returns></returns>
         public string validations(int vCommissionID, int vProfessorID, List<ScheduleComission> pSchedules)
         {
             bool vIsProfessorAssign = isProfessorAssign(Convert.ToInt32(vCommissionID), Convert.ToInt32(vProfessorID));
