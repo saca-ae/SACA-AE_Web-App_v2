@@ -193,6 +193,15 @@ namespace SACAAE.Controllers
         //GET: /Proyecto/AsignarProfesorProyecto/5
         public ActionResult AsignarProfesorProyecto(int? id)
         {
+            if (Request.UrlReferrer != null)
+            {
+                ViewBag.returnUrl = Request.UrlReferrer.ToString();
+            }
+            else
+            {
+                ViewBag.returnUrl = null;
+            }
+
             Project project = db.Projects.Find(id);
             ScheduleProjectViewModel projectViewModel = new ScheduleProjectViewModel();
             projectViewModel.Projects = project.Name;

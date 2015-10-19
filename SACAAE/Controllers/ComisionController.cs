@@ -204,6 +204,15 @@ namespace SACAAE.Controllers
         public ActionResult AsignarProfesorComision(int? id)
         
         {
+            if (Request.UrlReferrer != null)
+            {
+                ViewBag.returnUrl = Request.UrlReferrer.ToString();
+            }
+            else
+            {
+                ViewBag.returnUrl = null;
+            }
+
             Commission commission = db.Commissions.Find(id);
             ScheduleComissionViewModel commissionViewModel = new ScheduleComissionViewModel();
             commissionViewModel.Commissions = commission.Name;
