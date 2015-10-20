@@ -75,7 +75,7 @@
                     @item.End.ToString("dd/MM/yyyy")
                 </td>
                 <td class="text-center">
-                    @item.State.Name
+                    @Html.DisplayFor(modelItem => item.State.Name)
                 </td>
                 <td class="text-center">
                     <a href="@Url.Action("Details", new { id = item.ID })" title="Ver detalle"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
