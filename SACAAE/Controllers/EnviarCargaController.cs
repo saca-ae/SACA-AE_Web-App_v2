@@ -278,11 +278,13 @@ namespace SACAAE.Controllers
         private ReporteInfo setProjects(ReporteInfo pReportInfo)
         {
             var entidad_temp = "";
+            var vPeriodID = int.Parse(Request.Cookies["Periodo"].Value);
 
             var vProjects = db.Projects.ToList();
+            
             foreach (var vProject in vProjects)
             {
-                var vProfessors = db.ProjectsXProfessors.Where(p => p.ProjectID == vProject.ID).ToList();
+                var vProfessors = db.ProjectsXProfessors.Where(p => p.ProjectID == vProject.ID && p.PeriodID == vPeriodID).ToList();
                 foreach (var vProfe in vProfessors)
                 {
                     var vSchedule = vProfe.Schedule.ToList();
@@ -401,11 +403,12 @@ namespace SACAAE.Controllers
         private ReporteInfo setCommissions(ReporteInfo pReportInfo)
         {
             var entidad_temp = "";
+            var vPeriodID = int.Parse(Request.Cookies["Periodo"].Value);
 
             var vCommissions = db.Commissions.ToList();
             foreach (var vCommission in vCommissions)
             {
-                var vProfessors = db.CommissionsXProfessors.Where(p => p.CommissionID == vCommission.ID).ToList();
+                var vProfessors = db.CommissionsXProfessors.Where(p => p.CommissionID == vCommission.ID && p.PeriodID == vPeriodID).ToList();
                 foreach (var vProfe in vProfessors)
                 {
                     var vSchedule = vProfe.Schedule.ToList();
