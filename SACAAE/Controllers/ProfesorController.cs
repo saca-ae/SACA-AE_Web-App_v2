@@ -18,7 +18,8 @@ namespace SACAAE.Controllers
     public class ProfesorController : Controller
     {
         private SACAAEContext db = new SACAAEContext();
-
+        private const string TempDataMessageKeySuccess = "MessageSuccess";
+        private const string TempDataMessageKeyError = "MessageError";
         // GET: /Professor/
         public ActionResult Index()
         {
@@ -187,6 +188,7 @@ namespace SACAAE.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(profesor).State = EntityState.Modified;
+                TempData[TempDataMessageKeySuccess] = "Profesor editado correctamente";
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

@@ -6,17 +6,8 @@
 
 @section Scripts {
     <script src="@Url.Content("~/Scripts/SiteScripts/GuardarDias.js")"></script>
-    <script src="@Url.Content("~/Scripts/SiteScripts/ProjectProfessor.js")"></script>
-    <script>
-        window.onload = function(){
-            document.getElementById("Projects").value = get_id(3);
-        }
+    <script src="@Url.Content("~/Scripts/SiteScripts/assignProfesorProject.js")"></script>
 
-        function get_id(number) {
-            var url = window.location.pathname.split('/');
-            return url[number];
-        }
-    </script>
 }
 
 
@@ -28,13 +19,19 @@
     <h2 class="page-header">Asignar Profesor a Proyecto</h2>
     <div class="col-lg-4">
         <div class="span12">
-            @if (TempData.ContainsKey("MessageSuccess"))
-            {
-                <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
-            }
             @if (TempData.ContainsKey("MessageError"))
             {
-                <p class="text-danger">@TempData["MessageError"].ToString()</p>
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    @TempData["MessageError"].ToString()
+                </div>
+            }
+            @if (TempData.ContainsKey("MessageSuccess"))
+            {
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    @TempData["MessageSuccess"].ToString()
+                </div>
             }
             @using (Html.BeginForm("AsignarProfesorProyecto", "Proyecto", FormMethod.Post, new { @id = "formPost" }))
             {
@@ -75,6 +72,7 @@
                             <th>Dia</th>
                             <th>Inicio</th>
                             <th>Fin</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -131,18 +129,21 @@
                                     <option>09:50 pm</option>
                                 </select>
                             </td>
+                            <td>
+                                <a onclick="delete_row(1)" title="Eliminar"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
                 @Html.HiddenFor(model => model.Projects)
                 <p>
-                    <a id="assign_comission" onclick="obtener_dias()" href="#"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Horario</a>
+                    <a id="assign_comission" onclick="obtener_dias()"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Horario</a>
                 </p>
 
                 <p>
-                    <input id="buttonPost" type="submit" value="Asignar" class="btn" />
+                    <input id="buttonPost" type="button" value="Asignar" class="btn" onclick="submit_form()" />
 
-
+                    <a href="@ViewBag.returnUrl">Cancelar</a>
                 </p>
             }
         </div>

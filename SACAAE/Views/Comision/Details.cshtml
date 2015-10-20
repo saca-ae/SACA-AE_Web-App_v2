@@ -8,57 +8,62 @@
 <script src="@Url.Content("~/Scripts/SiteScripts/commissionDetails.js")"></script>
 
 <br />
-    <h2>Detalles de la Comisi&oacute;n</h2>
-    <hr />
+<h2>Detalles de la Comisi&oacute;n</h2>
+<hr />
 <!--Show success message-->
-@if (TempData.ContainsKey("MessageSuccess"))
-{
-    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
-}
-<!--Show error message-->
 @if (TempData.ContainsKey("MessageError"))
 {
-    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @TempData["MessageError"].ToString()
+    </div>
 }
-        <table id="commission_information">
-            <thead>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="static_info">Nombre</td>
-                    <td class="dynamic_info">@Html.DisplayFor(model => model.Name)</td>
-                </tr>
-                <tr>
-                    <td class="static_info">Inicio</td>
-                    <td class="dynamic_info">@Html.DisplayFor(model => model.Start)</td>
-                </tr>
-                <tr>
-                    <td class="static_info">Fin</td>
-                    <td class="dynamic_info">@Html.DisplayFor(model => model.End)</td>
-                </tr>
-            </tbody>
+@if (TempData.ContainsKey("MessageSuccess"))
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @TempData["MessageSuccess"].ToString()
+    </div>
+}
+<table id="commission_information">
+    <thead>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="static_info">Nombre</td>
+            <td class="dynamic_info">@Html.DisplayFor(model => model.Name)</td>
+        </tr>
+        <tr>
+            <td class="static_info">Inicio</td>
+            <td class="dynamic_info">@Html.DisplayFor(model => model.Start)</td>
+        </tr>
+        <tr>
+            <td class="static_info">Fin</td>
+            <td class="dynamic_info">@Html.DisplayFor(model => model.End)</td>
+        </tr>
+    </tbody>
 
-        </table>
-        <h3>Profesores</h3>
-        <a href="@Url.Action("AsignarProfesorComision", new { id = Model.ID })">
+</table>
+<h3>Profesores</h3>
+<a href="@Url.Action("AsignarProfesorComision", new { id = Model.ID })">
     <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Asignar Profesor
 </a>
     
-        <table id="professor_assign_commission" class="table">
-            <thead>
-                <th>Nombre</th>
-                <th>Horas Dedicadas</th>
-                <th>Acciones</th>
-            </thead>
+<table id="professor_assign_commission" class="table">
+    <thead>
+        <th>Nombre</th>
+        <th>Horas Dedicadas</th>
+        <th>Acciones</th>
+    </thead>
                
-            <tbody>
-            </tbody>
-        </table>
+    <tbody>
+    </tbody>
+</table>
    
-        <p>
-            @Html.ActionLink("Editar", "Edit", new { id = Model.ID }) |
-            @Html.ActionLink("Regresar", "Index")
-        </p>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Regresar", "Index")
+</p>
    
  <!-- Delete professor -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">

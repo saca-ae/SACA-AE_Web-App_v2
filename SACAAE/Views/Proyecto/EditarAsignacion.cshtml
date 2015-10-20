@@ -1,64 +1,32 @@
-﻿@model SACAAE.Models.ProjectXProfessor
+﻿@model SACAAE.Models.ViewModels.ScheduleProjectViewModel
 
 @{
-    ViewBag.Title = "EditarAsignacion";
+    ViewBag.Title = "Editar Asignacion";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
 
 <link href="~/Content/custom.css" rel="stylesheet" />
-<script>
-    window.onload = function () {
-        var professors = document.getElementById("Professors");
-        var hourType = document.getElementById("editHourCharge");
-        var table = document.getElementById('assign_project_schedule').getElementsByTagName('tbody')[0];
-        var route = "/Proyecto/" + get_id(3) + "/Profesor"
+<script src="@Url.Content("~/Scripts/SiteScripts/projectEditAssign.js")"></script>
+    
+<br />
+<h2>Editar Asignacion</h2>
+<hr />
+@if (TempData.ContainsKey("MessageError"))
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @TempData["MessageError"].ToString()
+    </div>
+}
+@if (TempData.ContainsKey("MessageSuccess"))
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @TempData["MessageSuccess"].ToString()
+    </div>
+}
 
-        $.getJSON(route, function (data) {
-            for (i = 0; i < data.length; i++) {
-                professors.value = data[i].professorID;
-                if (data[i].HourAllocatedTypeID == 1) {
-                    hourType.value = 1;
-                }
-                else {
-                    hourType.value = 0;
-                }
-
-            }
-        });
-        var route = "/Proyecto/getScheduleProfesor/" + get_id(3);
-        $.getJSON(route, function (data) {
-
-            for (i = 0; i < data.length; i++) {
-                var row = table.insertRow(table.rows.length);
-                var day_cell = row.insertCell(0);
-                var start_cell = row.insertCell(1);
-                var end_cell = row.insertCell(2);
-
-                day_cell.innerHTML = "<p>" + data[i].Day + "</p>";
-                day_cell.style.textAlign = "center";
-                day_cell.getElementsByTagName("p")[0].style.marginTop = "10px";
-
-                start_cell.innerHTML = "<p>" + data[i].StartHour + "</p>";
-                start_cell.style.textAlign = "center";
-                start_cell.getElementsByTagName("p")[0].style.marginTop = "10px";
-
-                end_cell.innerHTML = "<p>" + data[i].EndHour + "</p>";
-                end_cell.style.textAlign = "center";
-                end_cell.getElementsByTagName("p")[0].style.marginTop = "10px";
-            }
-        });
-    }
-
-
-    function get_id(number) {
-        var url = window.location.pathname.split('/');
-        return url[number];
-    }
-</script>
-
-<h2>EditarAsignacion</h2>
-
-@using (Html.BeginForm())
+@using (Html.BeginForm("EditarAsignacion", "Proyecto", FormMethod.Post, new { @id = "formPost" }))
 {
     @Html.AntiForgeryToken()
     <br />
@@ -69,7 +37,7 @@
             <div class="editor-label">
                 @Html.Label("Proyecto")
                 <br />
-                @Html.DisplayFor(model => model.Project.Name)
+                @Html.DisplayFor(model => model.Projects)
             </div>
             <br />
             <div class="editor-label">
@@ -84,7 +52,7 @@
             <div class="editor-field">
                 @Html.Label("Hora Reconocimiento")
 
-                <select onchange="changeHourCharge()" id="editHourCharge" name="editHourCharge" class="form-control ">
+                <select id="HourCharge" name="HourCharge" class="form-control ">
 
                     <option selected="selected" value="1">Si</option>
                     <option value="0">No</option>
@@ -99,19 +67,23 @@
                             <th>Dia</th>
                             <th>Inicio</th>
                             <th>Fin</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
+                <p>
+                    <a id="assign_project" onclick="obtener_dias()" > <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Horario</a>
+                </p>
             </div>
         </div>
         </div>
     <div class="col-sm-2"></div>
     
     </div>
-
+    @Html.HiddenFor(m => m.Projects)
     <p>
-        <input type="submit" value="Editar" class="btn" id="Editar_Asignacion" /> |
-        @Html.ActionLink("Cancelar", "Details", new { id = Model.ProjectID })
+        <input type="button" value="Editar" class="btn" id="Editar_Asignacion" onclick="submit_form()"  /> |
+        <a href="@ViewBag.returnUrl">Cancelar</a>
     </p>
 }

@@ -11,24 +11,26 @@
     <script src="@Url.Content("~/Scripts/SiteScripts/GuardarDias.js")"></script>
     <script src="@Url.Content("~/Scripts/SiteScripts/assignProfesorCommission.js")"></script>
 
-    <script>
-        window.onload = function () {
-            document.getElementById("Commissions").value = get_id(3);
-        }
-    </script>
+
 }
 
 <body onload="Load()">
     <h2 class="page-header">Asignar Profesor a Comisión</h2>
     <div class="col-lg-4">
         <div class="span12">
-            @if (TempData.ContainsKey("MessageSuccess"))
-            {
-                <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
-            }
             @if (TempData.ContainsKey("MessageError"))
             {
-                <p class="text-danger">@TempData["MessageError"].ToString()</p>
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    @TempData["MessageError"].ToString()
+                </div>
+            }
+            @if (TempData.ContainsKey("MessageSuccess"))
+            {
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    @TempData["MessageSuccess"].ToString()
+                </div>
             }
             @using (Html.BeginForm("AsignarProfesorComision", "Comision", FormMethod.Post, new { @id = "formPost" }))
             {
@@ -68,13 +70,14 @@
                 </div>
                 <br />
 
-                <table id="schedule_comission">
+                <table id="schedule_commission">
 
                     <thead>
                         <tr>
                             <th>Dia</th>
                             <th>Inicio</th>
                             <th>Fin</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -131,6 +134,9 @@
                                     <option>09:50 pm</option>
                                 </select>
                             </td>
+                            <td>
+                                <a onclick="delete_row(1)" title="Eliminar"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -138,11 +144,11 @@
                 <!--<input id="Commissions" value="" class="form-control" hidden="hidden" />-->
                 @Html.HiddenFor(m => m.Commissions)
                 <p>
-                    <a id="assign_comission" onclick="obtener_dias()" href="#"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Horario</a>
+                    <a id="assign_comission" onclick="obtener_dias()"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Horario</a>
                 </p>
 
                 <p>
-                    <input id="buttonPost" type="submit"  value="Asignar" class="btn" />
+                    <input id="buttonPost" type="button" value="Asignar" class="btn" onclick="submit_form()" />
 
                 </p>
             }

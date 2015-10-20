@@ -297,10 +297,12 @@
     <Content Include="Scripts\SiteScripts\assignProfesorCommission.js" />
     <Content Include="Scripts\SiteScripts\assignProfesorProject.js" />
     <Content Include="Scripts\SiteScripts\commissionDetails.js" />
+    <Content Include="Scripts\SiteScripts\commissionEditAssign.js" />
     <Content Include="Scripts\SiteScripts\editAssignCommission.js" />
     <Content Include="Scripts\SiteScripts\editAssignCourse.js" />
     <Content Include="Scripts\SiteScripts\editAssigProject.js" />
     <Content Include="Scripts\SiteScripts\projectDetails.js" />
+    <Content Include="Scripts\SiteScripts\projectEditAssign.js" />
     <Content Include="WebServiceMobile.svc" />
     <None Include="Properties\PublishProfiles\saca-ae.net - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\saca-ae.net - Web Deploy.pubxml" />
@@ -470,7 +472,6 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\BlockXPlanXCourses\" />
     <Folder Include="Views\Reportes\" />
   </ItemGroup>
   <ItemGroup>

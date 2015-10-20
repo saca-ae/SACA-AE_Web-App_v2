@@ -2,13 +2,24 @@
     ViewBag.Title = "Inicio";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
-<body>
-    <!--
+
+<div style="margin-top: 50px;">
+    @{
+        var alerts = (Request.Cookies["alerts"] != null) ? Request.Cookies["alerts"].Value : "false";
+        if (Convert.ToBoolean(alerts))
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Existen comisiones o proyectos caducados. <a href="@Url.Action("Index", "Alerts")" class="alert-link">Solucionar</a>
+            </div>
+        }
+    }    
+
     <div class="jumbotron">
         <h1>Bienvenido!</h1>
-        <p>Bienvenido al Sistema de Asignación de Carga Académica de la Escuela de Administración de Empresas - TEC.
-           Seleccione una entidad de la lista de botones ubicados en la barra superior derecha para filtrar los resultados. </p>
+        <p>
+            Sistema de Asignación de Carga Académica de la Escuela de Administración de Empresas - TEC.
+        </p>
 
     </div>
-        -->
-</body>
+</div>

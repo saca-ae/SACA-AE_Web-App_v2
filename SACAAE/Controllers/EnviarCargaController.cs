@@ -105,7 +105,7 @@ namespace SACAAE.Controllers
                 vMessageBody += "</table> </body> </html>";
                 if ((vProf.Email != null) && (vActiveProfessor == 1)) 
                 {
-                    sendEmail("cristian.arayaf@gmail.com",vMessageSubject,vMessageBody);
+                    sendEmail("esteban.1703@gmail.com",vMessageSubject,vMessageBody);
                 }
             }
         }
