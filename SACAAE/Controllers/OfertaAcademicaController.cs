@@ -81,7 +81,7 @@ namespace SACAAE.Controllers
 
             int vPlanXSedeID = tomarIDPlanXSede(vSedeID, vPlanID).ID;
             int vBloqueXPlanID = obtenerIdBloqueXPlan(vPlanID, vBloqueID);
-            int vBloqueXPlanXCursoID = obtenerBloqueXPlanXCursoID(vBloqueXPlanID, vCursoID,vSedeID);
+            int vBloqueXPlanXCursoID = obtenerBloqueXPlanXCursoID(vBloqueXPlanID, vCursoID, vSedeID);
             for (int vContadorGrupos = 0; vContadorGrupos < cantidadGrupos; vContadorGrupos++)
             {
                 int vNumeroGrupo = ObtenerUltimoNumeroGrupo(vPlanXSedeID, vPeriodoID, vBloqueXPlanXCursoID) + 1;
