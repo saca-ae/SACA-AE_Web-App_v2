@@ -174,13 +174,14 @@ namespace SACAAE.Controllers
             gvDatabase.SaveChanges();
         }
 
-        public IQueryable ListarGruposXSedeXPeriodo(int pPlanID, int pPeriodoID)
+        public IQueryable ListarGruposXSedeXPeriodo(int pPlanID, int pPeriodoID, int pSedeID)
         {
             // Grupos.PlanDeEstudio == pPlanID &&
             return from Grupos in gvDatabase.Groups
                    join BloqueXPlanXCursos in gvDatabase.BlocksXPlansXCourses on Grupos.BlockXPlanXCourseID equals BloqueXPlanXCursos.ID
+                   join BloqueXPlan in gvDatabase.AcademicBlocksXStudyPlans on BloqueXPlanXCursos.BlockXPlanID equals BloqueXPlan.ID 
                    join Cursos in gvDatabase.Courses on BloqueXPlanXCursos.CourseID equals Cursos.ID
-                   where Grupos.PeriodID == pPeriodoID
+                   where Grupos.PeriodID == pPeriodoID && BloqueXPlanXCursos.SedeID == pSedeID && BloqueXPlan.PlanID == pPlanID
                    select new { Grupos.ID, Grupos.Number, Cursos.Name};
         }
 
@@ -197,10 +198,10 @@ namespace SACAAE.Controllers
         }
         
 
-        [Route("OfertaAcademica/Ofertas/List/{pSede:int}/{pPlan:int}/{pPeriodo:int}")]
-        public ActionResult ObtenerOfertasAcademicas(int pSede, int pPlan, int pPeriodo)
+        [Route("OfertaAcademica/Ofertas/List/{pSede:int}/{pPlan:int}/{pPeriod:int}")]
+        public ActionResult ObtenerOfertasAcademicas(int pSede, int pPlan, int pPeriod)
         {
-            IQueryable listaOfertas = ListarGruposXSedeXPeriodo(pPlan, pPeriodo);
+            IQueryable listaOfertas = ListarGruposXSedeXPeriodo(pPlan, pPeriod,pSede);
             if (HttpContext.Request.IsAjaxRequest())
             {
                 return Json(listaOfertas, JsonRequestBehavior.AllowGet);
@@ -240,8 +241,8 @@ namespace SACAAE.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        [Route("OfertaAcademica/Cursos/List/{plan}/{bloque}")]
-        public ActionResult ObtenerCursos(int plan, int bloque)  //Por entidad
+        [Route("OfertaAcademica/Cursos/List/{plan}/{bloque}/{pSedeID}")]
+        public ActionResult ObtenerCursos(int plan, int bloque, int pSedeID)  //Por entidad
         {
             String entidad = Request.Cookies["Entidad"].Value;
             int entidadID = 0;
@@ -260,7 +261,8 @@ namespace SACAAE.Controllers
                        join BloqueXPlanXCursos in gvDatabase.BlocksXPlansXCourses on curso.ID equals BloqueXPlanXCursos.CourseID
                        join BloquesXPlan in gvDatabase.AcademicBlocksXStudyPlans on BloqueXPlanXCursos.BlockXPlanID equals BloquesXPlan.ID
                        join PlanDeEstudio in gvDatabase.StudyPlans on BloquesXPlan.PlanID equals PlanDeEstudio.ID
-                       where BloquesXPlan.PlanID == plan && BloquesXPlan.BlockID == bloque && PlanDeEstudio.EntityTypeID == entidadID
+                       where BloquesXPlan.PlanID == plan && BloquesXPlan.BlockID == bloque && PlanDeEstudio.EntityTypeID == entidadID &&
+                       BloqueXPlanXCursos.SedeID == pSedeID
                        orderby curso.Name
                        select new { curso.ID, curso.Name };
 

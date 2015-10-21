@@ -1,16 +1,23 @@
 ﻿@model SACAAE.Models.BlockXPlanXCourse
-    ViewBag.Title = "Agregar Curso a Bloque Academico";
+@{ 
+   ViewBag.Title = "Agregar Curso a Bloque Academico";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
 
 <h2>Agregar Curso a Bloque Académico</h2>
 @if (TempData.ContainsKey("MessageError"))
 {
-    <p class="text-danger">@TempData["MessageError"].ToString()</p>
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @TempData["MessageError"].ToString()
+    </div>
 }
 @if (TempData.ContainsKey("MessageSuccess"))
 {
-    <p class="text-success">@TempData["MessageSuccess"].ToString()</p>
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @TempData["MessageSuccess"].ToString()
+    </div>
 }
 
 @using (Html.BeginForm())

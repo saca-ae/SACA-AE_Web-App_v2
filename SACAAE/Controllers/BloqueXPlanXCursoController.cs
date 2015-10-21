@@ -46,7 +46,8 @@ namespace SACAAE.Controllers
                     TempData[TempDataMessageKey] = "El Plan de estudio  ya cuenta con el curso seleccionado. Por Favor intente de nuevo.";
                     return RedirectToAction("CrearBloqueXPlanXCurso", new { plan = PlanID });
                 }
-                crearRelacionBloqueXPlanXCurso(pBloqueXPlanXCurso);
+
+                crearRelacionBloqueXPlanXCurso(CursoID, idBloqueXPlan(PlanID, BloqueID));
                 TempData[TempDataMessageKeySuccess] = "El curso ha sido asignado al bloque académico del plan de estudio exitosamente";
                 return RedirectToAction("CrearBloqueXPlanXCurso", new { plan = PlanID });
 
@@ -135,15 +136,35 @@ namespace SACAAE.Controllers
             return false;
         }
 
-        public void crearRelacionBloqueXPlanXCurso(BlockXPlanXCourse pBloqueXPlanXCurso)
+        public void crearRelacionBloqueXPlanXCurso(int pCourseID, int pBlockXPlanID)
         {
-            if (existeRelacionBloqueXPlanXCurso(pBloqueXPlanXCurso.BlockXPlanID, pBloqueXPlanXCurso.CourseID))
-                return;
-            else
+            BlockXPlanXCourse vBlockXPlanXCourse = new BlockXPlanXCourse();
+            vBlockXPlanXCourse.CourseID = pCourseID;
+            vBlockXPlanXCourse.BlockXPlanID = pBlockXPlanID;
+            List<StudyPlanXSede> vPlanXSedeList = getPlanXSede(getPlanID(pBlockXPlanID));
+            vPlanXSedeList.ForEach(PlanXSede => vBlockXPlanXCourse.SedeID = PlanXSede.SedeID );
+
+            for (int vElement = 0; vElement < vPlanXSedeList.Count(); vElement++)
             {
-                gvDatabase.BlocksXPlansXCourses.Add(pBloqueXPlanXCurso);
-                gvDatabase.SaveChanges();
+                if (!existeRelacionBloqueXPlanXCurso(pBlockXPlanID, pCourseID))
+                {
+                    vBlockXPlanXCourse.SedeID = vPlanXSedeList.ElementAt(vElement).SedeID;
+                    gvDatabase.BlocksXPlansXCourses.Add(vBlockXPlanXCourse);
+                }
             }
+            gvDatabase.SaveChanges();    
+        }
+
+        public int getPlanID(int pBlockXPlan)
+        {
+            return gvDatabase.AcademicBlocksXStudyPlans.SingleOrDefault(BlockXPlan => BlockXPlan.ID == pBlockXPlan).PlanID;
+        }
+
+        public List<StudyPlanXSede> getPlanXSede(int pPlanID)
+        {
+            return (from PlanXSede in gvDatabase.StudyPlansXSedes
+                   where (PlanXSede.StudyPlanID == pPlanID)
+                   select PlanXSede).ToList();
         }
 
         [Route("BloqueXPlanXCurso/Cursos/List/{plan}/{bloque}")]

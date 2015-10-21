@@ -494,11 +494,11 @@ namespace SACAAE.Controllers
             else
             {
                 /*The user recive the information about the problem*/
-                TempData[TempDataMessageKeyError] = "No se puede asignar al profesor al curso\n porque existe choque de horario";
+                TempData[TempDataMessageKeyError] = "No se puede asignar al profesor al proyecto\n porque existe choque de horario";
 
                 /* Get list of professor related a  project*/
                 ProjectXProfessor project_profesor = db.ProjectsXProfessors.Find(vProjectXProfessorID);
-                ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
+                ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
                 return View(project_profesor);
             }
             return View();
@@ -728,8 +728,8 @@ namespace SACAAE.Controllers
         {
 
             //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-            bool isProjectShock = existShockScheduleCommission(vProfessorID, pSchedules);
-            if (!isProjectShock)
+            bool isCommissionShock = existShockScheduleCommission(vProfessorID, pSchedules);
+            if (!isCommissionShock)
             {
                 //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
                 bool isGroupShock = existShockScheduleGroup(vProfessorID, pSchedules);
@@ -744,7 +744,7 @@ namespace SACAAE.Controllers
             }
             else
             {
-                return "falseIsProjectSchock";
+                return "falseIsCommissionSchock";
             }
 
         }

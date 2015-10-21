@@ -717,11 +717,11 @@ namespace SACAAE.Controllers
                                  where bloqueXPlan.BlockID== pIDBloque && bloqueXPlan.PlanID == pIDPlan
                                  select bloqueXPlan.ID).FirstOrDefault();
             var idBloqueXPlanXCurso = (from bloqueXPlanXCurso in db.BlocksXPlansXCourses
-                                       where bloqueXPlanXCurso.CourseID == pIDCurso && bloqueXPlanXCurso.BlockXPlanID == idBloqueXPlan
+                                       where bloqueXPlanXCurso.CourseID == pIDCurso && bloqueXPlanXCurso.BlockXPlanID == idBloqueXPlan && bloqueXPlanXCurso.SedeID == pIDSede
                                        select bloqueXPlanXCurso.ID).FirstOrDefault();
 
             var lista_grupos =  from grupos in db.Groups
-                   where grupos.BlockXPlanXCourseID == idBloqueXPlanXCurso && grupos.PeriodID == pIDPeriodo && grupos.BlockXPlanXCourse.SedeID == pIDSede
+                   where grupos.BlockXPlanXCourseID == idBloqueXPlanXCurso && grupos.PeriodID == pIDPeriodo
                    select new { grupos.ID, grupos.Number };
 
             var json = JsonConvert.SerializeObject(lista_grupos);
