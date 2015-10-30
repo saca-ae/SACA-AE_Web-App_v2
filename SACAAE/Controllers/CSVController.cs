@@ -151,7 +151,7 @@ namespace SACAAE.Controllers
                 StreamWriter streamWriter = new StreamWriter(memoryStream, Encoding.UTF8);
 
                 var vWriter = new CsvWriter(streamWriter);
-
+                vWriter.Configuration.Encoding = Encoding.UTF8;
                 //Write the CSV's file header
                 vWriter.WriteHeader(typeof(DataCSV));
 
