@@ -11,9 +11,7 @@
 }
 
 <h2 class="page-header">Asignar Profesor a Curso</h2>
-<div class="row-fluid">
-    <div class="col-lg-5">
-        <div class="span12">
+
             @if (TempData.ContainsKey("MessageError"))
             {
                 <div class="alert alert-danger alert-dismissible" role="alert">
@@ -27,192 +25,202 @@
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     @TempData["MessageSuccess"].ToString()
                 </div>
-            }
+            }  
+            
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)
 
+                <div class="container-fluid">
+                    <div class="row">
+                        <!--Columna 1-->
+                        <div class="col-sm-6">
+                            <div class="editor-label">
+                                @Html.Label("Profesor")
+                            </div>
+                            <div class="editor-field">
+                                <select id="sltProfesor" name="sltProfesor" class="form-control">
+                                    @if (ViewBag.Profesores != null)
+                                    {
+                                        foreach (var item in ViewBag.Profesores)
+                                        {
+                                            <option value="@item.ID">@item.Name</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option selected="selected">No hay profesores</option>
+                                    }
+                                </select>
+                                @if (ViewBag.Profesores == null)
+                                {
 
-                <div class="editor-label">
-                    @Html.Label("Profesor")
-                </div>
-                <div class="editor-field">
-                    <select id="sltProfesor" name="sltProfesor" class="form-control">
-                        @if (ViewBag.Profesores != null)
-                        {
-                            foreach (var item in ViewBag.Profesores)
+                                    @Html.ActionLink("Crear Profesor", "Create", "Profesor")
+                                }
+                            </div>
+                            <br />
+
+                            <div class="editor-label">
+                                @Html.Label("Sede")
+                            </div>
+                            <div class="editor-field">
+                                <select id="sltSede" name="sltSede" class="form-control">
+                                    @if (ViewBag.Sedes != null)
+                                {
+                                        <option value=" " selected="selected">-- Seleccionar Sede --</option>
+                                    foreach (var item in ViewBag.Sedes)
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                }
+                                else
+                                {
+                                        <option selected="selected">No hay sedes</option>
+                                }
+                                    @if (ViewBag.Sedes == null)
+                                {
+                                        @Html.ActionLink("Agregar Sede", "Create", "Sede")
+                                }
+                                </select>
+                            </div>
+                            <br />
+
+                            <div class="editor-label">
+                                @Html.Label("Modalidad")
+                            </div>
+                            <div class="editor-field">
+                                <select id="sltModalidad" name="sltModalidad" class="form-control">
+                                    @if (ViewBag.Modalidades != null)
+                                {
+                                        <option value=" " selected="selected">-- Seleccionar Modalidad --</option>
+                                    foreach (var item in ViewBag.Modalidades)
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                }
+                                else
+                                {
+                                        <option selected="selected">No hay modalidades</option>
+                                }
+
+                                </select>
+                                @if (ViewBag.Modalidades == null)
                             {
-                                <option value="@item.ID">@item.Name</option>
+                                    @Html.ActionLink("Agregar Modalidad", "Crear", "Modalidad")
                             }
-                        }
-                        else
-                        {
-                            <option selected="selected">No hay profesores</option>
-                        }
-                    </select>
-                    @if (ViewBag.Profesores == null)
-                    {
+                            </div>
+                            <br />
 
-                        @Html.ActionLink("Crear Profesor", "Create", "Profesor")
-                    }
-                </div>
-                <br />
+                            <div class="editor-label">
+                                @Html.Label("Plan de Estudio")
+                            </div>
+                            <div class="editor-field">
+                                <select id="sltPlan" name="sltPlan" class="form-control"></select>
+                            </div>
+                            <br />
 
-                <div class="editor-label">
-                    @Html.Label("Sede")
+                            <div class="editor-label">
+                                @Html.Label("Bloque")
+                            </div>
+                            <div class="editor-field">
+                                <select id="sltBloque" name="sltBloque" class="form-control"></select>
+                            </div>
+                            <br />
+                            <div class="editor-label">
+                                @Html.Label("Curso")
+                            </div>
+                            <div class="editor-field">
+                                <select id="sltCurso" name="sltCurso" class="form-control"></select>
+                            </div>
+                            <br />
+                        </div>
+
+                        <!--Columna 2-->
+                        <div class="col-sm-6">
+                            
+
+                            <div class="editor-label">
+                                @Html.Label("Grupos sin profesor asignado")
+                            </div>
+                            <div class="editor-field">
+                                <select id="sltGrupo" name="sltGrupo" class="form-control"></select>
+                            </div>
+                            <br />
+
+                            <div class="editor-label">
+
+                                @Html.Label("Horario")
+                            </div>
+                            <div id="table_schedule_group" class="editor-field">
+                                <table>
+                                    <thead>
+                                    <th class="table_custom">Dia</th>
+                                    <th class="table_custom">Hora Inicio</th>
+                                    <th class="table_custom">Hora Fin</th>
+                                    <th class="table_custom">Aula</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="table_custom"></td>
+                                            <td class="table_custom"></td>
+                                            <td class="table_custom"></td>
+                                            <td class="table_custom"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table_custom"></td>
+                                            <td class="table_custom"></td>
+                                            <td class="table_custom"></td>
+                                            <td class="table_custom"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+
+                            <div class="editor-label">
+                                @Html.Label("Horas")
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("txtHoras", null, new { @class = "form-control", @disabled = "disabled" })
+
+                                <!--<input type="text" name="txtHoras" id="txtHoras" disabled="disabled" class="form-control">-->
+                            </div>
+                            <br />
+
+                            <div class="editor-label">
+                                @Html.Label("Horas Estimadas")
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBox("txtHorasEstimadas", null, new { @class = "form-control",@disabled = "disabled" })
+                            </div>
+
+                            <br />
+                            <div class="editor-label">
+                                @Html.Label("Horas Recargo")
+                            </div>
+                            <div class="editor-field">
+                                <select id="HourCharge" name="HourCharge" class="form-control" disabled="disabled">
+
+                                    <option selected="selected" value="1">Si</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                            <hr />
+                            <p>
+                                <input type="submit" onclick="habilitarHoras()" value="Asignar" class="btn" id="Asignar" />
+                                |
+                                @if (ViewBag.returnUrl != null)
+                                {
+                                                <a href="@ViewBag.returnUrl">Cancelar</a>
+                                }
+                                else
+                                {
+                                                @Html.ActionLink("Cancelar", "Index", "Proyecto");
+                                }
+                            </p>
+                      </div>
                 </div>
-                <div class="editor-field">
-                   <select id="sltSede" name="sltSede" class="form-control">
-                        @if (ViewBag.Sedes != null)
-                        {
-                            <option value=" " selected="selected">-- Seleccionar Sede --</option>
-                            foreach (var item in ViewBag.Sedes)
-                            {         
-                            <option value="@item.ID">@item.Name</option>
+            </div>
                             }
-                        }
-                        else
-                        {
-                            <option selected="selected">No hay sedes</option>
-                        }
-                       @if (ViewBag.Sedes == null)
-                       {
-                           @Html.ActionLink("Agregar Sede", "Create", "Sede")
-                       }
-                    </select>
-                </div>
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Modalidad")
-                </div>
-                <div class="editor-field">
-                    <select id="sltModalidad" name="sltModalidad" class="form-control">
-                        @if (ViewBag.Modalidades != null)
-                        {
-                            <option value=" " selected="selected">-- Seleccionar Modalidad --</option>
-                            foreach (var item in ViewBag.Modalidades)
-                            {         
-                            <option value="@item.ID">@item.Name</option>
-                            }
-                        }
-                        else
-                        {
-                            <option selected="selected">No hay modalidades</option>
-                        }
-
-                    </select>
-                    @if (ViewBag.Modalidades == null)
-                    {                    
-                        @Html.ActionLink("Agregar Modalidad", "Crear", "Modalidad")
-                    }
-                </div>
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Plan de Estudio")
-                </div>
-                <div class="editor-field">
-                    <select id="sltPlan" name="sltPlan" class="form-control"></select>
-                </div>
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Bloque")
-                </div>
-                <div class="editor-field">
-                    <select id="sltBloque" name="sltBloque" class="form-control"></select>
-                </div>
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Curso")
-                </div>
-                <div class="editor-field">
-                    <select id="sltCurso" name="sltCurso" class="form-control"></select>
-                </div>
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Grupos sin profesor asignado")
-                </div>
-                <div class="editor-field">
-                    <select id="sltGrupo" name="sltGrupo" class="form-control"></select>
-                </div>
-                <br />
-
-                
-                <br />
-
-                <div class="editor-label">
-                    @Html.Label("Cupo")
-                </div>
-                <div class="editor-field">
-                    <input type="text" name="txtCupo" id="txtCupo"  class="form-control">
-                </div>
-                <br />
-
-                <div class="editor-label">
-
-                    @Html.Label("Horario")
-                </div>
-                <div id="table_schedule_group" class="editor-field">
-                    <table>
-                        <thead>
-                        <th class="table_custom">Dia</th>
-                        <th class="table_custom">Hora Inicio</th>
-                        <th class="table_custom">Hora Fin</th>
-                        <th class="table_custom">Aula</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="table_custom"></td>
-                                <td class="table_custom"></td>
-                                <td class="table_custom"></td>
-                                <td class="table_custom"></td>
-                            </tr>
-                            <tr>
-                                <td class="table_custom"></td>
-                                <td class="table_custom"></td>
-                                <td class="table_custom"></td>
-                                <td class="table_custom"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <br>
-
-                <div class="editor-label">
-                    @Html.Label("Horas")
-                </div>
-                <div class="editor-field">
-                    @Html.TextBox("txtHoras", null, new { @class = "form-control" , @disabled = "disabled"})
-
-                    <!--<input type="text" name="txtHoras" id="txtHoras" disabled="disabled" class="form-control">-->
-                </div>
-                <br />
-                
-                <div class="editor-label">
-                    @Html.Label("Horas Estimadas")
-                </div>
-                <div class="editor-field">
-                    @Html.TextBox("txtHorasEstimadas", null, new { @class = "form-control", @type = "number", @required = "true" })
-                </div>
-                <hr />
-                <p>
-                    <input type="submit" onclick="habilitarHoras()" value="Asignar" class="btn" id="Asignar"  />
-                    |
-                    @if (ViewBag.returnUrl != null)
-                    {
-                        <a href="@ViewBag.returnUrl">Cancelar</a>
-                    }
-                    else
-                    {
-                        @Html.ActionLink("Cancelar", "Index", "Proyecto");
-                    }
-                </p>
-            }
-        </div>
-    </div>
-</div>
+ 

@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using SACAAE.Data_Access;
 using SACAAE.Models;
 using Newtonsoft.Json;
+using SACAAE.Models.ViewModels;
 
 namespace SACAAE.Controllers
 {
@@ -138,12 +139,50 @@ namespace SACAAE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Classroom aula = db.Classrooms.Find(ID);
-            if (aula == null)
+            Classroom classroom = db.Classrooms.Find(ID);
+            if (classroom == null)
             {
                 return HttpNotFound();
             }
-            return View(aula);
+
+            var periodo_actual = int.Parse(Request.Cookies["Periodo"].Value);
+            
+                var scheduleClassroom = (from aula in db.Classrooms
+                                  join grupo_aula in db.GroupClassrooms on aula.ID equals grupo_aula.ClassroomID
+                                  join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
+                                  join sede in db.Sedes on classroom.SedeID equals sede.ID
+                                  join grupo in db.Groups on grupo_aula.GroupID equals grupo.ID
+                                  join plan_bloque_curso in db.BlocksXPlansXCourses on grupo.BlockXPlanXCourseID equals plan_bloque_curso.ID
+                                  join curso in db.Courses on plan_bloque_curso.CourseID equals curso.ID
+                                  join periodo in db.Periods on grupo.PeriodID equals periodo.ID
+                                  where (aula.ID == ID) && (periodo.ID == periodo_actual) && (horario.StartHour != "700" && horario.StartHour != "900")
+
+                                  select new
+                                  {
+                                      curso.Name,
+                                      grupo.Number,
+                                      horario.StartHour,
+                                      horario.EndHour,
+                                      horario.Day
+                                  }).ToList();
+
+                var data = new ScheduleDataList();
+
+                scheduleClassroom.ForEach(p => data.add(
+                p.Day,
+                (p.Name + "\nGrupo: " + p.Number),
+                DateTime.Parse(p.StartHour),
+                DateTime.Parse(p.EndHour),
+                "Curso")
+            );
+
+                var viewModel = new ScheduleProfessorViewModel()
+                {
+                    Name = classroom.Code,
+                    ScheduleData = data.getData()
+                };
+
+            return View(viewModel);
         }
 
         //[Route("ObtenerHorarioAula/List/{aula}/{periodo:int}")]
@@ -332,6 +371,76 @@ namespace SACAAE.Controllers
         {
             db.SaveChanges();
         }
+
+        private class ScheduleDataList
+        {
+            private List<List<ScheduleData>> data;
+
+            public ScheduleDataList()
+            {
+                this.data = new List<List<ScheduleData>>();
+                for(int i=0; i<6; i++)
+                {
+                    this.data.Add(new List<ScheduleData>());
+                }
+            }
+
+            public void add(string day, string name, DateTime startHour, DateTime endHour, string type)
+            {
+                var index = 0;
+                switch (day)
+                {
+                    case "Lunes":   index = 0; break;
+                    case "Martes":  index = 1; break;
+                    case "Miercoles": index = 2; break;
+                    case "Jueves":  index = 3; break;
+                    case "Viernes": index = 4; break;
+                    case "Sabado":  index = 5; break;
+                }
+
+                this.data[index].Add(new ScheduleData()
+                {
+                    Name = name,
+                    Type = type,
+                    Difference = getDifference(startHour, endHour),
+                    StartBlock = getHourBlock(startHour)
+                });
+            }
+
+            public List<List<ScheduleData>> getData()
+            {
+                return this.data;
+            }
+
+            private int getDifference(DateTime startHour, DateTime endHour)
+            {
+                return (int)Math.Ceiling(endHour.Subtract(startHour).TotalHours);
+            }
+
+            private int getHourBlock(DateTime time)
+            {
+                var hh = 7;
+                var mm = 00;
+                var tt = "am";
+
+                for (int i = 0; i < 16; i++)
+                {
+                    var start = DateTime.Parse(hh + ":" + mm + tt);
+                    var end = DateTime.Parse((hh + 1) + ":" + mm + tt);
+
+                    if (betweenDates(start, end, time)) return i;
+
+                    hh++;
+                    if (hh == 12) tt = "pm";
+                }
+                return 0;
+            }
+
+            private bool betweenDates(DateTime beginDate, DateTime endDate, DateTime date)
+            {
+                return (beginDate <= date && date < endDate);
+            }
+        }
         #endregion
 
         #region Ajax
@@ -389,6 +498,7 @@ namespace SACAAE.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
         }
+
         #endregion
     }
 }

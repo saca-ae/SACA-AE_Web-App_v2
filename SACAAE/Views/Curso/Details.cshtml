@@ -1,7 +1,7 @@
 ﻿@model SACAAE.Models.Course
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalle de la Asignacion";
     Layout = "~/Views/Shared/Privado.cshtml";
 }
 
@@ -13,10 +13,6 @@
 }
 <script type="text/javascript">
     var tempIndex = 0;
-    
-
-    
-
 
 </script>
 
@@ -47,11 +43,12 @@
     </div>
 
 
-    <div class="detalles">
+    <div class="row">
 
-
-        <div class="detalle_1">
-            <table id="tbl_detalle_1">
+    
+        <!--<div class="detalle_1">-->
+        <div class="col-md-6">
+            <table id="tbl_detalle_1" class="table table-bordered">
 
                 <tbody>
                     <tr>
@@ -75,9 +72,11 @@
 
             </table>
         </div>
+       <!-- </div> -->
 
-        <div class="detalle_2">
-            <table id="tbl_detalle_2">
+        <!--<div class="detalle_2">-->
+        <div class="col-md-6">
+            <table id="tbl_detalle_2" class="table table-bordered">
                 <tbody>
                     <tr>
                         <th>Horas Practicas</th>
@@ -99,8 +98,9 @@
 
             </table>
         </div>
-    </div>
-    <br /><br /><br /><br /><br /><br />
+       <!-- </div> -->
+    </div> 
+  
     <h3>Grupos</h3>
 
     

@@ -271,19 +271,19 @@ ul.alert-dropdown {
         margin-right: 100px;
     }
 
-    .detalle_1, .detalle_2 {
+    /*.detalle_1, .detalle_2 {
         margin-left: 50px;
         float: left;
-    }
+    }*/
 
-    .detalle_1 th, .detalle_2 th {
-        border: 2px solid #4800ff;
+    #tbl_detalle_1 th, #tbl_detalle_2 th {
+        border: 2px solid;
         background-color: #808080;
         width: 150px;
     }
 
-    .detalle_1 td, .detalle_2 td {
-        border: 2px solid #4800ff;
+    #tbl_detalle_1 td, #tbl_detalle_2 td {
+        border: 2px solid;
         background-color: #93939B;
         width: 250px;
     }

@@ -444,9 +444,9 @@ namespace SACAAE.Controllers
                     TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
                     return RedirectToAction("Details", new { id = vProjectXProfessor.ProjectID });
                 }
-                else if (validate.Equals("falseIsGroupSchock"))
+                else if (validate.Equals("falseIsProjectShock"))
                 {
-                    TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al comisión";
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor al proyecto";
                     /* Get the list of professor related with commission */
                     if (Request.UrlReferrer != null)
                     {
@@ -467,9 +467,32 @@ namespace SACAAE.Controllers
 
                     return View(projectViewModel);
                 }
-                else if (validate.Equals("falseIsCommissionSchock"))
+                else if (validate.Equals("falseIsGroupShock"))
                 {
-                    TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor al comisión";
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al grupo";
+                    /* Get the list of professor related with commission */
+                    if (Request.UrlReferrer != null)
+                    {
+                        ViewBag.returnUrl = Request.UrlReferrer.ToString();
+                    }
+                    else
+                    {
+                        ViewBag.returnUrl = null;
+                    }
+
+                    var ProjectsXProfessors = db.ProjectsXProfessors.Find(vProjectXProfessorID);
+                    var projectID = ProjectsXProfessors.ProjectID;
+                    Project project = db.Projects.Find(projectID);
+                    ScheduleProjectViewModel projectViewModel = new ScheduleProjectViewModel();
+                    projectViewModel.Projects = project.Name;
+
+                    ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
+
+                    return View(projectViewModel);
+                }
+                else if (validate.Equals("falseIsCommissionShock"))
+                {
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor a la comisión";
                     /* Get the list of professor related with commission */
                     if (Request.UrlReferrer != null)
                     {
@@ -656,6 +679,48 @@ namespace SACAAE.Controllers
             return false;
         }
 
+        public bool existShockScheduleProjectWithoutProject(int pProfessorID, List<ScheduleProject> pSchedules,int pProjectID)
+        {
+            var vPeriod = Request.Cookies["Periodo"].Value;
+            var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
+
+            //Get the day, starthour and endhour where professor was assign in commission
+            var project_schedule = db.SP_getProfessorScheduleProject(pProfessorID, vPeriodID).ToList();
+
+            //Verify each scheedule with the new assign information
+            foreach (var vNewSchedule in pSchedules)
+            {
+                foreach (var vActualScheduleProject in project_schedule)
+                {
+                    if (vActualScheduleProject.ID != pProjectID)
+                    {
+                        if (vNewSchedule.Day.Equals(vActualScheduleProject.Day))
+                        {
+                            var vActualStartHour = DateTime.Parse(vActualScheduleProject.StartHour);
+                            var vActualEndHour = DateTime.Parse(vActualScheduleProject.EndHour);
+                            var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
+                            var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
+
+                            //Check the range of the schedule
+                            if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
+                                (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
+                                (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
+                                (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
+                            {
+                                return true;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Esteban Segura Benavides
         /// Check posibles conflicts with the new project schedule and the all group schedule related with determinated professor
@@ -724,29 +789,35 @@ namespace SACAAE.Controllers
             return false;
         }
 
-        public string validationsEdit(int vCommissionID, int vProfessorID, List<ScheduleProject> pSchedules)
+        public string validationsEdit(int pProjectID, int pProfessorID, List<ScheduleProject> pSchedules)
         {
-
-            //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-            bool isCommissionShock = existShockScheduleCommission(vProfessorID, pSchedules);
-            if (!isCommissionShock)
+            bool isProjectShock = existShockScheduleProjectWithoutProject(pProfessorID, pSchedules, pProjectID);
+            if (!isProjectShock)
             {
                 //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                bool isGroupShock = existShockScheduleGroup(vProfessorID, pSchedules);
-                if (!isGroupShock)
+                bool isCommissionShock = existShockScheduleCommission(pProfessorID, pSchedules);
+                if (!isCommissionShock)
                 {
-                    return "true";
+                    //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+                    bool isGroupShock = existShockScheduleGroup(pProfessorID, pSchedules);
+                    if (!isGroupShock)
+                    {
+                        return "true";
+                    }
+                    else
+                    {
+                        return "falseIsGroupShock";
+                    }
                 }
                 else
                 {
-                    return "falseIsGroupSchock";
+                    return "falseIsCommissionShock";
                 }
             }
             else
             {
-                return "falseIsCommissionSchock";
+                return "falseIsProjectShock";
             }
-
         }
         #endregion
 

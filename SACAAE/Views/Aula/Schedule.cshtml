@@ -1,5 +1,5 @@
-﻿@model SACAAE.Models.Classroom
-
+﻿@using SACAAE.Models.ViewModels
+@model ScheduleProfessorViewModel
 @{
     ViewBag.Title = "Horario Aula";
     Layout = "~/Views/Shared/Privado.cshtml";
@@ -7,47 +7,96 @@
 <head>
         @Styles.Render("~/Content/custom")
 </head>
-<body onload="load_window('@(Model.ID)')">
 
-    <h2> Horario de Aula </h2>
+
+<div class="col-lg-12">
+
+    <h2> Horario de Aulas </h2>
     <h4>
         <span class="label label-info">
             @Html.DisplayName("Aula: ")
-            @Html.DisplayFor(model => model.Code)
+            @Html.DisplayFor(model => model.Name)
         </span>
     </h4>
-    <div id="div_tabla">
-        
-        <div>
-            <p>
-                <br />
-                <br />
-                |  @Html.ActionLink("Regresar", "Index")  |
+    <table id="div_tabla" class="table table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th class="text-center">Horario</th>
+                <th class="text-center">Lunes</th>
+                <th class="text-center">Martes</th>
+                <th class="text-center">Miércoles</th>
+                <th class="text-center">Jueves</th>
+                <th class="text-center">Viernes</th>
+                <th class="text-center">Sábado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var ommitList = new int[] { 0, 0, 0, 0, 0, 0 };
+                var data = Model.ScheduleData;
+                var start = DateTime.Parse("07:30 am");
+                var end = start.AddMinutes(50);
 
-                <br />
-            </p>
+                for (int i = 0; i < 15; i++)
+                {
+                    <tr>
+                        <td>@getTime(start, end)</td>
+                        @for (int j = 0; j < data.Count; j++)
+                        {
+                            if (ommitList[j] > 0)
+                            {
+                                ommitList[j]--;
+                                continue;
+                            }
 
-        </div>
-    </div>
+                            var cellData = findData(data[j], i);
+                            if (cellData == null)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                if (cellData.Type == "Curso")
+                                {
+                                    <td class="table-course" rowspan="@cellData.Difference">@Html.Raw(Html.Encode(cellData.Name).Replace("\n", "<br />"))</td>
+                                }
+                                else if (cellData.Type == "Comisión")
+                                {
+                                    <td class="table-commission" rowspan="@cellData.Difference">@cellData.Name</td>
+                                }
+                                else
+                                {
+                                    <td class="table-project" rowspan="@cellData.Difference">@cellData.Name</td>
+                                }
+                                ommitList[j] = cellData.Difference - 1;
+                            }
+                        }
+                    </tr>
+                        start = (start == DateTime.Parse("12:30 pm")) ? DateTime.Parse("1:00 pm") : start.AddHours(1);
+                        end = (start == DateTime.Parse("12:30 pm")) ? start.AddMinutes(20) : start.AddMinutes(50);
+                }
+            }
+        </tbody>
+    </table>
 
-</body>
+    |  @Html.ActionLink("Regresar", "Index")  |
 
-@section Scripts {
-    <script src="@Url.Content("~/Scripts/SiteScripts/scheduleChart.js")"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var entidadid = "#" + getCookie("Entidad");
-            if (entidadid == "#") { Load('TEC'); }
-            $(entidadid).addClass('active');
+</div>
 
 
-            var route = "/Aula/Schedules/" + get_id(3);
-            $.getJSON(route, function (data) {
-                datos = datos_matriz(data);
-                obtener_dias(datos);
+@functions{
+    public string getTime(DateTime start, DateTime end)
+    {
+        return start.ToShortTimeString() + " a " + end.ToShortTimeString();
+    }
 
-            });
-
-        });
-    </script>
+    public ScheduleData findData(List<ScheduleData> list, int block)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i].StartBlock == block)
+                return list[i];
+        }
+        return null;
+    }
 }

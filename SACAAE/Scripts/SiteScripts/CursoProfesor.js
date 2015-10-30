@@ -117,6 +117,8 @@
         /*Horas calculadas de acuerdo al horario*/
         var horas = 0.0;
 
+        $('#HourCharge').prop("disabled", false);
+        $("#txtHorasEstimadas").val(0)
         $.getJSON(route1, function (data) {
             cupo = data.Capacity;
             //aula = data[0]["Aula"];
@@ -199,31 +201,24 @@
             "</div>";
                 }
             });
-            /************************/
-            //$.getJSON(route2, function (data) {
-            //    //alert(data.toSource());
-            //    for (var i = 0; i < data.length; i++) {
-            //        items += data[i]["Dia1"] + " " + data[i]["Hora_Inicio"] + " - " + data[i]["Hora_Fin"] + "\n";
-            //        //horas += (parseInt(data[i]["Hora_Fin"], 10) - parseInt(data[i]["Hora_Inicio"], 10));
-            //        var horafin = parseInt(data[i]["Hora_Fin"]);
-            //        var horainicio = parseInt(data[i]["Hora_Inicio"]);
-
-            //        horas += horafin - horainicio;
-            //    }
-
-            //    //alert(horas);
-            //    horas = horas / 100;
-
-            //    if (items != "") {
-            //        $("#txtHorario").val(items);
-            //        $("#Asignar").prop("disabled", false);
-            //        $("#txtHoras").val(Math.ceil(horas));
-            //    }
-            //    else {
-            //        $("#txtHorario").val("No hay horarios para ese curso.")
-            //    }
-            //});
         });
+    });
+
+    $("#HourCharge").change(function () {
+        var HourSelection = document.getElementById("HourCharge").value;
+
+        if (HourSelection == 1) {
+            $("#txtHorasEstimadas").val(0)
+        }
+        else {
+            var horas_teoricas = document.getElementById("txtHoras").value;
+
+            var horas_estimadas = 10 - horas_teoricas;
+
+            $("#txtHorasEstimadas").val(horas_estimadas);
+
+        }
+
     });
 });
 

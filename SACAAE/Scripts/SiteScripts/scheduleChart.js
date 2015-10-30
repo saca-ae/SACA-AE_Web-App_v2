@@ -1,23 +1,9 @@
-﻿$(document).ready(function () {
-    var entidadid = "#" + getCookie("Entidad");
-    if (entidadid == "#") { Load('TEC'); }
-    $(entidadid).addClass('active');
-
-    var route = "/Professor/Schedules/" + get_id(3);
-    $.getJSON(route, function (data) {
-        datos = datos_matriz(data);
-        obtener_dias(datos);
-
-    });
-});
-
-function get_id(number) {
+﻿function get_id(number) {
     var url = window.location.pathname.split('/');
     return url[number];
 }
 
 function datos_matriz(data) {
-    console.log(data);
     var datos = [];
     var dato_unico;
     $.each(data, function (i, horario) {
@@ -29,31 +15,191 @@ function datos_matriz(data) {
 
         var hora_salida = data[i].EndHour;
 
-        var diferencia = Math.ceil((Date.parse(hora_salida) - Date.parse(hora_entrada)) / 3600000);
-        
-        var bloque_inicio = getHourBlock(hora_entrada);
+        var int_hora_entrada
+        switch (hora_entrada) {
+            case 1:
+                int_hora_entrada = 730;
+                break;
+            case 2:
+                int_hora_entrada = 830;
+                break;
+            case 3:
+                int_hora_entrada = 930;
+                break;
+            case 4:
+                int_hora_entrada = 1030;
+                break;
+            case 5:
+                int_hora_entrada = 1130;
+                break;
+            case 6:
+                int_hora_entrada = 1230;
+                break;
 
-        numero_dia = numero_dia == "Lunes" ? 1 :
-                     numero_dia == "Martes" ? 2 :
-                     numero_dia == "Miércoles" ? 3 :
-                     numero_dia == "Jueves" ? 4 :
-                     numero_dia == "Viernes" ? 5 :
-                     numero_dia == "Sábado" ? 6 :
-                     0;
+            case 7:
+                int_hora_entrada = 1300;
+                break;
+            case 8:
+                int_hora_entrada = 1400;
+                break;
 
-        console.log(numero_dia);
+            case 9:
+                int_hora_entrada = 1500;
+                break;
+            case 10:
+                int_hora_entrada = 1600;
+                break;
 
-        dato_unico = [numero_dia, bloque_inicio, diferencia, nombre_curso, numero_curso]; console.log(dato_unico);//////////////////////////////////
+            case 11:
+                int_hora_entrada = 1700;
+                break;
+            case 12:
+                int_hora_entrada = 1800;
+                break;
+
+            case 13:
+                int_hora_entrada = 1900;
+                break;
+            case 14:
+                int_hora_entrada = 2000;
+                break;
+
+            case 15:
+                int_hora_entrada = 2100;
+                break;
+        }
+
+        var int_hora_salida;
+        switch (hora_salida) {
+            case "08:20 am":
+                int_hora_salida = 820;
+                break;
+            case "09:20 am":
+                int_hora_salida = 920;
+                break;
+            case "10:20 am":
+                int_hora_salida = 1020;
+                break;
+            case "11:20 am":
+                int_hora_salida = 1120;
+                break;
+            case "12:20 pm":
+                int_hora_salida = 1220;
+                break;
+
+            case "01:50 pm":
+                int_hora_salida = 1350;
+                break;
+            case "02:50 pm":
+                int_hora_salida = 1450;
+                break;
+
+            case "03:50 pm":
+                int_hora_salida = 1550;
+                break;
+            case "04:50 pm":
+                int_hora_salida = 1650;
+                break;
+
+            case "05:50 pm":
+                int_hora_salida = 1750;
+                break;
+            case "06:50 pm":
+                int_hora_salida = 1850;
+                break;
+
+            case "07:50 pm":
+                int_hora_salida = 1950;
+                break;
+            case "08:50 pm":
+                int_hora_salida = 2050;
+                break;
+
+            case "09:50 pm":
+                int_hora_salida = 2150;
+                break;
+        }
+
+        var diferencia = (int_hora_salida - int_hora_entrada);
+
+        if (int_hora_entrada < 1300) {
+            diferencia = diferencia + 10;
+        }
+        else if (int_hora_entrada < 1300 & int_hora_salida > 1300) {
+            diferencia = diferencia + 110;
+        }
+        else {
+            diferencia = diferencia + 50;
+        }
+        var bloque_inicio;
+
+
+        bloque_inicio = hora_entrada;
+        /*switch (int_hora_entrada) {
+            case 730:
+                bloque_inicio = 1;
+                break;
+            case 830:
+                bloque_inicio = 2;
+                break;
+            case 930:
+                bloque_inicio = 3;
+                break;
+            case 1030:
+                bloque_inicio = 4;
+                break;
+            case 1130:
+                bloque_inicio = 5;
+                break;
+            case 1230:
+                bloque_inicio = 6;
+                break;
+            case 1300:
+                bloque_inicio = 7;
+                break;
+            case 1400:
+                bloque_inicio = 8;
+                break;
+            case 1500:
+                bloque_inicio = 9;
+                break;
+            case 1600:
+                bloque_inicio = 10;
+                break;
+            case 1700:
+                bloque_inicio = 11;
+                break;
+            case 1800:
+                bloque_inicio = 12;
+                break;
+            case 1900:
+                bloque_inicio = 13;
+                break;
+            case 2000:
+                bloque_inicio = 14;
+                break;
+            case 2100:
+                bloque_inicio = 15;
+                break;
+        }*/
+        diferencia = diferencia / 100
+
+        dato_unico = [numero_dia, bloque_inicio, diferencia, nombre_curso, numero_curso];
         datos.push(dato_unico);
     });
 
     return datos;
+}
+function load_window(id_aula) {
+
 }
 
 function obtener_dias(data) {
     var cantidad_datos = data.length;
     var posicion_datos = 0;
     var body_table = "";
+    var header_table = ""
+    var header_table = table_header();
 
     var lunes = 0;
     var martes = 0;
@@ -116,8 +262,7 @@ function obtener_dias(data) {
 
 
         //1 Lunes
-        if (cantidad_datos != 0)
-        {
+        if (cantidad_datos != 0) {
             if (lunes == 0) {
                 if (data[posicion_datos][0] == 1 && data[posicion_datos][1] == i) {
                     info_temp = info_temp + "<td  id=\"seleccion_td\" rowSpan=\"" + data[posicion_datos][2] + "\">" + data[posicion_datos][3] + "</br> Grupo: " +
@@ -219,8 +364,7 @@ function obtener_dias(data) {
                 }
             }
         }
-        else
-        {
+        else {
             info_temp = info_temp + "<td class=\"tabla_horario_td\" ></td >";
             info_temp = info_temp + "<td class=\"tabla_horario_td\" ></td >";
             info_temp = info_temp + "<td class=\"tabla_horario_td\" ></td >";
@@ -249,41 +393,6 @@ function obtener_dias(data) {
 
     body_table = body_table + "</tbody></table>";
     document.getElementById('div_tabla').innerHTML = table_header() + body_table;
-}
-
-function getHourBlock(time) {
-    switch (time) {
-        case "07:30 am":
-            return 1;
-        case "08:30 am":
-            return 2;
-        case "09:30 am":
-            return 3;
-        case "10:30 am":
-            return 4;
-        case "11:30 am":
-            return 5;
-        case "12:30 pm":
-            return 6;
-        case "01:00 pm":
-            return 7;
-        case "02:00 pm":
-            return 8;
-        case "03:00 pm":
-            return 9;
-        case "04:00 pm":
-            return 10;
-        case "05:00 pm":
-            return 11;
-        case "06:00 pm":
-            return 12;
-        case "07:00 pm":
-            return 13;
-        case "08:00 pm":
-            return 14;
-        case "09:00 pm":
-            return 15;
-    }
 }
 
 function table_header() {
