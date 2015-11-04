@@ -414,7 +414,7 @@ namespace SACAAE.Controllers
                 if (!isProjectShock)
                 {
                     //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                    bool isGroupShock = existShockScheduleGroupWithoutCommissionSelec(vProfessorID, pGroupID);
+                    bool isGroupShock = existShockScheduleGroupWithoutCommissionSelect(vProfessorID, pGroupID);
                     if (!isGroupShock)
                     {
                         return "true";
@@ -436,7 +436,7 @@ namespace SACAAE.Controllers
         }
 
 
-        public bool existShockScheduleGroupWithoutCommissionSelec(int pProfessorID, int pGroupID)
+        public bool existShockScheduleGroupWithoutCommissionSelect(int pProfessorID, int pGroupID)
         {
             var vPeriod = Request.Cookies["Periodo"].Value;
             var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;

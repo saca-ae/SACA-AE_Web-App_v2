@@ -278,13 +278,13 @@ ul.alert-dropdown {
 
     #tbl_detalle_1 th, #tbl_detalle_2 th {
         border: 2px solid;
-        background-color: #808080;
+        background-color: rgba(128, 128, 128, 0.47);
         width: 150px;
     }
 
     #tbl_detalle_1 td, #tbl_detalle_2 td {
         border: 2px solid;
-        background-color: #93939B;
+        background-color: rgba(147, 147, 155, 0.31);
         width: 250px;
     }
 
@@ -480,17 +480,17 @@ ul.alert-dropdown {
     }
 
     #commission_information td, #commission_information th {
-        border: 2px solid #4800ff;
+        border: 2px solid;
         padding-left: 10px;
         padding-right: 10px;
     }
 
     .static_info {
-        background-color:#999999;
+        background-color: rgba(128, 128, 128, 0.47);
     }
 
     .dynamic_info {
-        background-color: #CCCCCC;
+        background-color: rgba(147, 147, 155, 0.31);
     }
 
     #table_assign_commision {
@@ -597,13 +597,6 @@ ul.alert-dropdown {
             padding-right: 10px;
         }
 
-    .static_info {
-        background-color: #999999;
-    }
-
-    .dynamic_info {
-        background-color: #CCCCCC;
-    }
 
     #table_assign_commision {
         width: 300px;
