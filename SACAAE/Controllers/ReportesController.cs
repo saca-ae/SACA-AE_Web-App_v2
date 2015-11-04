@@ -38,7 +38,7 @@ namespace SACAAE.Controllers
             using (Stream fs = new MemoryStream())
             {
                 StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-                sw.WriteLine("Tipo;Grupo;Nombre;Profesor;Dia;Hora Inicio;Hora Fin;Sede;Aula;Cupo;Plan de Estudio;Modalidad; Horas Teoricas; Horas Practicas;Carga Estimada;Entidad");
+                sw.WriteLine("Tipo;Grupo;Nombre;Profesor;Dia;Hora Inicio;Hora Fin;Sede;Aula;Plan de Estudio;Carga Estimada;Tipo Hora;Entidad");
                 var IdPeriodo = int.Parse(Request.Cookies["Periodo"].Value);
 
                 vReportInfo = LAHelper.setCourses(vReportInfo, vPeriodID);
@@ -68,26 +68,24 @@ namespace SACAAE.Controllers
                     {
                         if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                         {
-                            sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-                            sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-                            sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;;;;" + (vReportInfo.profesores_carga_tec[profe_actual] + vReportInfo.profesores_carga_fundatec[profe_actual]));
+                            sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
+                            sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
+                            sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + (vReportInfo.profesores_carga_tec[profe_actual] + vReportInfo.profesores_carga_fundatec[profe_actual]));
 
                         }
                         else if (!vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                         {
-                            sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;;;;" + "0");
-                            sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-                            sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
+                            sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + "0");
+                            sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
+                            sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
 
                         }
                         else if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && !vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                         {
-                            sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-                            sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;;;;" + 0);
-                            sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-
+                            sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
+                            sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + 0);
+                            sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
                         }
-
 
                         profe_actual = profe.Profesor_Nombre;
                         sw.WriteLine(profe.toStr());
@@ -96,23 +94,23 @@ namespace SACAAE.Controllers
                 // last professor at loop's end
                 if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                 {
-                    sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-                    sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-                    sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;;;;" + (vReportInfo.profesores_carga_tec[profe_actual] + vReportInfo.profesores_carga_fundatec[profe_actual]));
+                    sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
+                    sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
+                    sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + (vReportInfo.profesores_carga_tec[profe_actual] + vReportInfo.profesores_carga_fundatec[profe_actual]));
 
                 }
                 else if (!vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                 {
-                    sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;;;;" + "0");
-                    sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-                    sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
+                    sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + "0");
+                    sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
+                    sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
 
                 }
                 else if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && !vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                 {
-                    sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-                    sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;;;;" + 0);
-                    sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
+                    sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
+                    sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + 0);
+                    sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
 
                 }
 

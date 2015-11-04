@@ -20,7 +20,7 @@ namespace SACAAE.Helpers
     {
         private SACAAEContext db = new SACAAEContext();
 
-        /// <author>Cristian Araya Fuentes</author>
+        /// <author></author>
         /// <summary>
         /// Set all the data from professors and courses on the helper class
         /// </summary>
@@ -36,7 +36,8 @@ namespace SACAAE.Helpers
             {
                 var vDetail = db.GroupClassrooms.Where(p => p.GroupID == vGroup.ID).ToList();
                 var vCargaEstimada = (int)Math.Floor(10.0 / vDetail.Count);
-
+                String vTypeHour = "";
+                if (vGroup.HourAllocatedTypeID != null) vTypeHour = vGroup.HourAllocatedType.Name; 
                 foreach (var vSchedule in vDetail)
                 {
 
@@ -48,7 +49,6 @@ namespace SACAAE.Helpers
                     entidad_temp = vGroup.BlockXPlanXCourse.AcademicBlockXStudyPlan.StudyPlan.EntityType.Name;
                     pReportInfo.todo_profesores.Add(new Profesor
                     {
-
                         Tipo = "Carga docente",
                         Grupo = vGroup.Number + "",
                         Nombre = vCourseInfo.Name,
@@ -56,13 +56,10 @@ namespace SACAAE.Helpers
                         Dia = vSchedule.Schedule.Day,
                         HoraInicio = HoraInicio,
                         HoraFin = HoraFin,
-                        Cupo = (vGroup.Capacity ?? vSchedule.Classroom.Capacity) + "",
                         PlanEstudio = vGroup.BlockXPlanXCourse.AcademicBlockXStudyPlan.StudyPlan.Name,
-                        Modalidad = vGroup.BlockXPlanXCourse.AcademicBlockXStudyPlan.StudyPlan.Modality.Name,
                         Sede = vGroup.BlockXPlanXCourse.Sede.Name,
-                        HoraTeoricas = vGroup.BlockXPlanXCourse.Course.TheoreticalHours + "",
-                        HoraPractica = vGroup.BlockXPlanXCourse.Course.PracticeHours + "",
                         CargaEstimada = Carga + "",
+                        TipoHora = vTypeHour,
                         Aula = vSchedule.Classroom.Code,
                         Entidad = entidad_temp
                     });
@@ -79,12 +76,12 @@ namespace SACAAE.Helpers
                             else if (pReportInfo.profesores_carga_tec.ContainsKey(vGroup.Professor.Name))
                             {
                                 vProfessorEntity = pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name];  // get professor's courses
-                                if (!vProfessorEntity.Contains(vCourseInfo.Name))                                   // omit duplicate counting
-                                {
+                                //if (!vProfessorEntity.Contains(vCourseInfo.Name) )                                   // omit duplicate counting
+                                //{
                                     vProfessorEntity.Add(vCourseInfo.Name);
                                     pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name] = vProfessorEntity;
                                     pReportInfo.profesores_carga_tec[vGroup.Professor.Name] += Carga;
-                                }
+                                //}
                             }
                             else
                             {
@@ -112,12 +109,12 @@ namespace SACAAE.Helpers
                         else if (pReportInfo.profesores_carga_fundatec.ContainsKey(vGroup.Professor.Name))
                         {
                             vProfessorEntity = pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name];  // get professor's courses
-                            if (!vProfessorEntity.Contains(vCourseInfo.Name))                                   // omit duplicate counting
-                            {
+                            //if (!vProfessorEntity.Contains(vCourseInfo.Name))                                   // omit duplicate counting
+                            //{
                                 vProfessorEntity.Add(vCourseInfo.Name);
                                 pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name] = vProfessorEntity;
                                 pReportInfo.profesores_carga_fundatec[vGroup.Professor.Name] += Carga;
-                            }
+                            //}
                         }
                         else
                         {
@@ -126,8 +123,6 @@ namespace SACAAE.Helpers
                             {
                                 vProfessorEntity = pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name];
                                 vProfessorEntity.Add(vCourseInfo.Name);
-
-
                                 pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name] = vProfessorEntity;
                             }
                             else
@@ -142,7 +137,7 @@ namespace SACAAE.Helpers
             return pReportInfo;
         }
 
-        /// <author>Cristian Araya Fuentes</author>
+        /// <author></author>
         /// <summary>
         /// Set all the data from professors and projects on the helper class
         /// </summary>
@@ -152,7 +147,6 @@ namespace SACAAE.Helpers
         {
             var entidad_temp = "";
             var vPeriodID = pPeriodID;
-
             var vProjects = db.Projects.ToList();
 
             foreach (var vProject in vProjects)
@@ -160,12 +154,14 @@ namespace SACAAE.Helpers
                 var vProfessors = db.ProjectsXProfessors.Where(p => p.ProjectID == vProject.ID && p.PeriodID == vPeriodID).ToList();
                 foreach (var vProfe in vProfessors)
                 {
+                    String vTypeHour = "";    //
+                    if ( vProfe.HourAllocatedTypeID != null) vTypeHour = vProfe.HourAllocatedType.Name;  //
                     var vSchedule = vProfe.Schedule.ToList();
                     foreach (var vDay in vSchedule)
                     {
                         var HoraInicio = DateTime.Parse(vDay.StartHour);
                         var HoraFin = DateTime.Parse(vDay.EndHour);
-
+                        
                         var CargaC = Math.Ceiling(HoraFin.Subtract(HoraInicio).TotalHours);
                         if (HoraInicio <= DateTime.Parse("12:00 PM") && HoraFin >= DateTime.Parse("01:00 PM"))
                         {
@@ -182,52 +178,42 @@ namespace SACAAE.Helpers
                             Dia = vDay.Day,
                             HoraInicio = HoraInicio.ToShortTimeString(),
                             HoraFin = HoraFin.ToShortTimeString(),
-                            Cupo = "N/A",
                             PlanEstudio = "N/A",
-                            Modalidad = "N/A",
                             Sede = "N/A",
-                            HoraTeoricas = "N/A",
-                            HoraPractica = "N/A",
                             CargaEstimada = CargaC + "",
+                            TipoHora = vTypeHour,
                             Aula = "N/A",
                             Entidad = entidad_temp
                         });
 
 
                         List<string> entidadesXProfesor;
-                        // All TEC entities
+                        // Separates FundaTEC -- ??
                         if (entidad_temp.Equals("TEC") || entidad_temp.Equals("TEC-VIC") || entidad_temp.Equals("TEC-REC") ||
                         entidad_temp.Equals("TEC-MIXTO") || entidad_temp.Equals("TEC-Académico") || entidad_temp.Equals("CIADEG "))
                         {
-                            if (!entidad_temp.Equals("TEC-REC")) // Omit volunteer hours
+                            if (pReportInfo.profesores_carga_tec.ContainsKey(vProfe.Professor.Name)) //Proffesor has assigned academic load
                             {
-                                if (pReportInfo.profesores_carga_tec.ContainsKey(vProfe.Professor.Name))
-                                {
-                                    entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];    // get professor's courses
-                                    if (!entidadesXProfesor.Contains(vProject.Name))                                        // omit duplicate counting
-                                    {
-                                        entidadesXProfesor.Add(vProject.Name);
-                                        pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
-                                        pReportInfo.profesores_carga_tec[vProfe.Professor.Name] += Convert.ToInt32(CargaC);
-                                    }
+                                entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];
+                                entidadesXProfesor.Add(vProject.Name);
+                                pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
+                                if (vTypeHour == "Reconocimiento")  //
+                                    pReportInfo.profesores_carga_tec[vProfe.Professor.Name] += Convert.ToInt32(CargaC);
+                            }
+                            else
+                            {
+                                if (vTypeHour == "Reconocimiento") //
+                                    pReportInfo.profesores_carga_tec.Add(vProfe.Professor.Name, Convert.ToInt32(CargaC));
 
+                                if (pReportInfo.profesores_cursos_asociados.ContainsKey(vProfe.Professor.Name))         // ask if the course, project or commission has been counted
+                                {
+                                    entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];
+                                    entidadesXProfesor.Add(vProject.Name);
+                                    pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
                                 }
                                 else
                                 {
-
-                                    pReportInfo.profesores_carga_tec.Add(vProfe.Professor.Name, Convert.ToInt32(CargaC));
-                                    if (pReportInfo.profesores_cursos_asociados.ContainsKey(vProfe.Professor.Name))         // ask if the course, project or commission has been counted
-                                    {
-                                        entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];
-                                        entidadesXProfesor.Add(vProject.Name);
-
-
-                                        pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
-                                    }
-                                    else
-                                    {
-                                        pReportInfo.profesores_cursos_asociados.Add(vProfe.Professor.Name, new List<string>() { vProject.Name });
-                                    }
+                                    pReportInfo.profesores_cursos_asociados.Add(vProfe.Professor.Name, new List<string>() { vProject.Name });
                                 }
                             }
                         }
@@ -236,12 +222,9 @@ namespace SACAAE.Helpers
                             if (pReportInfo.profesores_carga_fundatec.ContainsKey(vProfe.Professor.Name))
                             {
                                 entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];
-                                if (!entidadesXProfesor.Contains(vProject.Name))                                        // omit duplicate counting
-                                {
-                                    entidadesXProfesor.Add(vProject.Name);
-                                    pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
-                                    pReportInfo.profesores_carga_fundatec[vProfe.Professor.Name] += Convert.ToInt32(CargaC);
-                                }
+                                entidadesXProfesor.Add(vProject.Name);
+                                pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
+                                pReportInfo.profesores_carga_fundatec[vProfe.Professor.Name] += Convert.ToInt32(CargaC);
                             }
                             else
                             {
@@ -250,15 +233,12 @@ namespace SACAAE.Helpers
                                 {
                                     entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];
                                     entidadesXProfesor.Add(vProject.Name);
-
-
                                     pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
                                 }
                                 else
                                 {
                                     pReportInfo.profesores_cursos_asociados.Add(vProfe.Professor.Name, new List<string>() { vProject.Name });
                                 }
-
                             }
                         }
                     }
@@ -284,6 +264,8 @@ namespace SACAAE.Helpers
                 var vProfessors = db.CommissionsXProfessors.Where(p => p.CommissionID == vCommission.ID && p.PeriodID == vPeriodID).ToList();
                 foreach (var vProfe in vProfessors)
                 {
+                    String vTypeHour = "";    //
+                    if (vProfe.HourAllocatedTypeID != null) vTypeHour = vProfe.HourAllocatedType.Name;  //               
                     var vSchedule = vProfe.Schedule.ToList();
                     foreach (var vDay in vSchedule)
                     {
@@ -306,13 +288,10 @@ namespace SACAAE.Helpers
                             Dia = vDay.Day,
                             HoraInicio = HoraInicio.ToShortTimeString(),
                             HoraFin = HoraFin.ToShortTimeString(),
-                            Cupo = "N/A",
                             PlanEstudio = "N/A",
-                            Modalidad = "N/A",
                             Sede = "N/A",
-                            HoraTeoricas = "N/A",
-                            HoraPractica = "N/A",
                             CargaEstimada = CargaC + "",
+                            TipoHora = vTypeHour,
                             Aula = "N/A",
                             Entidad = entidad_temp
                         });
@@ -327,24 +306,20 @@ namespace SACAAE.Helpers
                                 if (pReportInfo.profesores_carga_tec.ContainsKey(vProfe.Professor.Name))
                                 {
                                     entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];
-                                    if (!entidadesXProfesor.Contains(vCommission.Name))                                     // omit duplicate counting
-                                    {
-                                        entidadesXProfesor.Add(vCommission.Name);
-                                        pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
+                                    entidadesXProfesor.Add(vCommission.Name);
+                                    pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
+                                    if (vTypeHour == "Reconocimiento")  //
                                         pReportInfo.profesores_carga_tec[vProfe.Professor.Name] += Convert.ToInt32(CargaC);
-                                    }
-
                                 }
                                 else
                                 {
-
-                                    pReportInfo.profesores_carga_tec.Add(vProfe.Professor.Name, Convert.ToInt32(CargaC));
+                                    if (vTypeHour == "Reconocimiento")  //
+                                        pReportInfo.profesores_carga_tec.Add(vProfe.Professor.Name, Convert.ToInt32(CargaC));
+                                    
                                     if (pReportInfo.profesores_cursos_asociados.ContainsKey(vProfe.Professor.Name))         // ask if the course, project or commission has been counted
                                     {
                                         entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];
                                         entidadesXProfesor.Add(vCommission.Name);
-
-
                                         pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
                                     }
                                     else
@@ -359,12 +334,9 @@ namespace SACAAE.Helpers
                             if (pReportInfo.profesores_carga_fundatec.ContainsKey(vProfe.Professor.Name))
                             {
                                 entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];
-                                if (!entidadesXProfesor.Contains(vCommission.Name))                                          // omit duplicate counting
-                                {
-                                    entidadesXProfesor.Add(vCommission.Name);
-                                    pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
-                                    pReportInfo.profesores_carga_fundatec[vProfe.Professor.Name] += Convert.ToInt32(CargaC);
-                                }
+                                entidadesXProfesor.Add(vCommission.Name);
+                                pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
+                                pReportInfo.profesores_carga_fundatec[vProfe.Professor.Name] += Convert.ToInt32(CargaC);
                             }
                             else
                             {
@@ -373,8 +345,6 @@ namespace SACAAE.Helpers
                                 {
                                     entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];
                                     entidadesXProfesor.Add(vCommission.Name);
-
-
                                     pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
                                 }
                                 else
@@ -422,13 +392,10 @@ namespace SACAAE.Helpers
             public string Dia { get; set; }
             public string HoraInicio { get; set; }
             public string HoraFin { get; set; }
-            public string Cupo { get; set; }
             public string PlanEstudio { get; set; }
-            public string Modalidad { get; set; }
             public string Sede { get; set; }
-            public string HoraTeoricas { get; set; }
-            public string HoraPractica { get; set; }
             public string CargaEstimada { get; set; }
+            public string TipoHora { get; set; }
             public string Aula { get; set; }
             public string Entidad { get; set; }
 
@@ -436,8 +403,7 @@ namespace SACAAE.Helpers
             {
                 return Tipo + ";" + Grupo + ";" + Nombre + ";" + Profesor_Nombre + ";" +
                        Dia + ";" + HoraInicio + ";" + HoraFin + ";" + Sede + ";" + Aula + ";" +
-                       Cupo + ";" + PlanEstudio + ";" + Modalidad + ";" + HoraTeoricas + ";" +
-                       HoraPractica + ";" + CargaEstimada + ";" + Entidad + ";";
+                       PlanEstudio + ";" + CargaEstimada + ";" + TipoHora + ";" + Entidad + ";";
             }
         }
 
