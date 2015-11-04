@@ -385,7 +385,7 @@ namespace SACAAE.Controllers
                 if (validate.Equals("true"))
                 {
                     vCommissionProfessor.ProfessorID = vProfessorID;
-                    if (vHourCharge.Equals("1"))
+                    if (vHourCharge==1)
                     {
                         vCommissionProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourCharge);
                     }
@@ -399,7 +399,6 @@ namespace SACAAE.Controllers
                     foreach (ScheduleComission vSchedule in vSchedules)
                     {
                         Schedule vTempSchedule = existSchedule(vSchedule.Day, vSchedule.StartHour, vSchedule.EndHour);
-
 
                         if (vTempSchedule != null)
                         {
@@ -431,7 +430,7 @@ namespace SACAAE.Controllers
                 }
                 else if (validate.Equals("falseIsGroupShock"))
                 {
-                    TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al comisión";
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor a la comisión";
                     /* Get the list of professor related with commission */
                     if (Request.UrlReferrer != null)
                     {
@@ -454,7 +453,7 @@ namespace SACAAE.Controllers
                 }
                 else if (validate.Equals("falseIsProjectShock"))
                 {
-                    TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor al comisión";
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor a la comisión";
                     if (Request.UrlReferrer != null)
                     {
                         ViewBag.returnUrl = Request.UrlReferrer.ToString();
@@ -476,7 +475,7 @@ namespace SACAAE.Controllers
                 }
                 else if (validate.Equals("falseIsCommissionShock"))
                 {
-                    TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor al comisión";
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor a la comisión";
                     if (Request.UrlReferrer != null)
                     {
                         ViewBag.returnUrl = Request.UrlReferrer.ToString();

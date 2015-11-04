@@ -303,6 +303,7 @@
     <Content Include="Scripts\SiteScripts\editAssignCommission.js" />
     <Content Include="Scripts\SiteScripts\editAssignCourse.js" />
     <Content Include="Scripts\SiteScripts\editAssigProject.js" />
+    <Content Include="Scripts\SiteScripts\editProfessorCourse.js" />
     <Content Include="Scripts\SiteScripts\projectDetails.js" />
     <Content Include="Scripts\SiteScripts\projectEditAssign.js" />
     <Content Include="WebServiceMobile.svc" />

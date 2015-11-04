@@ -5,7 +5,7 @@ window.onload = function () {
     var idSede = "";
     var idModalidad = "";
     var idPlan = "";
-    
+
     route = "/Cursos/Group/" + idGrupo;
     $.getJSON(route, function (data) {
         $.each(data, function (i, grupo) {
@@ -28,7 +28,7 @@ window.onload = function () {
                 document.getElementById('divHorasEstimadas').innerHTML = "<p>" + vEstimateHour + "</p>"
             }
             else {
-                vEstimateHour = 11 - data[i].TheoreticalHours
+                vEstimateHour = 10 - data[i].TheoreticalHours
                 document.getElementById('editHourCharge').selectedIndex = 1;
                 document.getElementById('divHorasEstimadas').innerHTML = "<p>" + vEstimateHour + "</p>"
             }
@@ -48,7 +48,7 @@ function changeHourCharge() {
         document.getElementById("divHorasEstimadas").innerHTML = "<p>0</p>"
     }
     else if (HourSelection != '1') {
-        var horas_estimadas = 11 - TheoricalHour;
+        var horas_estimadas = 10 - TheoricalHour;
 
         document.getElementById("divHorasEstimadas").innerHTML = "<p>" + horas_estimadas + "</p>"
     }
