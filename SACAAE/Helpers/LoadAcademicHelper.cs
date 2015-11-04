@@ -30,8 +30,8 @@ namespace SACAAE.Helpers
         {
             var vPeriodID = pPeriodID;
             var entidad_temp = "";
-
             var vGroups = db.Groups.Where(p => p.PeriodID == vPeriodID).OrderBy(p => p.Number).ToList();
+            
             foreach (Group vGroup in vGroups)
             {
                 var vDetail = db.GroupClassrooms.Where(p => p.GroupID == vGroup.ID).ToList();
@@ -40,7 +40,6 @@ namespace SACAAE.Helpers
                 if (vGroup.HourAllocatedTypeID != null) vTypeHour = vGroup.HourAllocatedType.Name; 
                 foreach (var vSchedule in vDetail)
                 {
-
                     string HoraInicio = vSchedule.Schedule.StartHour;
                     string HoraFin = vSchedule.Schedule.EndHour;
                     int Carga = vCargaEstimada;
@@ -76,22 +75,20 @@ namespace SACAAE.Helpers
                             else if (pReportInfo.profesores_carga_tec.ContainsKey(vGroup.Professor.Name))
                             {
                                 vProfessorEntity = pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name];  // get professor's courses
-                                //if (!vProfessorEntity.Contains(vCourseInfo.Name) )                                   // omit duplicate counting
-                                //{
-                                    vProfessorEntity.Add(vCourseInfo.Name);
-                                    pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name] = vProfessorEntity;
+                                vProfessorEntity.Add(vCourseInfo.Name); 
+                                pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name] = vProfessorEntity;
+                                if (vTypeHour != "Reconocimiento")  //
                                     pReportInfo.profesores_carga_tec[vGroup.Professor.Name] += Carga;
-                                //}
                             }
                             else
                             {
-                                pReportInfo.profesores_carga_tec.Add(vGroup.Professor.Name, Carga);
+                                if (vTypeHour != "Reconocimiento")
+                                    pReportInfo.profesores_carga_tec.Add(vGroup.Professor.Name, Carga);
+
                                 if (pReportInfo.profesores_cursos_asociados.ContainsKey(vGroup.Professor.Name))     // ask if the course, project or commission has been counted
                                 {
                                     vProfessorEntity = pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name];
                                     vProfessorEntity.Add(vCourseInfo.Name);
-
-
                                     pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name] = vProfessorEntity;
                                 }
                                 else
@@ -109,12 +106,9 @@ namespace SACAAE.Helpers
                         else if (pReportInfo.profesores_carga_fundatec.ContainsKey(vGroup.Professor.Name))
                         {
                             vProfessorEntity = pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name];  // get professor's courses
-                            //if (!vProfessorEntity.Contains(vCourseInfo.Name))                                   // omit duplicate counting
-                            //{
-                                vProfessorEntity.Add(vCourseInfo.Name);
-                                pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name] = vProfessorEntity;
-                                pReportInfo.profesores_carga_fundatec[vGroup.Professor.Name] += Carga;
-                            //}
+                            vProfessorEntity.Add(vCourseInfo.Name);
+                            pReportInfo.profesores_cursos_asociados[vGroup.Professor.Name] = vProfessorEntity;
+                            pReportInfo.profesores_carga_fundatec[vGroup.Professor.Name] += Carga;
                         }
                         else
                         {
@@ -132,7 +126,6 @@ namespace SACAAE.Helpers
                         }
                     }
                 }
-
             }
             return pReportInfo;
         }
@@ -197,12 +190,12 @@ namespace SACAAE.Helpers
                                 entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];
                                 entidadesXProfesor.Add(vProject.Name);
                                 pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
-                                if (vTypeHour == "Reconocimiento")  //
+                                if (vTypeHour != "Reconocimiento")  //
                                     pReportInfo.profesores_carga_tec[vProfe.Professor.Name] += Convert.ToInt32(CargaC);
                             }
                             else
                             {
-                                if (vTypeHour == "Reconocimiento") //
+                                if (vTypeHour != "Reconocimiento") //
                                     pReportInfo.profesores_carga_tec.Add(vProfe.Professor.Name, Convert.ToInt32(CargaC));
 
                                 if (pReportInfo.profesores_cursos_asociados.ContainsKey(vProfe.Professor.Name))         // ask if the course, project or commission has been counted
@@ -308,12 +301,12 @@ namespace SACAAE.Helpers
                                     entidadesXProfesor = pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name];
                                     entidadesXProfesor.Add(vCommission.Name);
                                     pReportInfo.profesores_cursos_asociados[vProfe.Professor.Name] = entidadesXProfesor;
-                                    if (vTypeHour == "Reconocimiento")  //
+                                    if (vTypeHour != "Reconocimiento")  //
                                         pReportInfo.profesores_carga_tec[vProfe.Professor.Name] += Convert.ToInt32(CargaC);
                                 }
                                 else
                                 {
-                                    if (vTypeHour == "Reconocimiento")  //
+                                    if (vTypeHour != "Reconocimiento")  //
                                         pReportInfo.profesores_carga_tec.Add(vProfe.Professor.Name, Convert.ToInt32(CargaC));
                                     
                                     if (pReportInfo.profesores_cursos_asociados.ContainsKey(vProfe.Professor.Name))         // ask if the course, project or commission has been counted
