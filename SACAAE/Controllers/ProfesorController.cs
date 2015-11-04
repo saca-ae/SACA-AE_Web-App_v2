@@ -31,21 +31,18 @@ namespace SACAAE.Controllers
             var viewModel = new List<ProfesorViewModel>();
 
             SACAAE.Helpers.LoadAcademicHelper.ReporteInfo vReportInfo = new SACAAE.Helpers.LoadAcademicHelper.ReporteInfo();
-            //Cursos
             vReportInfo = LAHelper.setCourses(vReportInfo, vPeriod);
-            //Proyectos
             vReportInfo = LAHelper.setProjects(vReportInfo, vPeriod);
-            //Comisiones
             vReportInfo = LAHelper.setCommissions(vReportInfo, vPeriod);
 
             SACAAE.Helpers.LoadAcademicHelper.Profesor[] array_profesores = vReportInfo.todo_profesores.ToArray();
-            string profe_actual = "";
 
             Array.Sort(array_profesores, delegate(SACAAE.Helpers.LoadAcademicHelper.Profesor user1,
                                                   SACAAE.Helpers.LoadAcademicHelper.Profesor user2)
             {
                 return user1.Profesor_Nombre.CompareTo(user2.Profesor_Nombre);
             });
+            string profe_actual = "";
 
             List<ProfesorViewModel> vProfList = new List<ProfesorViewModel>();
             foreach (SACAAE.Helpers.LoadAcademicHelper.Profesor profe in array_profesores)
@@ -58,11 +55,7 @@ namespace SACAAE.Controllers
                     profe_actual = profe.Profesor_Nombre;
                 }
 
-                if (profe_actual.Equals(profe.Profesor_Nombre))
-                {
-                    
-                }
-                else
+                if (!profe_actual.Equals(profe.Profesor_Nombre))
                 {
                     if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                     {
@@ -72,7 +65,6 @@ namespace SACAAE.Controllers
                     else if (!vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                     {
                         vCargaFundaTEC =  vReportInfo.profesores_carga_fundatec[profe_actual];
-
                     }
                     else if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && !vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                     {

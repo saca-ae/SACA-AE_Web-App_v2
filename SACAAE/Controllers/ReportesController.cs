@@ -52,13 +52,13 @@ namespace SACAAE.Controllers
                     return user1.Profesor_Nombre.CompareTo(user2.Profesor_Nombre);
                 });
                 string profe_actual = "";
+                
                 foreach (SACAAE.Helpers.LoadAcademicHelper.Profesor profe in array_profesores)
                 {
                     if (profe_actual.Equals(""))
                     {
                         profe_actual = profe.Profesor_Nombre;
                     }
-
 
                     if (profe_actual.Equals(profe.Profesor_Nombre))
                     {
@@ -71,14 +71,12 @@ namespace SACAAE.Controllers
                             sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
                             sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
                             sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + (vReportInfo.profesores_carga_tec[profe_actual] + vReportInfo.profesores_carga_fundatec[profe_actual]));
-
                         }
                         else if (!vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                         {
                             sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + "0");
                             sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
                             sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-
                         }
                         else if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && !vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                         {
@@ -86,7 +84,6 @@ namespace SACAAE.Controllers
                             sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + 0);
                             sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
                         }
-
                         profe_actual = profe.Profesor_Nombre;
                         sw.WriteLine(profe.toStr());
                     }
@@ -97,21 +94,20 @@ namespace SACAAE.Controllers
                     sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
                     sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
                     sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + (vReportInfo.profesores_carga_tec[profe_actual] + vReportInfo.profesores_carga_fundatec[profe_actual]));
-
                 }
+
                 else if (!vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                 {
                     sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + "0");
                     sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
                     sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-
                 }
+
                 else if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && !vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
                 {
                     sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
                     sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + 0);
                     sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-
                 }
 
                 sw.Flush();
@@ -123,8 +119,6 @@ namespace SACAAE.Controllers
                 sw.Close();
                 sw.Dispose();
             }
-
-
             return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, "Reporte.csv");
         }
     }
