@@ -44,23 +44,10 @@
     <table class="table table-hover" id="indexTable">
         <thead>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th class="text-center">
-                    <!--Plaza-->
-                    Horas TEC
-                </th>
-                <th class="text-center">
-                    <!-- Horas Asignadas-->
-                    Horas FUNDATEC
-                </th>
-                <th class="text-center">
-                    <!--Plaza-->
-                    Total
-                </th>
-                <th class="text-center">Asignar a</th>
-                <th class="text-center">Acciones</th>
+                <th> @Html.DisplayNameFor(model => model.Name) </th>
+                <th class="text-center">Horas TEC </th>
+                <th class="text-center">Asignar a </th>
+                <th class="text-center">Acciones </th>
             </tr>
         </thead>
         <tbody>
@@ -71,8 +58,6 @@
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td class="text-center">@Html.DisplayFor(modelItem => item.TECHours) </td>
-                    <td class="text-center">@Html.DisplayFor(modelItem => item.FundaTECHours) </td>
-                    <td>@Html.DisplayFor(modelItem => item.TotalHours)</td>
                     <td class="text-center">
                         @Html.ActionLink("Comisión", "Asignar", "ComisionProfesor") |
                         @Html.ActionLink("Proyecto", "Asignar", "ProyectoProfesor") |

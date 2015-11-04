@@ -110,7 +110,7 @@ namespace SACAAE.Controllers
                 vMessageBody += "</table> </body> </html>";
                 if ((vProf.Email != null) && (vActiveProfessor == 1)) 
                 {
-                    sendEmail("esteban.1703@gmail.com",vMessageSubject,vMessageBody);
+                    sendEmail(vProf.Email,vMessageSubject,vMessageBody);
                 }
             }
         }
