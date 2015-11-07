@@ -1,4 +1,5 @@
 ﻿using SACAAE.Data_Access;
+using SACAAE.Models.StoredProcedures;
 using SACAAE.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -419,12 +420,12 @@ namespace SACAAE.Helpers
             //Verify each scheedule with the new assign information
             foreach (var vNewSchedule in vListScheduleGroup)
             {
-                foreach (var vActualScheduleCommission in project_schedule)
+                foreach (var vActualScheduleProject in project_schedule)
                 {
-                    if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
+                    if (vNewSchedule.Day.Equals(vActualScheduleProject.Day))
                     {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
+                        var vActualStartHour = DateTime.Parse(vActualScheduleProject.StartHour);
+                        var vActualEndHour = DateTime.Parse(vActualScheduleProject.EndHour);
                         var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
                         var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
 
@@ -532,22 +533,9 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleCommission in commission_schedule)
                 {
-                    if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-                    }
+                    bool vIsScheduleCorrect = verifyScheduleCommission(vNewSchedule, vActualScheduleCommission);
+                    if (vIsScheduleCorrect)
+                        return vIsScheduleCorrect;
                 }
             }
             return false;
@@ -570,22 +558,9 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleCommission in project_schedule)
                 {
-                    if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-                    }
+                    bool vIsScheduleCorrect = verifyScheduleCommission(vNewSchedule, vActualScheduleCommission);
+                    if (vIsScheduleCorrect)
+                        return vIsScheduleCorrect;
                 }
             }
             return false;
@@ -608,27 +583,16 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleCommission in group_schedule)
                 {
-                    if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-
-                    }
+                    bool vIsScheduleCorrect = verifyScheduleCommission(vNewSchedule, vActualScheduleCommission);
+                    if (vIsScheduleCorrect)
+                        return vIsScheduleCorrect;
                 }
             }
             return false;
         }
+
+       
+
 #endregion
 
         #region Project
@@ -649,22 +613,9 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleCommission in commission_schedule)
                 {
-                    if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-                    }
+                    bool vIsScheduleCorrect = verifyScheduleProject(vNewSchedule, vActualScheduleCommission);
+                    if (vIsScheduleCorrect)
+                        return vIsScheduleCorrect;
                 }
             }
             return false;
@@ -687,22 +638,9 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleProject in project_schedule)
                 {
-                    if (vNewSchedule.Day.Equals(vActualScheduleProject.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleProject.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleProject.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-                    }
+                    bool vIsScheduleCorrect = verifyScheduleProject(vNewSchedule, vActualScheduleProject);
+                    if (vIsScheduleCorrect)
+                        return vIsScheduleCorrect;
                 }
             }
             return false;
@@ -725,28 +663,15 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleProject in project_schedule)
                 {
-                    if (vNewSchedule.Day.Equals(vActualScheduleProject.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleProject.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleProject.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-
-                    }
+                    bool vIsScheduleCorrect= verifyScheduleProject(vNewSchedule, vActualScheduleProject);
+                    if(vIsScheduleCorrect)
+                        return vIsScheduleCorrect;
                 }
             }
             return false;
         }
 
+    
 
         /// <summary>
         /// Check if a professor is already assig in a project
@@ -771,5 +696,53 @@ namespace SACAAE.Helpers
             return false;
         }
         #endregion
+
+        private bool verifyScheduleCommission(ScheduleComission pNewSchedule, ScheduleAssign pActualSchedule)
+        {
+
+            if (pNewSchedule.Day.Equals(pActualSchedule.Day))
+            {
+                var vActualStartHour = DateTime.Parse(pActualSchedule.StartHour);
+                var vActualEndHour = DateTime.Parse(pActualSchedule.EndHour);
+                var vNewStartHour = DateTime.Parse(pActualSchedule.StartHour);
+                var vNewEndHour = DateTime.Parse(pActualSchedule.EndHour);
+
+                //Check the range of the schedule
+                if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
+                    (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
+                    (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
+                    (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        private bool verifyScheduleProject(ScheduleProject pNewSchedule, ScheduleAssign pActualSchedule)
+        {
+            
+            if (pNewSchedule.Day.Equals(pActualSchedule.Day))
+            {
+                var vActualStartHour = DateTime.Parse(pActualSchedule.StartHour);
+                var vActualEndHour = DateTime.Parse(pActualSchedule.EndHour);
+                var vNewStartHour = DateTime.Parse(pActualSchedule.StartHour);
+                var vNewEndHour = DateTime.Parse(pActualSchedule.EndHour);
+
+                //Check the range of the schedule
+                if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
+                    (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
+                    (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
+                    (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }
+            
+        
     }
 }

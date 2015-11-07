@@ -336,10 +336,10 @@ namespace SACAAE.Controllers
                 {
                     case "Lunes":   index = 0; break;
                     case "Martes":  index = 1; break;
-                    case "Miercoles": index = 2; break;
+                    case "Miércoles": index = 2; break;
                     case "Jueves":  index = 3; break;
                     case "Viernes": index = 4; break;
-                    case "Sabado":  index = 5; break;
+                    case "Sábado": index = 5; break;
                 }
 
                 this.data[index].Add(new ScheduleData()

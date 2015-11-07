@@ -92,10 +92,10 @@ function obtener_dias() {
         day_cell.innerHTML = "<select id=\"tdRow" + acumulador + "Day\" onchange=\"onchangeDaySelection(" + acumulador + ")\">" +
                                   "<option>Lunes</option>" +
                                   "<option>Martes</option>" +
-                                  "<option>Miercoles</option>" +
+                                  "<option>Miércoles</option>" +
                                   "<option>Jueves</option>" +
                                   "<option>Viernes</option>" +
-                                 " <option>Sabado</option>" +
+                                 " <option>Sábado</option>" +
                               "</select>";
         starhour_cell.innerHTML = "<select id=\"tdRow" + acumulador + "StartHour\" onchange=\"onchangeStartHourSelection(" + acumulador + ")\">" +
                                   "<option>07:30 am</option>" +

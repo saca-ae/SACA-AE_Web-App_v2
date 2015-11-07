@@ -172,10 +172,10 @@ function obtener_dias() {
         celda_Day.innerHTML = "<select id=\"tdRow" + (contador - 1) + "Day\" onchange=\"onchangeDaySelection(" + (contador - 1) + ")\">" +
                                   "<option>Lunes</option>" +
                                   "<option>Martes</option>" +
-                                  "<option>Miercoles</option>" +
+                                  "<option>Miércoles</option>" +
                                   "<option>Jueves</a></option>" +
-                                  "<option><a href=\"#\">Viernes</a></option>" +
-                                 " <option><a href=\"#\">Sabado</a></option>" +
+                                  "<option>Viernes</a></option>" +
+                                 " <option>Sábado</a></option>" +
                               "</select>";
         celda_StarHour.innerHTML = "<select id=\"tdRow" + (contador - 1) + "StartHour\" onchange=\"onchangeStartHourSelection(" + (contador - 1) + ")\">" +
                                   "<option>07:30 am</option>" +
@@ -306,61 +306,6 @@ function onchangeEndHourSelection(identificador) {
             int_hora_entrada = 2100;
             break;
     }
-    /*
-    switch (vEndHour)
-    {
-        case "07:30 am":
-            int_hora_entrada = 730;
-            break;
-        case "08:30 am":
-            int_hora_entrada = 830;
-            break;
-        case "09:30 am":
-            int_hora_entrada = 930;
-            break;
-        case "10:30 am":
-            int_hora_entrada = 1030;
-            break;
-        case "11:30 am":
-            int_hora_entrada = 1130;
-            break;
-        case "12:30 pm":
-            int_hora_entrada = 1230;
-            break;
-
-        case "01:00 pm":
-            int_hora_entrada = 1300;
-            break;
-        case "02:00 pm":
-            int_hora_entrada = 1400;
-            break;
-
-        case "03:00 pm":
-            int_hora_entrada = 1500;
-            break;
-        case "04:00 pm":
-            int_hora_entrada = 1600;
-            break;
-
-        case "05:00 pm":
-            int_hora_entrada = 1700;
-            break;
-        case "06:00 pm":
-            int_hora_entrada = 1800;
-            break;
-
-        case "07:00 pm":
-            int_hora_entrada = 1900;
-            break;
-        case "08:00 pm":
-            int_hora_entrada = 2000;
-            break;
-
-        case "09:00 pm":
-            int_hora_entrada = 2100;
-            break;
-    }
-    */
     switch (vEndHour) {
         case "08:20 am":
             int_hora_salida = 820;
