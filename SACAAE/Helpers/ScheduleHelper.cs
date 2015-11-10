@@ -704,8 +704,8 @@ namespace SACAAE.Helpers
             {
                 var vActualStartHour = DateTime.Parse(pActualSchedule.StartHour);
                 var vActualEndHour = DateTime.Parse(pActualSchedule.EndHour);
-                var vNewStartHour = DateTime.Parse(pActualSchedule.StartHour);
-                var vNewEndHour = DateTime.Parse(pActualSchedule.EndHour);
+                var vNewStartHour = DateTime.Parse(pNewSchedule.StartHour);
+                var vNewEndHour = DateTime.Parse(pNewSchedule.EndHour);
 
                 //Check the range of the schedule
                 if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
@@ -727,8 +727,8 @@ namespace SACAAE.Helpers
             {
                 var vActualStartHour = DateTime.Parse(pActualSchedule.StartHour);
                 var vActualEndHour = DateTime.Parse(pActualSchedule.EndHour);
-                var vNewStartHour = DateTime.Parse(pActualSchedule.StartHour);
-                var vNewEndHour = DateTime.Parse(pActualSchedule.EndHour);
+                var vNewStartHour = DateTime.Parse(pNewSchedule.StartHour);
+                var vNewEndHour = DateTime.Parse(pNewSchedule.EndHour);
 
                 //Check the range of the schedule
                 if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||

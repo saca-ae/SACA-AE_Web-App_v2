@@ -207,19 +207,21 @@
                                 </select>
                             </div>
                             <hr />
-                            <p>
-                                <input type="submit" onclick="habilitarHoras()" value="Asignar" class="btn" id="Asignar" />
-                                |
-                                @if (ViewBag.returnUrl != null)
-                                {
-                                                <a href="@ViewBag.returnUrl">Cancelar</a>
-                                }
-                                else
-                                {
-                                                @Html.ActionLink("Cancelar", "Index", "Proyecto");
-                                }
-                            </p>
+                            
                       </div>
+                        <p>
+                            <input type="submit" onclick="habilitarHoras()" value="Asignar" class="btn" id="Asignar" />
+                            |
+                            @if (ViewBag.returnUrl != null)
+                            {
+                                <a href="@ViewBag.returnUrl">Cancelar</a>
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Cancelar", "Index", "Proyecto");
+                            }
+                        </p>
+
                 </div>
             </div>
                             }
