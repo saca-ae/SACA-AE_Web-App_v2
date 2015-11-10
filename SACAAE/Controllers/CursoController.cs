@@ -207,7 +207,7 @@ namespace SACAAE.Controllers
 
 
             /* Se obtiene la lista de profesores */
-            ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
+            ViewBag.Profesores = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name");
             Course vCurso = db.Courses.Find(id);
             return View(vCurso);
         }

@@ -47,7 +47,8 @@ namespace SACAAE.Controllers
             {
                 return HttpNotFound();
             }
-            var vPlazaProfessorList = vPlaza.PlazasXProfessors.ToList();
+            var vPlazaProfessorList = vPlaza.PlazasXProfessors.OrderByDescending(p => p.PercentHours)
+                                                              .ThenBy(p => p.Professor.Name).ToList();
             var vProfessors = new List<PlazaAllocateProfessor>();
             vPlazaProfessorList.ForEach(p => vProfessors.Add(new PlazaAllocateProfessor()
             {
@@ -219,7 +220,8 @@ namespace SACAAE.Controllers
             {
                 return HttpNotFound();
             }
-            var vPlazaProfesorList = vPlaza.PlazasXProfessors.ToList();
+            var vPlazaProfesorList = vPlaza.PlazasXProfessors.OrderByDescending(p => p.PercentHours)
+                                                             .ThenBy(p => p.Professor.Name).ToList();
             var vProfessors = new List<PlazaAllocateProfessor>();
             vPlazaProfesorList.ForEach(p => vProfessors.Add(new PlazaAllocateProfessor()
             {
@@ -327,7 +329,7 @@ namespace SACAAE.Controllers
             {
                 var vPlazaProfes = db.Plazas.Find(pPlaza).PlazasXProfessors.Select(p => p.Professor).ToList();
                 var vProfesList = db.Professors.ToList();
-                var json = vProfesList.Except(vPlazaProfes).Select(p => new { p.ID, p.Name });
+                var json = vProfesList.Except(vPlazaProfes).Select(p => new { p.ID, p.Name }).OrderBy(p => p.Name);
 
                 return Json(json, JsonRequestBehavior.AllowGet);
             }

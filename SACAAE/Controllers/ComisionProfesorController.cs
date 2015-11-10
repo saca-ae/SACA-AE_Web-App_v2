@@ -45,7 +45,7 @@ namespace SACAAE.Controllers
             var entidad = Request.Cookies["Entidad"].Value;
             var entidadID = getEntityID(entidad);
 
-            ViewBag.Professors = new SelectList(db.Professors, "ID", "Name"); ;
+            ViewBag.Professors = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name"); ;
 
             if (entidadID == 1)
             {
@@ -181,7 +181,7 @@ namespace SACAAE.Controllers
             }
 
             /* get List of all commissions */
-            ViewBag.Commission = new SelectList(db.Commissions, "ID", "Name");
+            ViewBag.Commission = new SelectList(db.Commissions.OrderBy(p => p.Name), "ID", "Name");
 
             return View();
         }
@@ -199,7 +199,7 @@ namespace SACAAE.Controllers
             }
 
             /* Se obtiene la lista de profesores */
-            ViewBag.profesores = new SelectList(db.Professors, "ID", "Name");
+            ViewBag.profesores = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name");
 
             return View();
         }

@@ -219,7 +219,7 @@ namespace SACAAE.Controllers
             ScheduleComissionViewModel commissionViewModel = new ScheduleComissionViewModel();
             commissionViewModel.Commissions = commission.Name;
 
-            ViewBag.Professors = new SelectList(db.Professors, "ID", "Name"); ;
+            ViewBag.Professors = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name"); ;
             return View(commissionViewModel);
         }
 

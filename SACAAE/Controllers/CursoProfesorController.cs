@@ -95,7 +95,7 @@ namespace SACAAE.Controllers
 
                     else if (validate.Equals("falseIsCommissionSchock"))
                     {
-                        TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor al curso";
+                        TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno el profesor al curso";
                         /* get List of all teachers */
                         ViewBag.Profesores = obtenerTodosProfesores().ToList();
                         /*get List of all 'sedes' */
@@ -123,7 +123,7 @@ namespace SACAAE.Controllers
             }
 
             /* get List of all courses */
-            ViewBag.Courses = new SelectList(db.Courses, "ID", "Name");
+            ViewBag.Courses = new SelectList(db.Courses.OrderBy(p => p.Name), "ID", "Name");
             /*get List of all 'sedes' */
             ViewBag.Sedes = new SelectList(db.Sedes, "ID", "Name");
 
@@ -143,7 +143,7 @@ namespace SACAAE.Controllers
             }
 
             /* Se obtiene la lista de profesores */
-            ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
+            ViewBag.Profesores = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name");
 
             return View();
         }

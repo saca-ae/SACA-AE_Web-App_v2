@@ -208,7 +208,7 @@ namespace SACAAE.Controllers
             ScheduleProjectViewModel projectViewModel = new ScheduleProjectViewModel();
             projectViewModel.Projects = project.Name;
 
-            ViewBag.Professors = new SelectList(db.Professors, "ID", "Name"); 
+            ViewBag.Professors = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name"); 
             return View(projectViewModel);
         }
 
