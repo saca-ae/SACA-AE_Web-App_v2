@@ -60,10 +60,10 @@ function obtener_dias()
         celda_Day.innerHTML = "<select id=\"tdRow" + (contador - 1) + "Day\" onchange=\"onchangeDaySelection("+(contador - 1) +")\">" +
                                   "<option>Lunes</option>" +
                                   "<option>Martes</option>" +
-                                  "<option>Miercoles</option>" +
+                                  "<option>Miércoles</option>" +
                                   "<option>Jueves</option>" +
                                   "<option>Viernes</option>" +
-                                 " <option>Sabado</option>" +
+                                 " <option>Sábado</option>" +
                               "</select>";
         celda_StarHour.innerHTML = "<select id=\"tdRow" + (contador - 1) + "StartHour\" onchange=\"onchangeStartHourSelection(" + (contador - 1) + ")\">" +
                                   "<option>07:30 am</option>" +

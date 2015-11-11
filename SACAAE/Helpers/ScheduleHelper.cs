@@ -23,73 +23,32 @@ namespace SACAAE.Helpers
         {
 
             //Check the schedule of the commissions related with the professor
-            bool isCommissionShock = existShockScheduleCommissioninGroup(vProfessorID, pGroupID, pPeriodID);
+            bool vIsScheduleConflictCommission = existScheduleConflictCommissioninGroup(vProfessorID, pGroupID, pPeriodID);
             //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-            if (!isCommissionShock)
-            {
-                //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                bool isProjectShock = existShockScheduleProjectinGroup(vProfessorID, pGroupID, pPeriodID);
-                if (!isProjectShock)
-                {
-                    //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                    bool isGroupShock = existShockScheduleGroupinGroup(vProfessorID, pGroupID, pPeriodID);
-                    if (!isGroupShock)
-                    {
-                        return "true";
-                    }
-                    else
-                    {
-                        return "falseIsGroupSchock";
-                    }
-                }
-                else
-                {
-                    return "falseIsProjectSchock";
-                }
-            }
-            else
-            {
-                return "falseIsCommissionSchock";
-            }
+            bool vIsScheduleConflictProject = existScheduleConflictProjectinGroup(vProfessorID, pGroupID, pPeriodID);
+            //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+            bool vIsScheduleConflictGroup = existScheduleConflictGroupinGroup(vProfessorID, pGroupID, pPeriodID);
+
+            return isScheduleConflict(vIsScheduleConflictCommission, vIsScheduleConflictProject, vIsScheduleConflictGroup);
+                    
         }
 
         public string validationsEditGroup(int pGroupID, int pProfessorID, int pPeriodID)
         {
 
             //Check the schedule of the commissions related with the professor
-            bool isCommissionShock = existShockScheduleCommissioninGroup(pProfessorID, pGroupID, pPeriodID);
+            bool vIsScheduleConflictCommission = existScheduleConflictCommissioninGroup(pProfessorID, pGroupID, pPeriodID);           
             //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-            if (!isCommissionShock)
-            {
-                //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                bool isProjectShock = existShockScheduleProjectinGroup(pProfessorID, pGroupID, pPeriodID);
-                if (!isProjectShock)
-                {
-                    //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                    bool isGroupShock = existShockScheduleGroupWithoutGroupSelect(pProfessorID, pGroupID, pPeriodID);
-                    if (!isGroupShock)
-                    {
-                        return "true";
-                    }
-                    else
-                    {
-                        return "falseIsGroupSchock";
-                    }
-                }
-                else
-                {
-                    return "falseIsProjectSchock";
-                }
-            }
-            else
-            {
-                return "falseIsCommissionSchock";
-            }
+            bool vIsScheduleConflictProject = existScheduleConflictProjectinGroup(pProfessorID, pGroupID, pPeriodID);
+            //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+            bool vIsScheduleConflictGroup = existScheduleConflictGroupWithoutGroupSelect(pProfessorID, pGroupID, pPeriodID);
+
+            return isScheduleConflict(vIsScheduleConflictCommission, vIsScheduleConflictProject, vIsScheduleConflictGroup);
         }
 
         /// <summary>
         /// <autor>Esteban Segura Benavides</autor>
-        /// Check all posibles shocks in all schedules of the professor
+        /// Check all posibles schedule conflicts in all schedules of the professor
         /// </summary>
         /// <param name="pProfessorID"></param>
         /// <param name="pGroupID"></param>
@@ -100,34 +59,13 @@ namespace SACAAE.Helpers
             if (!vIsProfessorAssign)
             {
                 //Check the schedule of the commissions related with the professor
-                bool isCommissionShock = existShockScheduleCommissionwithActualCommission(pProfessorID, pPeriodID, pSchedules);
+                bool vIsScheduleConflictCommission = existScheduleConflictCommissionwithActualCommission(pProfessorID, pPeriodID, pSchedules);
                 //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                if (!isCommissionShock)
-                {
-                    //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                    bool isProjectShock = existShockScheduleProjectwithActualCommission(pProfessorID, pPeriodID, pSchedules);
-                    if (!isProjectShock)
-                    {
-                        //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                        bool isGroupShock = existShockScheduleGroupwithActualCommission(pProfessorID, pPeriodID, pSchedules);
-                        if (!isGroupShock)
-                        {
-                            return "true";
-                        }
-                        else
-                        {
-                            return "falseIsGroupShock";
-                        }
-                    }
-                    else
-                    {
-                        return "falseIsProjectShock";
-                    }
-                }
-                else
-                {
-                    return "falseIsCommissionShock";
-                }
+                bool vIsScheduleConflictProject = existScheduleConflictProjectwithActualCommission(pProfessorID, pPeriodID, pSchedules);
+                //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+                bool vIsScheduleConflictGroup = existScheduleConflictGroupwithActualCommission(pProfessorID, pPeriodID, pSchedules);
+
+                return isScheduleConflict(vIsScheduleConflictCommission, vIsScheduleConflictProject, vIsScheduleConflictGroup);
             }
             else
             {
@@ -137,16 +75,54 @@ namespace SACAAE.Helpers
 
         public string validationsEditCommisson(int pCommissionID, int pProfessorID, int pPeriodID, List<ScheduleComission> pSchedules)
         {
-            bool isCommissionShock = existShockScheduleCommissionWithoutCommissionSelect(pProfessorID, pPeriodID, pSchedules, pCommissionID);
-            if (!isCommissionShock)
+            //Check the schedule of the commissions related with the professor
+            bool vIsScheduleConflictCommission = existScheduleConflictCommissionWithoutCommissionSelect(pProfessorID, pPeriodID, pSchedules, pCommissionID);
+            //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+            bool vIsScheduleConflictProject = existScheduleConflictProjectwithActualCommission(pProfessorID, pPeriodID, pSchedules);
+            //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+            bool vIsScheduleConflictGroup = existScheduleConflictGroupwithActualCommission(pProfessorID, pPeriodID, pSchedules);
+
+            return isScheduleConflict(vIsScheduleConflictCommission, vIsScheduleConflictProject, vIsScheduleConflictGroup);
+        }
+
+        public string validationProject(int pProjectID, int pProfessorID,int pPeriodID, List<ScheduleProject> pSchedule)
+        {
+            bool vIsProfessorAssign = isProfessorAssigntoProject(pProjectID,pProfessorID,pPeriodID);
+            if (!vIsProfessorAssign)
             {
+                bool vIsScheduleConflictProject = existScheduleConflictProjectwithActualProject(pProfessorID, pPeriodID, pSchedule);           
                 //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                bool isProjectShock = existShockScheduleProjectwithActualCommission(pProfessorID, pPeriodID, pSchedules);
-                if (!isProjectShock)
+                bool vIsScheduleConflictCommission = existScheduleConflictCommissionwithActualProject(pProfessorID, pPeriodID, pSchedule);
+                //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+                bool vIsScheduleConflictGroup = existScheduleConflictGroupwithProject(pProfessorID, pPeriodID, pSchedule);
+
+                return isScheduleConflict(vIsScheduleConflictCommission, vIsScheduleConflictProject, vIsScheduleConflictGroup);
+            }
+            else
+            {
+                return "falseIsProfessorShock";
+            }
+        }
+        public string validationsEditProject(int pProjectID, int pProfessorID, int pPeriodID,List<ScheduleProject> pSchedule)
+        {
+            bool vIsScheduleConflictProject = existScheduleConflictProjectWithoutProject(pProfessorID, pPeriodID, pSchedule, pProjectID);
+           
+            //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+            bool vIsScheduleConflictCommission = existScheduleConflictCommissionwithActualProject(pProfessorID, pPeriodID, pSchedule);
+            
+            //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
+            bool vIsScheduleConflictGroup = existScheduleConflictGroupwithProject(pProfessorID, pPeriodID, pSchedule);
+
+            return isScheduleConflict(vIsScheduleConflictCommission, vIsScheduleConflictProject, vIsScheduleConflictGroup);
+        }
+
+        public string isScheduleConflict(bool pIsScheduleConflictCommission, bool pIsScheduleConflictProject, bool pIsScheduleConflictGroup)
+        {
+            if (!pIsScheduleConflictCommission)
+            {
+                if (!pIsScheduleConflictProject)
                 {
-                    //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                    bool isGroupShock = existShockScheduleGroupwithActualCommission(pProfessorID, pPeriodID, pSchedules);
-                    if (!isGroupShock)
+                    if (!pIsScheduleConflictGroup)
                     {
                         return "true";
                     }
@@ -166,75 +142,7 @@ namespace SACAAE.Helpers
             }
         }
 
-        public string validationProject(int pProjectID, int pProfessorID,int pPeriodID, List<ScheduleProject> pSchedule)
-        {
-            bool vIsProfessorAssign = isProfessorAssigntoProject(pProjectID,pProfessorID,pPeriodID);
-            if (!vIsProfessorAssign)
-            {
-                bool isProjectShock = existShockScheduleProjectwithActualProject(pProfessorID, pPeriodID, pSchedule);
-                if (!isProjectShock)
-                {
-                    //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                    bool isCommissionShock = existShockScheduleCommissionwithActualProject(pProfessorID, pPeriodID, pSchedule);
-                    if (!isCommissionShock)
-                    {
-                        //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                        bool isGroupShock = existShockScheduleGroupwithProject(pProfessorID, pPeriodID, pSchedule);
-                        if (!isGroupShock)
-                        {
-                            return "true";
-                        }
-                        else
-                        {
-                            return "falseIsGroupShock";
-                        }
-                    }
-                    else
-                    {
-                        return "falseIsCommissionShock";
-                    }
-                }
-                else
-                {
-                    return "falseIsProjectShock";
-                }
-            }
-            else
-            {
-                return "falseIsProfessorShock";
-            }
-        }
-        public string validationsEditProject(int pProjectID, int pProfessorID, int pPeriodID,List<ScheduleProject> pSchedule)
-        {
-            bool isProjectShock = existShockScheduleProjectWithoutProject(pProfessorID, pPeriodID,pSchedule,pProjectID);
-            if (!isProjectShock)
-            {
-                //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                bool isCommissionShock = existShockScheduleCommissionwithActualProject(pProfessorID,pPeriodID, pSchedule);
-                if (!isCommissionShock)
-                {
-                    //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                    bool isGroupShock = existShockScheduleGroupwithProject(pProfessorID,pPeriodID, pSchedule);
-                    if (!isGroupShock)
-                    {
-                        return "true";
-                    }
-                    else
-                    {
-                        return "falseIsGroupShock";
-                    }
-                }
-                else
-                {
-                    return "falseIsCommissionShock";
-                }
-            }
-            else
-            {
-                return "falseIsProjectShock";
-            }
-        }
-        private bool existShockScheduleGroupWithoutGroupSelect(int pProfessorID, int pGroupID, int pPeriodID)
+        private bool existScheduleConflictGroupWithoutGroupSelect(int pProfessorID, int pGroupID, int pPeriodID)
         {
             /*Get Group from database accordin to pGroupID*/
             var vListScheduleGroup = (from grupo in db.Groups
@@ -250,27 +158,14 @@ namespace SACAAE.Helpers
             //Verify each scheedule with the new assign information
             foreach (var vNewSchedule in vListScheduleGroup)
             {
-                foreach (var vActualScheduleCommission in group_schedule)
+                foreach (var vActualScheduleGroup in group_schedule)
                 {
-                    if (vActualScheduleCommission.ID != pGroupID)
+                    if (vActualScheduleGroup.ID != pGroupID)
                     {
-                        if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
-                        {
-                            var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                            var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
-                            var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                            var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                            //Check the range of the schedule
-                            if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                                (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                                (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                                (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                            {
-                                return true;
-                            }
-
-                        }
+                        bool vIsScheduleCorrect = verifyRange(vNewSchedule.Day, vActualScheduleGroup.Day, vActualScheduleGroup.StartHour,
+                                                                       vActualScheduleGroup.EndHour, vNewSchedule.StartHour, vNewSchedule.EndHour);
+                        if (vIsScheduleCorrect)
+                            return vIsScheduleCorrect;
                     }
                 }
             }
@@ -278,7 +173,7 @@ namespace SACAAE.Helpers
         }
 
 
-        private bool existShockScheduleCommissionWithoutCommissionSelect(int pProfessorID,int pPeriodID, List<ScheduleComission> pSchedules, int pCommissionID)
+        private bool existScheduleConflictCommissionWithoutCommissionSelect(int pProfessorID,int pPeriodID, List<ScheduleComission> pSchedules, int pCommissionID)
         {
             //Get the day, starthour and endhour where professor was assign in commission
             var commission_schedule = db.SP_getProfessorScheduleCommission(pProfessorID, pPeriodID).ToList();
@@ -290,29 +185,17 @@ namespace SACAAE.Helpers
                 {
                     if (vActualScheduleCommission.ID != pCommissionID)
                     {
-                        if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
-                        {
-                            var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                            var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
-                            var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                            var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                            //Check the range of the schedule
-                            if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                                (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                                (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                                (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                            {
-                                return true;
-                            }
-                        }
+                        bool vIsScheduleCorrect = verifyRange(vNewSchedule.Day, vActualScheduleCommission.Day, vActualScheduleCommission.StartHour,
+                                                                       vActualScheduleCommission.EndHour, vNewSchedule.StartHour, vNewSchedule.EndHour);
+                        if (vIsScheduleCorrect)
+                            return vIsScheduleCorrect;
                     }
                 }
             }
             return false;
         }
 
-        public bool existShockScheduleProjectWithoutProject(int pProfessorID,int pPeriodID,List<ScheduleProject> pSchedules, int pProjectID)
+        public bool existScheduleConflictProjectWithoutProject(int pProfessorID,int pPeriodID,List<ScheduleProject> pSchedules, int pProjectID)
         {
             //Get the day, starthour and endhour where professor was assign in commission
             var project_schedule = db.SP_getProfessorScheduleProject(pProfessorID, pPeriodID).ToList();
@@ -324,22 +207,10 @@ namespace SACAAE.Helpers
                 {
                     if (vActualScheduleProject.ID != pProjectID)
                     {
-                        if (vNewSchedule.Day.Equals(vActualScheduleProject.Day))
-                        {
-                            var vActualStartHour = DateTime.Parse(vActualScheduleProject.StartHour);
-                            var vActualEndHour = DateTime.Parse(vActualScheduleProject.EndHour);
-                            var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                            var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                            //Check the range of the schedule
-                            if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                                (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                                (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                                (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                            {
-                                return true;
-                            }
-                        }
+                        bool vIsScheduleCorrect = verifyRange(vNewSchedule.Day, vActualScheduleProject.Day, vActualScheduleProject.StartHour,
+                                                                       vActualScheduleProject.EndHour, vNewSchedule.StartHour, vNewSchedule.EndHour);
+                        if (vIsScheduleCorrect)
+                            return vIsScheduleCorrect;
 
                     }
                     else
@@ -359,7 +230,7 @@ namespace SACAAE.Helpers
         /// <param name="pProfessorID"></param>
         /// <param name="pSchedules"></param>
         /// <returns>true if found any problem with the schedules</returns>
-        private bool existShockScheduleCommissioninGroup(int pProfessorID, int pGroupID, int pPeriodID)
+        private bool existScheduleConflictCommissioninGroup(int pProfessorID, int pGroupID, int pPeriodID)
         {
             /*Get Group from database accordin to idGrupo*/
             var vListScheduleGroup = (from grupo in db.Groups
@@ -376,22 +247,10 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleCommission in commission_schedule)
                 {
-                    if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-                    }
+                    bool vIsScheduleCorrect = verifyRange(vNewSchedule.Day, vActualScheduleCommission.Day, vActualScheduleCommission.StartHour,
+                                                                        vActualScheduleCommission.EndHour, vNewSchedule.StartHour, vNewSchedule.EndHour);
+                    if (vIsScheduleCorrect)
+                        return vIsScheduleCorrect;
                 }
             }
             return false;
@@ -404,7 +263,7 @@ namespace SACAAE.Helpers
         /// <param name="pProfessorID"></param>
         /// <param name="pGroupID"></param>
         /// <returns>true if found any problem with the schedules</returns>
-        private bool existShockScheduleProjectinGroup(int pProfessorID, int pGroupID, int pPeriodID)
+        private bool existScheduleConflictProjectinGroup(int pProfessorID, int pGroupID, int pPeriodID)
         {
             /*Get Group from database accordin to pGroupID*/
             var vListScheduleGroup = (from grupo in db.Groups
@@ -422,22 +281,10 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleProject in project_schedule)
                 {
-                    if (vNewSchedule.Day.Equals(vActualScheduleProject.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleProject.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleProject.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-                    }
+                    bool vIsScheduleCorrect = verifyRange(vNewSchedule.Day, vActualScheduleProject.Day, vActualScheduleProject.StartHour,
+                                                                        vActualScheduleProject.EndHour, vNewSchedule.StartHour, vNewSchedule.EndHour);
+                    if (vIsScheduleCorrect)
+                        return vIsScheduleCorrect;
                 }
             }
             return false;
@@ -450,7 +297,7 @@ namespace SACAAE.Helpers
         /// <param name="pProfessorID"></param>
         /// <param name="pSchedules"></param>
         /// <returns>true if found any problem with the schedules</returns>
-        private bool existShockScheduleGroupinGroup(int pProfessorID, int pGroupID, int pPeriodID)
+        private bool existScheduleConflictGroupinGroup(int pProfessorID, int pGroupID, int pPeriodID)
         {
             /*Get Group from database accordin to pGroupID*/
             var vListScheduleGroup = (from grupo in db.Groups
@@ -468,23 +315,10 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleCommission in group_schedule)
                 {
-                    if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-
-                    }
+                    bool vIsScheduleCorrect = verifyRange(vNewSchedule.Day, vActualScheduleCommission.Day, vActualScheduleCommission.StartHour,
+                                                                        vActualScheduleCommission.EndHour, vNewSchedule.StartHour, vNewSchedule.EndHour);
+                    if (vIsScheduleCorrect)
+                        return vIsScheduleCorrect;
                 }
             }
             return false;
@@ -523,7 +357,7 @@ namespace SACAAE.Helpers
         /// <param name="pProfessorID"></param>
         /// <param name="pSchedules"></param>
         /// <returns>true if found any problem with the schedules</returns>
-        private bool existShockScheduleCommissionwithActualCommission(int pProfessorID, int pPeriodID, List<ScheduleComission> pSchedules)
+        private bool existScheduleConflictCommissionwithActualCommission(int pProfessorID, int pPeriodID, List<ScheduleComission> pSchedules)
         {
             //Get the day, starthour and endhour where professor was assign in commission
             var commission_schedule = db.SP_getProfessorScheduleCommission(pProfessorID, pPeriodID).ToList();
@@ -533,7 +367,8 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleCommission in commission_schedule)
                 {
-                    bool vIsScheduleCorrect = verifyScheduleCommission(vNewSchedule, vActualScheduleCommission);
+                    bool vIsScheduleCorrect = verifyRange(vNewSchedule.Day, vActualScheduleCommission.Day,vActualScheduleCommission.StartHour,
+                                                                        vActualScheduleCommission.EndHour,vNewSchedule.StartHour, vNewSchedule.EndHour);
                     if (vIsScheduleCorrect)
                         return vIsScheduleCorrect;
                 }
@@ -548,7 +383,7 @@ namespace SACAAE.Helpers
         /// <param name="pProfessorID"></param>
         /// <param name="pSchedules"></param>
         /// <returns>true if found any problem with the schedules</returns>
-        private bool existShockScheduleProjectwithActualCommission(int pProfessorID, int pPeriodID, List<ScheduleComission> pSchedules)
+        private bool existScheduleConflictProjectwithActualCommission(int pProfessorID, int pPeriodID, List<ScheduleComission> pSchedules)
         {
             //Get the day, starthour and endhour where professor was assign in commission
             var project_schedule = db.SP_getProfessorScheduleProject(pProfessorID, pPeriodID).ToList();
@@ -558,7 +393,8 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleCommission in project_schedule)
                 {
-                    bool vIsScheduleCorrect = verifyScheduleCommission(vNewSchedule, vActualScheduleCommission);
+                    bool vIsScheduleCorrect = verifyRange(vNewSchedule.Day, vActualScheduleCommission.Day,vActualScheduleCommission.StartHour,
+                                                                        vActualScheduleCommission.EndHour,vNewSchedule.StartHour,vNewSchedule.EndHour);
                     if (vIsScheduleCorrect)
                         return vIsScheduleCorrect;
                 }
@@ -573,7 +409,7 @@ namespace SACAAE.Helpers
         /// <param name="pProfessorID"></param>
         /// <param name="pSchedules"></param>
         /// <returns>true if found any problem with the schedules</returns>
-        private bool existShockScheduleGroupwithActualCommission(int pProfessorID, int pPeriodID, List<ScheduleComission> pSchedules)
+        private bool existScheduleConflictGroupwithActualCommission(int pProfessorID, int pPeriodID, List<ScheduleComission> pSchedules)
         {
             //Get the day, starthour and endhour where professor was assign in commission
             var group_schedule = db.SP_getProfessorScheduleGroup(pProfessorID, pPeriodID).ToList();
@@ -583,7 +419,8 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleCommission in group_schedule)
                 {
-                    bool vIsScheduleCorrect = verifyScheduleCommission(vNewSchedule, vActualScheduleCommission);
+                    bool vIsScheduleCorrect = verifyRange(vNewSchedule.Day, vActualScheduleCommission.Day,vActualScheduleCommission.StartHour,
+                                                            vActualScheduleCommission.EndHour, vNewSchedule.StartHour,vNewSchedule.EndHour);
                     if (vIsScheduleCorrect)
                         return vIsScheduleCorrect;
                 }
@@ -603,7 +440,7 @@ namespace SACAAE.Helpers
         /// <param name="pProfessorID"></param>
         /// <param name="pSchedules"></param>
         /// <returns>true if found any problem with the schedules</returns>
-        private bool existShockScheduleCommissionwithActualProject(int pProfessorID, int pPeriodID,List<ScheduleProject> pSchedules)
+        private bool existScheduleConflictCommissionwithActualProject(int pProfessorID, int pPeriodID,List<ScheduleProject> pSchedules)
         {
             //Get the day, starthour and endhour where professor was assign in commission
             var commission_schedule = db.SP_getProfessorScheduleCommission(pProfessorID, pPeriodID).ToList();
@@ -613,7 +450,8 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleCommission in commission_schedule)
                 {
-                    bool vIsScheduleCorrect = verifyScheduleProject(vNewSchedule, vActualScheduleCommission);
+                    bool vIsScheduleCorrect = verifyRange(vNewSchedule.Day, vActualScheduleCommission.Day, vActualScheduleCommission.StartHour,
+                                                          vActualScheduleCommission.EndHour, vNewSchedule.StartHour,vNewSchedule.EndHour);
                     if (vIsScheduleCorrect)
                         return vIsScheduleCorrect;
                 }
@@ -628,7 +466,7 @@ namespace SACAAE.Helpers
         /// <param name="pProfessorID"></param>
         /// <param name="pSchedules"></param>
         /// <returns>true if found any problem with the schedules</returns>
-        public bool existShockScheduleProjectwithActualProject(int pProfessorID,int pPeriodID, List<ScheduleProject> pSchedules)
+        public bool existScheduleConflictProjectwithActualProject(int pProfessorID,int pPeriodID, List<ScheduleProject> pSchedules)
         {
             //Get the day, starthour and endhour where professor was assign in commission
             var project_schedule = db.SP_getProfessorScheduleProject(pProfessorID, pPeriodID).ToList();
@@ -638,7 +476,8 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleProject in project_schedule)
                 {
-                    bool vIsScheduleCorrect = verifyScheduleProject(vNewSchedule, vActualScheduleProject);
+                    bool vIsScheduleCorrect = verifyRange(vNewSchedule.Day, vActualScheduleProject.Day, vActualScheduleProject.StartHour,
+                                                         vActualScheduleProject.EndHour,vNewSchedule.StartHour, vNewSchedule.EndHour);
                     if (vIsScheduleCorrect)
                         return vIsScheduleCorrect;
                 }
@@ -653,7 +492,7 @@ namespace SACAAE.Helpers
         /// <param name="pProfessorID"></param>
         /// <param name="pSchedules"></param>
         /// <returns>true if found any problem with the schedules</returns>
-        private bool existShockScheduleGroupwithProject(int pProfessorID,int pPeriodID, List<ScheduleProject> pSchedules)
+        private bool existScheduleConflictGroupwithProject(int pProfessorID,int pPeriodID, List<ScheduleProject> pSchedules)
         {
             //Get the day, starthour and endhour where professor was assign in commission
             var project_schedule = db.SP_getProfessorScheduleGroup(pProfessorID, pPeriodID).ToList();
@@ -663,7 +502,8 @@ namespace SACAAE.Helpers
             {
                 foreach (var vActualScheduleProject in project_schedule)
                 {
-                    bool vIsScheduleCorrect= verifyScheduleProject(vNewSchedule, vActualScheduleProject);
+                    bool vIsScheduleCorrect= verifyRange(vNewSchedule.Day, vActualScheduleProject.Day, vActualScheduleProject.StartHour,
+                                                                    vActualScheduleProject.EndHour,vNewSchedule.StartHour,vNewSchedule.EndHour);
                     if(vIsScheduleCorrect)
                         return vIsScheduleCorrect;
                 }
@@ -697,15 +537,15 @@ namespace SACAAE.Helpers
         }
         #endregion
 
-        private bool verifyScheduleCommission(ScheduleComission pNewSchedule, ScheduleAssign pActualSchedule)
+        private bool verifyRange(string pNewScheduleDay,string pActualScheduleDay, string pActualStartHour, string pActualEndHour, 
+                                string pNewStartHour, string pNewEndHour)
         {
-
-            if (pNewSchedule.Day.Equals(pActualSchedule.Day))
+            if (pNewScheduleDay.Equals(pActualScheduleDay))
             {
-                var vActualStartHour = DateTime.Parse(pActualSchedule.StartHour);
-                var vActualEndHour = DateTime.Parse(pActualSchedule.EndHour);
-                var vNewStartHour = DateTime.Parse(pNewSchedule.StartHour);
-                var vNewEndHour = DateTime.Parse(pNewSchedule.EndHour);
+                DateTime vActualStartHour = DateTime.Parse(pActualStartHour);
+                DateTime vActualEndHour = DateTime.Parse(pActualEndHour);
+                DateTime vNewStartHour = DateTime.Parse(pNewStartHour);
+                DateTime vNewEndHour = DateTime.Parse(pNewEndHour);
 
                 //Check the range of the schedule
                 if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
@@ -715,34 +555,8 @@ namespace SACAAE.Helpers
                 {
                     return true;
                 }
-
             }
             return false;
         }
-
-        private bool verifyScheduleProject(ScheduleProject pNewSchedule, ScheduleAssign pActualSchedule)
-        {
-            
-            if (pNewSchedule.Day.Equals(pActualSchedule.Day))
-            {
-                var vActualStartHour = DateTime.Parse(pActualSchedule.StartHour);
-                var vActualEndHour = DateTime.Parse(pActualSchedule.EndHour);
-                var vNewStartHour = DateTime.Parse(pNewSchedule.StartHour);
-                var vNewEndHour = DateTime.Parse(pNewSchedule.EndHour);
-
-                //Check the range of the schedule
-                if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                    (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                    (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                    (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                {
-                    return true;
-                }
-
-            }
-            return false;
-        }
-            
-        
     }
 }

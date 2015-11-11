@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SACAAE.Data_Access;
+using SACAAE.Helpers;
 using SACAAE.Models;
 using SACAAE.Models.ViewModels;
 using System;
@@ -15,6 +16,8 @@ namespace SACAAE.Controllers
     public class CursoProfesorController : Controller
     {
         private SACAAEContext db = new SACAAEContext();
+        private ScheduleHelper scheduleHelper = new ScheduleHelper();
+
         private const string TempDataMessageKeySuccess = "MessageSuccess";
         private const string TempDataMessageKeyError = "MessageError";
 
@@ -45,12 +48,15 @@ namespace SACAAE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Asignar(int sltCurso, int sltProfesor, int sltGrupo, int HourCharge)
         {
+            var vPeriod = Request.Cookies["Periodo"].Value;
+            var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
+
             if (ModelState.IsValid)
             {
 
                     //Verify if profesor have other assign in the same day and start hour, if don't have conflict with other group in the same hour and day return true, else
                     //if found problem with other group in the same day and start hour return false and the assign is cancelled and the user receive information
-                    string validate = validations(sltProfesor, sltGrupo);
+                    string validate = scheduleHelper.validations(sltProfesor, sltGrupo,vPeriodID);
 
                     //If doesn't exist problems in the profesor schedule
                     if (validate.Equals("true"))
@@ -58,7 +64,6 @@ namespace SACAAE.Controllers
                         var grupo = db.Groups.Find(sltGrupo);
                         grupo.ProfessorID = sltProfesor;
 
-                        //FALTA AGREGAR EL TIPO DE HORA SI ES RECARGO O NO
                         if (HourCharge == 1)
                         {
                             grupo.HourAllocatedTypeID = 1;
@@ -69,7 +74,7 @@ namespace SACAAE.Controllers
                         return RedirectToAction("Asignar");
                     }
                     // Exist problems in profesor schedule, so the assign is cancelled and the user recive the information of the problem
-                    else if (validate.Equals("falseIsGroupSchock"))
+                    else if (validate.Equals("falseIsGroupShock"))
                     {
                         TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al curso";
                         /* get List of all teachers */
@@ -81,7 +86,7 @@ namespace SACAAE.Controllers
                         return View();
 
                     }
-                    else if (validate.Equals("falseIsProjectSchock"))
+                    else if (validate.Equals("falseIsProjectShock"))
                     {
                         TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor al curso";
                         /* get List of all teachers */
@@ -93,7 +98,7 @@ namespace SACAAE.Controllers
                         return View();
                     }
 
-                    else if (validate.Equals("falseIsCommissionSchock"))
+                    else if (validate.Equals("falseIsCommissionShock"))
                     {
                         TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno el profesor al curso";
                         /* get List of all teachers */
@@ -202,224 +207,6 @@ namespace SACAAE.Controllers
                    select modalidad;
         }
 
-        /// <summary>
-        /// <autor>Esteban Segura Benavides</autor>
-        /// Check all posibles shocks in all schedules of the professor
-        /// </summary>
-        /// <param name="vProfessorID"></param>
-        /// <param name="pGroupID"></param>
-        /// <returns></returns>
-        public string validations(int vProfessorID, int pGroupID)
-        {
-
-            //Check the schedule of the commissions related with the professor
-            bool isCommissionShock = existShockScheduleCommission(vProfessorID, pGroupID);
-            //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-            if (!isCommissionShock)
-            {
-                //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                bool isProjectShock = existShockScheduleProject(vProfessorID, pGroupID);
-                if (!isProjectShock)
-                {
-                    //if exist shock with the schedule, the system doesn't let assign new projects in that schedule
-                    bool isGroupShock = existShockScheduleGroup(vProfessorID, pGroupID);
-                    if (!isGroupShock)
-                    {
-                        return "true";
-                    }
-                    else
-                    {
-                        return "falseIsGroupSchock";
-                    }
-                }
-                else
-                {
-                    return "falseIsProjectSchock";
-                }
-            }
-            else
-            {
-                return "falseIsCommissionSchock";
-            }
-        }
-
-        
-
-        /// <summary>
-        /// Esteban Segura Benavides
-        /// Check posibles conflicts with the new project schedule and the all commission schedule related with determinated professor
-        /// </summary>
-        /// <param name="pProfessorID"></param>
-        /// <param name="pSchedules"></param>
-        /// <returns>true if found any problem with the schedules</returns>
-        public bool existShockScheduleCommission(int pProfessorID, int pGroupID)
-        {
-            var vPeriod = Request.Cookies["Periodo"].Value;
-            var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
-
-
-            /*Get Group from database accordin to idGrupo*/
-            var vListScheduleGroup = (from grupo in db.Groups
-                                      join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
-                                      join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
-                                      where (grupo.ID == pGroupID)
-                                      select new { horario.StartHour, horario.EndHour, horario.Day }).ToList();
-
-            //Get the day, starthour and endhour where professor was assign in commission
-            var commission_schedule = db.SP_getProfessorScheduleCommission(pProfessorID, vPeriodID).ToList();
-
-            //Verify each scheedule with the new assign information
-            foreach (var vNewSchedule in vListScheduleGroup)
-            {
-                foreach (var vActualScheduleCommission in commission_schedule)
-                {
-                    if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Esteban Segura Benavides
-        /// Check posibles conflicts with the new project schedule and the all project schedule related with determinated professor
-        /// </summary>
-        /// <param name="pProfessorID"></param>
-        /// <param name="pGroupID"></param>
-        /// <returns>true if found any problem with the schedules</returns>
-        public bool existShockScheduleProject(int pProfessorID, int pGroupID)
-        {
-            var vPeriod = Request.Cookies["Periodo"].Value;
-            var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
-
-            /*Get Group from database accordin to pGroupID*/
-            var vListScheduleGroup = (from grupo in db.Groups
-                                      join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
-                                      join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
-                                      where (grupo.ID == pGroupID)
-                                      select new { horario.StartHour, horario.EndHour, horario.Day }).ToList();
-
-
-            //Get the day, starthour and endhour where professor was assign in commission
-            var project_schedule = db.SP_getProfessorScheduleProject(pProfessorID, vPeriodID).ToList();
-
-            //Verify each scheedule with the new assign information
-            foreach (var vNewSchedule in vListScheduleGroup)
-            {
-                foreach (var vActualScheduleCommission in project_schedule)
-                {
-                    if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Esteban Segura Benavides
-        /// Check posibles conflicts with the new project schedule and the all group schedule related with determinated professor
-        /// </summary>
-        /// <param name="pProfessorID"></param>
-        /// <param name="pSchedules"></param>
-        /// <returns>true if found any problem with the schedules</returns>
-        public bool existShockScheduleGroup(int pProfessorID, int pGroupID)
-        {
-            var vPeriod = Request.Cookies["Periodo"].Value;
-            var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
-
-            /*Get Group from database accordin to pGroupID*/
-            var vListScheduleGroup = (from grupo in db.Groups
-                                      join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
-                                      join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
-                                      where (grupo.ID == pGroupID)
-                                      select new { horario.StartHour, horario.EndHour, horario.Day }).ToList();
-
-
-            //Get the day, starthour and endhour where professor was assign in commission
-            var group_schedule = db.SP_getProfessorScheduleGroup(pProfessorID, vPeriodID).ToList();
-
-            //Verify each scheedule with the new assign information
-            foreach (var vNewSchedule in vListScheduleGroup)
-            {
-                foreach (var vActualScheduleCommission in group_schedule)
-                {
-                    if (vNewSchedule.Day.Equals(vActualScheduleCommission.Day))
-                    {
-                        var vActualStartHour = DateTime.Parse(vActualScheduleCommission.StartHour);
-                        var vActualEndHour = DateTime.Parse(vActualScheduleCommission.EndHour);
-                        var vNewStartHour = DateTime.Parse(vNewSchedule.StartHour);
-                        var vNewEndHour = DateTime.Parse(vNewSchedule.EndHour);
-
-                        //Check the range of the schedule
-                        if ((vActualStartHour <= vNewStartHour && vNewStartHour <= vActualEndHour) ||
-                            (vActualStartHour <= vNewEndHour && vNewEndHour <= vActualEndHour) ||
-                            (vNewStartHour <= vActualStartHour && vActualStartHour <= vNewEndHour) ||
-                            (vNewStartHour <= vActualEndHour && vActualEndHour <= vNewEndHour))
-                        {
-                            return true;
-                        }
-
-                    }
-                }
-            }
-            return false;
-        }
-
-
-       
-
-        /// <summary>
-        /// Revoca la asignación de un profesor a un curso.
-        /// </summary>
-        /// <param name="idProfesorXCurso">El id del profesor x curso.</param>
-        /// <returns>True si logra revocarlo.</returns>
-        public bool revocarProfesor(int idProfesorXCurso)
-        {
-            var retorno = false;
-            /*var grupo = db.Groups.Find(pIDGroup);
-            grupo.ProfessorID = null;
-            grupo.HourAllocatedTypeID = null;
-            db.SaveChanges();
-
-            if (temp != null)
-            {
-                entidades.Entry(temp).Property(p => p.Profesor).CurrentValue = 3;
-                entidades.Entry(temp).Property(p => p.Horas).CurrentValue = 0;
-                retorno = true;
-            }
-
-            entidades.SaveChanges();*/
-
-            return retorno;
-        }
         #endregion
 
         #region Ajax Post
@@ -501,17 +288,6 @@ namespace SACAAE.Controllers
         /// </summary>
         /// 
         /// <autor>Unknow</autor>
-        /// <changes>
-        /// Esteban Segura Benavides 8/28/2015
-        ///   
-        ///   Route:
-        ///   Before: CursoProfesor/GruposSinProfesor/List/{curso:int}/{plan:int}/{sede:int}/{bloque:int}
-        ///   New: CursoProfesor/Sedes/{sede:int}/Planes/{plan:int}/Bloques/{bloque:int}/Cursos/{curso:int}/GroupWithoutProfesor
-        ///
-        ///   Method Name:
-        ///   Before: ObtenerGruposSinProfesor
-        ///   New: getGroupWithoutProfesor
-        /// </changes>
         /// <param name="pCurso">ID of Course in database</param>
         /// <param name="pPlan">ID of Study Plan in database</param>
         /// <param name="pSede">ID of Sede in database</param>
@@ -589,19 +365,6 @@ namespace SACAAE.Controllers
         /// ***************** NOT USED  ********************************* 
         /// </summary>
         /// <autor>Unkown</autor>
-        /// <change>
-        /// Esteban Segura Benavides 9/12/2015
-        /// Script Old:
-        /// var listaCursos = from profesores in db.Professors
-        ///join grupo in db.Groups on profesores.ID equals grupo.ProfessorID
-        ///join bloqueXPlanXCurso in db.BlocksXPlansXCourses on grupo.BlockXPlanXCourseID equals bloqueXPlanXCurso.ID
-        ///where profesores.ID == idProfesor
-        ///select new { profesores.ID, bloqueXPlanXCurso.Course.Name, bloqueXPlanXCurso.Course.Code }; 
-        ///
-        /// Script New:
-        /// 
-        /// Professor_Course
-        /// </change>
         /// <param name="pIDProfesor"></param>
         /// <returns></returns>
         [Route("CursoProfesor/Profesor/Cursos/{pIDProfesor:int}")]
@@ -624,28 +387,6 @@ namespace SACAAE.Controllers
         /// Get a groups associated a determinated course 
         /// </summary>
         /// <autor>Esteban Segura Benavides</autor>
-        /// <changes>
-        /// Esteban Segura Benavides 8/28/2015
-        ///   
-        ///   Script Old:
-        ///   from curso in db.Courses
-///           join bloque_planes_curso in db.BlocksXPlansXCourses on curso.ID equals bloque_planes_curso.CourseID
-///           join bloque_planes in db.AcademicBlocksXStudyPlans on bloque_planes_curso.BlockXPlanID equals bloque_planes.ID
-///           join grupo in db.Groups on bloque_planes_curso.ID equals grupo.BlockXPlanXCourseID
-///           join profesor in db.Professors on grupo.ProfessorID equals profesor.ID
-///           join plan_estudio in db.StudyPlans on bloque_planes.PlanID equals plan_estudio.ID
-//////        join plan_sede in db.StudyPlansXSedes on plan_estudio.ID equals plan_sede.StudyPlanID
-///           join sede in db.Sedes on plan_sede.SedeID equals sede.ID
-///           join grupo_aula in db.GroupClassrooms on grupo.ID equals grupo_aula.GroupID
-///           join aula in db.Classrooms on grupo_aula.ClassroomID equals aula.ID
-///           join horario in db.Schedules on grupo_aula.ScheduleID equals horario.ID
-///           where curso.ID == pIDCurso && sede.Name == "Cartago"
- ///           select new { grupo.ID, grupo.Number, profesor.Name, aula.Code, horario.StartHour, horario.EndHour, horario.Day });
-///           Script New:
-///           
-        ///
-        ///                           select new { grupo.ID, grupo.Number, profesor.Name, aula.Code, horario.StartHour, horario.EndHour, horario.Day });
-        /// </changes>
         /// <param name="pIDCurso">ID Course in database</param>
         /// <returns>ID, Number of Group, Name of Profesor, Code of Aula and StartHour, EndHour and Day of Schedule</returns>
         [Route("CursoProfesor/Cursos/{pIDCurso:int}/{pSede:int}")]

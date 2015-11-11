@@ -248,18 +248,18 @@ namespace SACAAE.Controllers
                     return RedirectToAction("Details", new { id = ID });
                 }
                 // Exist problems in profesor schedule, so the assign is cancelled and the user recive the information of the problem
-                else if (validate.Equals("falseIsGroupSchock"))
+                else if (validate.Equals("falseIsGroupShock"))
                 {
                     TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al curso";
                     return RedirectToAction("AsignarProfesoraCurso");
                 }
-                else if (validate.Equals("falseIsProjectSchock"))
+                else if (validate.Equals("falseIsProjectShock"))
                 {
                     TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor al curso";
                     return RedirectToAction("AsignarProfesoraCurso");
                 }
 
-                else if (validate.Equals("falseIsCommissionSchock"))
+                else if (validate.Equals("falseIsCommissionShock"))
                 {
                     TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor al curso";
                     return RedirectToAction("AsignarProfesoraCurso");
@@ -358,7 +358,7 @@ namespace SACAAE.Controllers
                     return RedirectToAction("Details", new { id = grupo.BlockXPlanXCourse.CourseID });
                 }
                 // Exist problems in profesor schedule, so the assign is cancelled and the user recive the information of the problem
-                else if (validate.Equals("falseIsGroupSchock"))
+                else if (validate.Equals("falseIsGroupShock"))
                 {
                     /*The user recive the information about the problem*/
                     TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al curso"; ;
@@ -368,7 +368,7 @@ namespace SACAAE.Controllers
                     ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
                     return View(grupo);
                 }
-                else if (validate.Equals("falseIsProjectSchock"))
+                else if (validate.Equals("falseIsProjectShock"))
                 {
                     /*The user recive the information about the problem*/
                     TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor al curso";
@@ -379,7 +379,7 @@ namespace SACAAE.Controllers
                     return View(grupo);
                 }
 
-                else if (validate.Equals("falseIsCommissionSchock"))
+                else if (validate.Equals("falseIsCommissionShock"))
                 {
                     /*The user recive the information about the problem*/
                     TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor al curso";

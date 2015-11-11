@@ -221,8 +221,8 @@ namespace SACAAE.Controllers
             var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
 
             string vHourCharge = pSchedule.HourCharge;
-            var vProjectID = Convert.ToInt32(pSchedule.Projects);
-            var vProfessorID = Convert.ToInt32(pSchedule.Professors);
+            int vProjectID = Convert.ToInt32(pSchedule.Projects);
+            int vProfessorID = Convert.ToInt32(pSchedule.Professors);
 
             List<ScheduleProject> vSchedules = pSchedule.ScheduleProject;
             
@@ -273,6 +273,8 @@ namespace SACAAE.Controllers
 
                 db.SaveChanges();
                 TempData[TempDataMessageKeySuccess] = "El profesor fue asignado correctamente.";
+
+               
 
                 return RedirectToAction("Details", new { id = vProjectID });
             }
