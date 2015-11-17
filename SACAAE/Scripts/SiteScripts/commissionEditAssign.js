@@ -309,3 +309,9 @@ function get_id(number) {
     var url = window.location.pathname.split('/');
     return url[number];
 }
+
+
+function my_back(id_commission) {
+    var route = "/Comision/Details/" + id_commission;
+    window.location = route;
+}

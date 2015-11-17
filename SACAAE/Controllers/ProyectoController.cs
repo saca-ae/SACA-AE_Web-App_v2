@@ -208,7 +208,8 @@ namespace SACAAE.Controllers
             ScheduleProjectViewModel projectViewModel = new ScheduleProjectViewModel();
             projectViewModel.Projects = project.Name;
 
-            ViewBag.Professors = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name"); 
+            ViewBag.Professors = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name");
+            ViewBag.ProjectID = project.ID.ToString();
             return View(projectViewModel);
         }
 
@@ -363,7 +364,7 @@ namespace SACAAE.Controllers
             projectViewModel.Projects = project.Name;
 
             ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
-
+            ViewBag.ProjectID = projectID.ToString();
             return View(projectViewModel);
         }
 
@@ -436,85 +437,36 @@ namespace SACAAE.Controllers
                     return RedirectToAction("Details", new { id = vProjectXProfessor.ProjectID });
                 }
                 else if (validate.Equals("falseIsProjectShock"))
-                {
                     TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor al proyecto";
-                    /* Get the list of professor related with commission */
-                    if (Request.UrlReferrer != null)
-                    {
-                        ViewBag.returnUrl = Request.UrlReferrer.ToString();
-                    }
-                    else
-                    {
-                        ViewBag.returnUrl = null;
-                    }
-
-                    var ProjectsXProfessors = db.ProjectsXProfessors.Find(vProjectXProfessorID);
-                    var projectID = ProjectsXProfessors.ProjectID;
-                    Project project = db.Projects.Find(projectID);
-                    ScheduleProjectViewModel projectViewModel = new ScheduleProjectViewModel();
-                    projectViewModel.Projects = project.Name;
-
-                    ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
-
-                    return View(projectViewModel);
-                }
+                    
+                
                 else if (validate.Equals("falseIsGroupShock"))
-                {
-                    TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al grupo";
-                    /* Get the list of professor related with commission */
-                    if (Request.UrlReferrer != null)
-                    {
-                        ViewBag.returnUrl = Request.UrlReferrer.ToString();
-                    }
-                    else
-                    {
-                        ViewBag.returnUrl = null;
-                    }
-
-                    var ProjectsXProfessors = db.ProjectsXProfessors.Find(vProjectXProfessorID);
-                    var projectID = ProjectsXProfessors.ProjectID;
-                    Project project = db.Projects.Find(projectID);
-                    ScheduleProjectViewModel projectViewModel = new ScheduleProjectViewModel();
-                    projectViewModel.Projects = project.Name;
-
-                    ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
-
-                    return View(projectViewModel);
-                }
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor al proyecto";
+                    
                 else if (validate.Equals("falseIsCommissionShock"))
-                {
                     TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor a la comisión";
-                    /* Get the list of professor related with commission */
-                    if (Request.UrlReferrer != null)
-                    {
-                        ViewBag.returnUrl = Request.UrlReferrer.ToString();
-                    }
-                    else
-                    {
-                        ViewBag.returnUrl = null;
-                    }
 
-                    var ProjectsXProfessors = db.ProjectsXProfessors.Find(vProjectXProfessorID);
-                    var projectID = ProjectsXProfessors.ProjectID;
-                    Project project = db.Projects.Find(projectID);
-                    ScheduleProjectViewModel projectViewModel = new ScheduleProjectViewModel();
-                    projectViewModel.Projects = project.Name;
-
-                    ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
-
-                    return View(projectViewModel);
+                /* Get the list of professor related with project */
+                if (Request.UrlReferrer != null)
+                {
+                    ViewBag.returnUrl = Request.UrlReferrer.ToString();
                 }
-            }
-            else
-            {
-                /*The user recive the information about the problem*/
-                TempData[TempDataMessageKeyError] = "No se puede asignar al profesor al proyecto\n porque existe choque de horario";
+                else
+                {
+                    ViewBag.returnUrl = null;
+                }
 
-                /* Get list of professor related a  project*/
-                ProjectXProfessor project_profesor = db.ProjectsXProfessors.Find(vProjectXProfessorID);
+                var ProjectsXProfessors = db.ProjectsXProfessors.Find(vProjectXProfessorID);
+                var projectID = ProjectsXProfessors.ProjectID;
+                Project project = db.Projects.Find(projectID);
+                ScheduleProjectViewModel projectViewModel = new ScheduleProjectViewModel();
+                projectViewModel.Projects = project.Name;
+
                 ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
-                return View(project_profesor);
+                ViewBag.ProjectID = projectID.ToString();
+                return View(projectViewModel);
             }
+            
             return View();
         }
 

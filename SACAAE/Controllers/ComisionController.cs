@@ -220,6 +220,7 @@ namespace SACAAE.Controllers
             commissionViewModel.Commissions = commission.Name;
 
             ViewBag.Professors = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name"); ;
+            ViewBag.CommissionID = commission.ID.ToString();
             return View(commissionViewModel);
         }
 
@@ -342,14 +343,15 @@ namespace SACAAE.Controllers
             {
                 ViewBag.returnUrl = null;
             }
-
+            
             var commission_profesor = db.CommissionsXProfessors.Find(id);
             var commissionID = commission_profesor.CommissionID;
             Commission commission = db.Commissions.Find(commissionID);
             ScheduleComissionViewModel commissionViewModel = new ScheduleComissionViewModel();
             commissionViewModel.Commissions = commission.Name;
 
-            ViewBag.Professors = new SelectList(db.Professors, "ID", "Name"); 
+            ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
+            ViewBag.CommissionID = commissionID.ToString();
 
             return View(commissionViewModel);
         }
@@ -420,73 +422,31 @@ namespace SACAAE.Controllers
                     return RedirectToAction("Details", new { id = vCommissionProfessor.CommissionID });
                 }
                 else if (validate.Equals("falseIsGroupShock"))
-                {
                     TempData[TempDataMessageKeyError] = "Existe choque de horario con grupos, no se asigno al profesor a la comisión";
-                    /* Get the list of professor related with commission */
-                    if (Request.UrlReferrer != null)
-                    {
-                        ViewBag.returnUrl = Request.UrlReferrer.ToString();
-                    }
-                    else
-                    {
-                        ViewBag.returnUrl = null;
-                    }
-
-                    var commission_profesor = db.CommissionsXProfessors.Find(vCommissionProfessorID);
-                    var commissionID = commission_profesor.CommissionID;
-                    Commission commission = db.Commissions.Find(commissionID);
-                    ScheduleComissionViewModel commissionViewModel = new ScheduleComissionViewModel();
-                    commissionViewModel.Commissions = commission.Name;
-
-                    ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
-
-                    return View(commissionViewModel);
-                }
-                else if (validate.Equals("falseIsProjectShock"))
-                {
-                    TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor a la comisión";
-                    if (Request.UrlReferrer != null)
-                    {
-                        ViewBag.returnUrl = Request.UrlReferrer.ToString();
-                    }
-                    else
-                    {
-                        ViewBag.returnUrl = null;
-                    }
-
-                    var commission_profesor = db.CommissionsXProfessors.Find(vCommissionProfessorID);
-                    var commissionID = commission_profesor.CommissionID;
-                    Commission commission = db.Commissions.Find(commissionID);
-                    ScheduleComissionViewModel commissionViewModel = new ScheduleComissionViewModel();
-                    commissionViewModel.Commissions = commission.Name;
-
-                    ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
-
-                    return View(commissionViewModel);
-                }
-                else if (validate.Equals("falseIsCommissionShock"))
-                {
-                    TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor a la comisión";
-                    if (Request.UrlReferrer != null)
-                    {
-                        ViewBag.returnUrl = Request.UrlReferrer.ToString();
-                    }
-                    else
-                    {
-                        ViewBag.returnUrl = null;
-                    }
-
-                    var commission_profesor = db.CommissionsXProfessors.Find(vCommissionProfessorID);
-                    var commissionID = commission_profesor.CommissionID;
-                    Commission commission = db.Commissions.Find(commissionID);
-                    ScheduleComissionViewModel commissionViewModel = new ScheduleComissionViewModel();
-                    commissionViewModel.Commissions = commission.Name;
-
-                    ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
-
-                    return View(commissionViewModel);
-                }
                 
+                else if (validate.Equals("falseIsProjectShock"))
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con proyectos, no se asigno al profesor a la comisión";
+                
+                else if (validate.Equals("falseIsCommissionShock"))
+                    TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor a la comisión";
+                
+                if (Request.UrlReferrer != null)
+                {
+                    ViewBag.returnUrl = Request.UrlReferrer.ToString();
+                }
+                else
+                {
+                    ViewBag.returnUrl = null;
+                }
+                var commission_profesor = db.CommissionsXProfessors.Find(vCommissionProfessorID);
+                var commissionID = commission_profesor.CommissionID;
+                Commission commission = db.Commissions.Find(commissionID);
+                ScheduleComissionViewModel commissionViewModel = new ScheduleComissionViewModel();
+                commissionViewModel.Commissions = commission.Name;
+
+                ViewBag.Professors = new SelectList(db.Professors, "ID", "Name");
+                ViewBag.CommissionID = commission_profesor.CommissionID.ToString();
+                return View(commissionViewModel);
                 
                 
             }

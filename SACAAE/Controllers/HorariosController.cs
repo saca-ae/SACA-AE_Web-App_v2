@@ -16,7 +16,8 @@ namespace SACAAE.Controllers
     public class HorariosController : Controller
     {
         private SACAAEContext db = new SACAAEContext();
-
+        private const string TempDataMessageKeySuccess = "MessageSuccess";
+        private const string TempDataMessageKeyError = "MessageError";
         // GET: /Horario/
         public ActionResult Index()
         {
@@ -261,13 +262,13 @@ namespace SACAAE.Controllers
                         }
                     }
                     Response.Cookies.Clear();*/
-                    TempData["Message"] = "Cambios guardados satisfactoriamente";
+                    TempData[TempDataMessageKeySuccess] = "Cambios guardados satisfactoriamente";
                     return RedirectToAction("Index");
 
                 }
                 else
                 {
-                    TempData["Message"] = "Error: Choque de horario";
+                    TempData[TempDataMessageKeyError] = "Error: Choque de horario";
                     return RedirectToAction("Index");
                 }
             /*}

@@ -208,3 +208,7 @@ function get_id(number) {
     return url[number];
 }
 
+function my_back(id_commission) {
+    var route = "/Comision/Details/" + id_commission;
+    window.location = route;
+}

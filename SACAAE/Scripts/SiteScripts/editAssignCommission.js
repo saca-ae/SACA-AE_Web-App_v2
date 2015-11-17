@@ -48,6 +48,7 @@ function editar_asignacion_comision(vIDComision) {
     var route_temporal = "/Comision/EditarAsignacion/" + vIDComision;
     window.location = route_temporal;
 }
+
 /// <summary>
 ///  Get the element select for delete
 /// </summary>

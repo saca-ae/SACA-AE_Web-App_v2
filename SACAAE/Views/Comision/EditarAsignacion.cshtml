@@ -85,8 +85,8 @@
     </div>
     @Html.HiddenFor(m => m.Commissions)
     <p>
-        <input type="button" value="Editar" class="btn" id="Editar_Asignacion" onclick="submit_form()"/> |
-        <a href="@ViewBag.returnUrl">Cancelar</a>
+        <input type="button" value="Editar" class="btn" id="Editar_Asignacion" onclick="submit_form()"/> 
+        <input type="button" value="Cancelar" class="btn" id="Cancelar" onclick="my_back(@ViewBag.CommissionID)"/>
     </p>
 }
 

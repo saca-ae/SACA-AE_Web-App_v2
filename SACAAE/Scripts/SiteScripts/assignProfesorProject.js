@@ -226,3 +226,7 @@ function get_id(number) {
     return url[number];
 }
 
+function my_back(id_project) {
+    var route = "/Proyecto/Details/" + id_project;
+    window.location = route;
+}
