@@ -40,24 +40,7 @@
                                 @Html.Label("Profesor")
                             </div>
                             <div class="editor-field">
-                                <select id="sltProfesor" name="sltProfesor" class="form-control">
-                                    @if (ViewBag.Profesores != null)
-                                    {
-                                        foreach (var item in ViewBag.Profesores)
-                                        {
-                                            <option value="@item.ID">@item.Name</option>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <option selected="selected">No hay profesores</option>
-                                    }
-                                </select>
-                                @if (ViewBag.Profesores == null)
-                                {
-
-                                    @Html.ActionLink("Crear Profesor", "Create", "Profesor")
-                                }
+                                @Html.DropDownList("Professors", null, htmlAttributes: new { @class = "form-control" })
                             </div>
                             <br />
 

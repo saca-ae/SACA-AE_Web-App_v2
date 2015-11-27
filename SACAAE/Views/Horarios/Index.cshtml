@@ -16,6 +16,15 @@
         margin-bottom: 25px;
         width: 220px;
     }
+
+    #new_schedule {
+        border-collapse: collapse; 
+
+    }
+
+    #new_schedule tr {
+        border: 1px solid black;
+    }
 </style>
 @section Scripts {
 
@@ -112,7 +121,6 @@
                 }
                 <br />
                 <label>
-
                     Plan
                 </label>
                 <select id="Plan" name="Plan" class="form-control"></select>
@@ -164,6 +172,7 @@
                                 <th>Inicio</th>
                                 <th>Fin</th>
                                 <th>Aula</th>
+                                <th><th>
                             </tr>
                         </thead>
                         <tbody>
@@ -222,9 +231,12 @@
                                 </td>
 
                                 <td>
-                                    <select id="tdRow1Classroom" onchange="onchangeClassroomSelection(1)" disabled="disabled">
+                                    <select id="tdRow1Classroom" onchange="onchangeClassroomSelection(1)" disabled="disabled" >
                                         
                                     </select>
+                                </td>
+                                <td>
+                                    <a onclick="delete_row(1)" title="Eliminar"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                                 </td>
                             </tr>
                         </tbody>
@@ -232,7 +244,7 @@
                 </div>
 
                 
-                    <a id="assign_schedule" onclick="obtener_dias()" href="#"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Horario</a>
+                    <a id="assign_schedule" onclick="obtener_dias()"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Horario</a>
                 
                
 

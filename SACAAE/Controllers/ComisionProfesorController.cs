@@ -21,7 +21,7 @@ namespace SACAAE.Controllers
         private const string TempDataMessageKeySuccess = "MessageSuccess";
         private const string TempDataMessageKeyError = "MessageError";
         // GET: ComisionProfesor/Asignar
-        public ActionResult Asignar()
+        public ActionResult Asignar(int? Profesor)
         {
 
             List<String> HorasInicio = new List<String>();
@@ -44,10 +44,12 @@ namespace SACAAE.Controllers
                 ViewBag.returnUrl = null;
             }
 
+
             var entidad = Request.Cookies["Entidad"].Value;
             var entidadID = getEntityID(entidad);
 
-            ViewBag.Professors = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name"); ;
+            ViewBag.Professors = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name",Profesor); 
+            
 
             if (entidadID == 1)
             {

@@ -59,9 +59,9 @@
                     </td>
                     <td class="text-center">@Html.DisplayFor(modelItem => item.TECHours) </td>
                     <td class="text-center">
-                        @Html.ActionLink("Comisión", "Asignar", "ComisionProfesor") |
-                        @Html.ActionLink("Proyecto", "Asignar", "ProyectoProfesor") |
-                        @Html.ActionLink("Curso", "Asignar", "CursoProfesor")
+                        @Html.ActionLink("Comisión", "Asignar", "ComisionProfesor", new { Profesor = item.ID},null) |
+                        @Html.ActionLink("Proyecto", "Asignar", "ProyectoProfesor", new { Profesor = item.ID }, null) |
+                        @Html.ActionLink("Curso", "Asignar", "CursoProfesor", new { Profesor = item.ID }, null)
                     </td>
                     <td class="text-center">
                         <a href="@Url.Action("Details", new { id = item.ID })" title="Ver detalle"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a> &nbsp

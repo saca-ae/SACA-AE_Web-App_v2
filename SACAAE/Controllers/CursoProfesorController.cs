@@ -22,7 +22,7 @@ namespace SACAAE.Controllers
         private const string TempDataMessageKeyError = "MessageError";
 
         // GET: CursoProfesor/Asignar
-        public ActionResult Asignar()
+        public ActionResult Asignar(int? Profesor)
         {
             if (Request.UrlReferrer != null)
             {
@@ -34,7 +34,7 @@ namespace SACAAE.Controllers
             }
 
             /* get List of all teachers */
-            ViewBag.Profesores = obtenerTodosProfesores().ToList();
+            ViewBag.Professors = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name", Profesor); 
             /*get List of all 'sedes' */
             ViewBag.Sedes = obtenerTodasSedes().ToList();
             /* get List of all 'modalidades' */

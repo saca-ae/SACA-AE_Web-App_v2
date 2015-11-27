@@ -150,13 +150,15 @@ function Enviar() {
 
 /*Horarios*/
 var contador = 2;
+var acumulador = 2;
+
 function obtener_dias() {
     var table = document.getElementById("new_schedule");
     //var row_count = table.rows.length
     //alert(contador);
-    if (contador < 5) {
+    if (contador < 7) {
         var row = table.insertRow(contador);
-        row.setAttribute("id", "trRow" + contador);
+        row.setAttribute("id", "trRow" + acumulador);
         row.setAttribute("data-day", "Lunes");
         row.setAttribute("data-starthour", "07:30 am");
         row.setAttribute("data-endhour", "08:20 am");
@@ -168,8 +170,9 @@ function obtener_dias() {
         var celda_StarHour = row.insertCell(1);
         var celda_EndHour = row.insertCell(2);
         var celda_Classroom = row.insertCell(3);
+        var delete_cell = row.insertCell(4);
 
-        celda_Day.innerHTML = "<select id=\"tdRow" + (contador - 1) + "Day\" onchange=\"onchangeDaySelection(" + (contador - 1) + ")\">" +
+        celda_Day.innerHTML = "<select id=\"tdRow" + acumulador+ "Day\" onchange=\"onchangeDaySelection(" +acumulador+ ")\">" +
                                   "<option>Lunes</option>" +
                                   "<option>Martes</option>" +
                                   "<option>Miércoles</option>" +
@@ -177,7 +180,7 @@ function obtener_dias() {
                                   "<option>Viernes</a></option>" +
                                  " <option>Sábado</a></option>" +
                               "</select>";
-        celda_StarHour.innerHTML = "<select id=\"tdRow" + (contador - 1) + "StartHour\" onchange=\"onchangeStartHourSelection(" + (contador - 1) + ")\">" +
+        celda_StarHour.innerHTML = "<select id=\"tdRow" + acumulador+ "StartHour\" onchange=\"onchangeStartHourSelection(" +acumulador+ ")\">" +
                                   "<option>07:30 am</option>" +
                                   "<option>08:30 am</option>" +
                                   "<option>09:30 am</option>" +
@@ -194,7 +197,7 @@ function obtener_dias() {
                                   "<option>08:00 pm</option>" +
                                   "<option>09:00 pm</option>" +
                               "</select>";
-        celda_EndHour.innerHTML = "<select id=\"tdRow" + (contador - 1) + "EndHour\" onchange=\"onchangeEndHourSelection(" + (contador - 1) + ")\">" +
+        celda_EndHour.innerHTML = "<select id=\"tdRow" + acumulador+ "EndHour\" onchange=\"onchangeEndHourSelection(" + acumulador+ ")\">" +
                                       "<option>08:20 am</option>" +
                                       "<option>09:20 am</option>" +
                                       "<option>10:20 am</option>" +
@@ -211,10 +214,12 @@ function obtener_dias() {
                                       "<option>09:50 pm</option>" +
                                     "</select>";
 
+        var current_acumulador = acumulador;
         var route = "/Horarios/Sedes/" + $('select[name="Sede"]').val() + "/Aulas";
         
+        
         $.getJSON(route, function (data) {
-            var items = "<select id=\"tdRow" + (contador - 1) + "Classroom\" onchange=\"onchangeClassroomSelection(" + (contador - 1) + ")\">";
+            var items = "<select id=\"tdRow" + current_acumulador + "Classroom\" onchange=\"onchangeClassroomSelection(" + current_acumulador + ")\">";
             $.each(data, function (i, aula) {
                 if (i == 0) {
                     row.setAttribute("data-classroom", aula.ID);
@@ -227,11 +232,14 @@ function obtener_dias() {
             celda_Classroom.innerHTML = items;
         });
        
-
+        delete_cell.innerHTML = "<a  onclick = \"delete_row(" + acumulador + ")\" title=\"Eliminar\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a>";
+        delete_cell.style.textAlign = "center";
+        delete_cell.style.borderCollapse = "collapse";
+        delete_cell.getElementsByTagName("a")[0].style.marginTop = "10px";
        
     }
 
-
+    acumulador += 1;
 }
 
 function onchangeDaySelection(identificador) {
@@ -243,125 +251,25 @@ function onchangeClassroomSelection(identificador) {
     $('#trRow' + identificador).attr('data-classroom', $('#tdRow' + identificador + 'Classroom').val());
 }
 function onchangeStartHourSelection(identificador) {
-    var pStartHour = $('#tdRow' + identificador + 'StartHour').val();
-    $('#trRow' + identificador).attr('data-starthour', pStartHour);
+    var vStartHour = $('#tdRow' + identificador + 'StartHour').val();
+    $('#trRow' + identificador).attr('data-starthour', vStartHour);
 }
 
 function onchangeEndHourSelection(identificador) {
-    var vStartHour = $('#tdRow' + identificador + 'StartHour').val();
     var vEndHour = $('#tdRow' + identificador + 'EndHour').val();
+    $('#trRow'+identificador).attr('data-endhour', vEndHour)
+}
 
-
-    var int_hora_entrada;
-    var int_hora_salida;
-    switch (vStartHour) {
-        case "07:30 am":
-            int_hora_entrada = 730;
-            break;
-        case "08:30 am":
-            int_hora_entrada = 830;
-            break;
-        case "09:30 am":
-            int_hora_entrada = 930;
-            break;
-        case "10:30 am":
-            int_hora_entrada = 1030;
-            break;
-        case "11:30 am":
-            int_hora_entrada = 1130;
-            break;
-        case "12:30 pm":
-            int_hora_entrada = 1230;
-            break;
-
-        case "01:00 pm":
-            int_hora_entrada = 1300;
-            break;
-        case "02:00 pm":
-            int_hora_entrada = 1400;
-            break;
-
-        case "03:00 pm":
-            int_hora_entrada = 1500;
-            break;
-        case "04:00 pm":
-            int_hora_entrada = 1600;
-            break;
-
-        case "05:00 pm":
-            int_hora_entrada = 1700;
-            break;
-        case "06:00 pm":
-            int_hora_entrada = 1800;
-            break;
-
-        case "07:00 pm":
-            int_hora_entrada = 1900;
-            break;
-        case "08:00 pm":
-            int_hora_entrada = 2000;
-            break;
-
-        case "09:00 pm":
-            int_hora_entrada = 2100;
-            break;
+function delete_row(i) {
+    var table = document.getElementById("new_schedule");
+    var trRow = table.getElementsByTagName("tr");
+    var rowCount = table.rows.length;
+    if (rowCount > 2) {
+        for (var j = 0; j < trRow.length; j++) {
+            if (trRow[j].id == "trRow" + i) {
+                table.deleteRow(j);
+                contador -= 1;
+            }
+        }
     }
-    switch (vEndHour) {
-        case "08:20 am":
-            int_hora_salida = 820;
-            break;
-        case "09:20 am":
-            int_hora_salida = 920;
-            break;
-        case "10:20 am":
-            int_hora_salida = 1020;
-            break;
-        case "11:20 am":
-            int_hora_salida = 1120;
-            break;
-        case "12:20 pm":
-            int_hora_salida = 1220;
-            break;
-
-        case "01:50 pm":
-            int_hora_salida = 1350;
-            break;
-        case "02:50 pm":
-            int_hora_salida = 1450;
-            break;
-
-        case "03:50 pm":
-            int_hora_salida = 1550;
-            break;
-        case "04:50 pm":
-            int_hora_salida = 1650;
-            break;
-
-        case "05:50 pm":
-            int_hora_salida = 1750;
-            break;
-        case "06:50 pm":
-            int_hora_salida = 1850;
-            break;
-
-        case "07:50 pm":
-            int_hora_salida = 1950;
-            break;
-        case "08:50 pm":
-            int_hora_salida = 2050;
-            break;
-
-        case "09:50 pm":
-            int_hora_salida = 2150;
-            break;
-    }
-
-    //********************************************************************************
-    if (int_hora_salida > int_hora_entrada) {
-        $('#trRow' + identificador).attr('data-endhour', vEndHour);
-    }
-    else {
-        // alert("Error");
-    }
-
 }

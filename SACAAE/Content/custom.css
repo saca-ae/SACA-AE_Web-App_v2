@@ -120,7 +120,6 @@ ul.alert-dropdown {
      border: 1px solid rgba(0,0,0,0.1);  
 }
 
-
 @media(min-width:768px) {
     .side-nav {
         position: fixed;
@@ -229,7 +228,8 @@ ul.alert-dropdown {
 }
 
 /*Horario Grafico Esteban Segura Benavides*/
-    #tabla_horario {
+    #tabla_horario 
+    {
         border-collapse: collapse;
         border: 1px solid black;
         width: 1000px;
