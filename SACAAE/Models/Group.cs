@@ -19,7 +19,7 @@ namespace SACAAE.Models
         [ForeignKey("HourAllocatedType")]
         public int? HourAllocatedTypeID { get; set; }
         public int? Capacity { get; set; }
-
+        public int EstimatedHour { get; set; }
         public virtual Period Period { get; set; }
         public virtual Professor Professor { get; set; }
         public virtual HourAllocatedType HourAllocatedType { get; set; }

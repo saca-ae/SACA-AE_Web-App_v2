@@ -529,9 +529,5 @@ namespace SACAAE.Controllers
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
-       
-    
     }
-
-    
 }

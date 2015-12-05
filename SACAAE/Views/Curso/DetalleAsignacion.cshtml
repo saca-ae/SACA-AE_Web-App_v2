@@ -45,19 +45,12 @@
                         document.getElementById('tipoHoras').innerHTML = "<p>No</p>";
                         document.getElementById('horasEstimadas').innerHTML = "<p>" + vEstimateHour + "</p>"
                     }
-                    
-
                 });
                 route2 = "/CursoProfesor/Cursos/" + idCurso + "/Sedes/" + idSede + "/Modalidades/" + idModalidad + "/Planes/" + idPlan + "/Grupos/" + idGrupo + "/Horario/";
                 generate_table_schedule_group(route2);
-            })
-             
-           
+            })       
    };
-  
-
-
-        
+       
 </script>
 <head>
     @Styles.Render("~/Content/custom")
@@ -68,7 +61,6 @@
     <h2>Detalle del Grupo</h2>
     <hr />
 </div>
-
 
     <input id="idProfesor" type="hidden" value="@Html.DisplayFor(model => model.ID)">
     <div id="columna_1">
@@ -96,10 +88,8 @@
     
     <div id="columna_2">
         @Html.Label("Horario")
-        <div id="table_schedule_group" class="editor-field">
-
-        </div>
-        <br />
+        <div id="table_schedule_group" class="editor-field"></div>
+        <br/>
         @Html.Label("Horas Recargo")
         <div id="tipoHoras"></div>
 
@@ -107,7 +97,8 @@
         <div id="horasTeoricas"></div>
 
         @Html.Label("Horas Estimadas")
-        <div id="horasEstimadas"></div>
+        @Html.DisplayFor(model => model.EstimatedHour, new { htmlAttributes = new { id = "horasEstimadas" } })
+
     </div>   
     
     <div id="columna_inferior">

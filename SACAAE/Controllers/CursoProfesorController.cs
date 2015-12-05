@@ -46,14 +46,13 @@ namespace SACAAE.Controllers
         // POST: CursoProfesor/Asignar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Asignar(int sltCurso, int sltProfesor, int sltGrupo, int HourCharge)
+        public ActionResult Asignar(int sltCurso, int sltProfesor, int sltGrupo, int HourCharge, String txtHorasEstimadas)
         {
             var vPeriod = Request.Cookies["Periodo"].Value;
             var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
-
+            int vEstimatedHours = Convert.ToInt32(txtHorasEstimadas);
             if (ModelState.IsValid)
             {
-
                     //Verify if profesor have other assign in the same day and start hour, if don't have conflict with other group in the same hour and day return true, else
                     //if found problem with other group in the same day and start hour return false and the assign is cancelled and the user receive information
                     string validate = scheduleHelper.validations(sltProfesor, sltGrupo,vPeriodID);
@@ -68,6 +67,7 @@ namespace SACAAE.Controllers
                         {
                             grupo.HourAllocatedTypeID = 1;
                         }
+                        grupo.EstimatedHour = vEstimatedHours;
                         db.SaveChanges();
 
                         TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
@@ -84,7 +84,6 @@ namespace SACAAE.Controllers
                         /* get List of all 'modalidades' */
                         ViewBag.Modalidades = obtenerTodasModalidades().ToList<Modality>();
                         return View();
-
                     }
                     else if (validate.Equals("falseIsProjectShock"))
                     {
@@ -108,11 +107,9 @@ namespace SACAAE.Controllers
                         /* get List of all 'modalidades' */
                         ViewBag.Modalidades = obtenerTodasModalidades().ToList<Modality>();
                         return View();
-                    }
-                
+                    }        
             }
             return View();
-
         }
 
         //GET: CursoProfesor/Editar
@@ -158,7 +155,6 @@ namespace SACAAE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult revocar(int sltCursosImpartidos)
         {
-
             var revocado = false;
 
             //revocado = repositorioCursoProfesor.revocarProfesor(sltCursosImpartidos);
@@ -329,7 +325,7 @@ namespace SACAAE.Controllers
             if (HttpContext.Request.IsAjaxRequest())
             {
                 var grupo = db.Groups.Find(cursoxgrupo);
-                var info = new { grupo.ID, grupo.Capacity,grupo.BlockXPlanXCourse.Course.TheoreticalHours };
+                var info = new { grupo.ID, grupo.Capacity,grupo.BlockXPlanXCourse.Course.TheoreticalHours, grupo.EstimatedHour };
 
                 return Json(info, JsonRequestBehavior.AllowGet);
             }

@@ -166,7 +166,6 @@ namespace SACAAE.Controllers
                         db.Courses.Remove(curso);
                         db.SaveChanges();
                         TempData[TempDataMessageKeyError] = "Curso removido satisfactoriamente";
-
                     }
                     else
                     {
@@ -205,7 +204,6 @@ namespace SACAAE.Controllers
                 ViewBag.returnUrl = null;
             }
 
-
             /* Se obtiene la lista de profesores */
             ViewBag.Profesores = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name");
             Course vCurso = db.Courses.Find(id);
@@ -221,13 +219,13 @@ namespace SACAAE.Controllers
         // POST: CursoProfesor/Asignar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AsignarProfesoraCurso(int ID, int Profesores, int Grupos_Disponibles, int HourCharge)
+        public ActionResult AsignarProfesoraCurso(int ID, int Profesores, int Grupos_Disponibles, int HourCharge, String txtHorasEstimadas)
         {
             if (ModelState.IsValid)
             {
                 var vPeriod = Request.Cookies["Periodo"].Value;
                 var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
-
+                int vEstimatedHour = Convert.ToInt32(txtHorasEstimadas);
                 //Verify if profesor have other assign in the same day and start hour, if don't have conflict with other group in the same hour and day return true, else
                 //if found problem with other group in the same day and start hour return false and the assign is cancelled and the user receive information
                 string validate = dbHelper.validations(Profesores, Grupos_Disponibles, vPeriodID);
@@ -239,10 +237,11 @@ namespace SACAAE.Controllers
                     grupo.ProfessorID = Profesores;
                     if (HourCharge == 1)
                     {
-                        
                         grupo.HourAllocatedTypeID = 1;
                     }
-                   db.SaveChanges();
+                    grupo.EstimatedHour = vEstimatedHour;
+                    
+                    db.SaveChanges();
 
                     TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
                     return RedirectToAction("Details", new { id = ID });
@@ -263,10 +262,7 @@ namespace SACAAE.Controllers
                 {
                     TempData[TempDataMessageKeyError] = "Existe choque de horario con comisiones, no se asigno al profesor al curso";
                     return RedirectToAction("AsignarProfesoraCurso");
-                }
-
-
-               
+                }    
             }
             return View();
         }
@@ -317,7 +313,6 @@ namespace SACAAE.Controllers
                 return HttpNotFound();
             }
            
-
             /* Se obtiene la lista de profesores */
             ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
             return View(grupo);
@@ -327,12 +322,13 @@ namespace SACAAE.Controllers
         // POST Curso/EditarAsignacion/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditarAsignacion(String ID, int Profesores, String editHourCharge)
+        public ActionResult EditarAsignacion(String ID, int Profesores, String editHourCharge, String EstimatedHour)
         {
             var vPeriod = Request.Cookies["Periodo"].Value;
             var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
 
             int idGrupo = Convert.ToInt32(ID);
+            int vEstimatedHour = Convert.ToInt32(EstimatedHour);
             int vHourChange = Convert.ToInt32(editHourCharge);
             if (ModelState.IsValid)
             {
@@ -346,12 +342,12 @@ namespace SACAAE.Controllers
                     if (vHourChange == 1)
                     {
                         grupo.HourAllocatedTypeID = 1;
-                        
                     }
                     else
                     {
                         grupo.HourAllocatedTypeID = null;
                     }
+                    grupo.EstimatedHour = vEstimatedHour;
                     db.SaveChanges();
 
                     TempData[TempDataMessageKeySuccess] = "Profesor asignado correctamente";
@@ -392,9 +388,6 @@ namespace SACAAE.Controllers
             }
             return View();
         }
-
-
-        
 
         protected override void Dispose(bool disposing)
         {
@@ -485,8 +478,6 @@ namespace SACAAE.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        
         #endregion
-
     }
 }

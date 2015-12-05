@@ -47,8 +47,8 @@ namespace SACAAE.Controllers
             List<ProfesorViewModel> vProfList = new List<ProfesorViewModel>();
             foreach (SACAAE.Helpers.LoadAcademicHelper.Profesor profe in array_profesores)
             {
-                int vCargaTEC = 0;
-                int vCargaFundaTEC = 0;
+                double vCargaTEC = 0;
+                double vCargaFundaTEC = 0;
 
                 if (profe_actual.Equals(""))
                 {
@@ -82,7 +82,7 @@ namespace SACAAE.Controllers
                         StateID = 1 ,
                         Email = "" , 
                         TECHours = vCargaTEC,
-                        FundaTECHours = vCargaFundaTEC
+                        FundaTECHours = 0
                     });
                     profe_actual = profe.Profesor_Nombre;
                 }
@@ -91,7 +91,8 @@ namespace SACAAE.Controllers
             for (int vCont = 0; vCont < Professors.Count(); vCont++) 
             {
                 Professor vProf = Professors.ElementAt(vCont);
-                int vTecHours = 0, vFundaTECHours = 0;
+                int vFundaTECHours = 0;
+                double vTecHours = 0;
                 if ((vProfList.Find(item => item.Name == vProf.Name)) != null)
                 {
                     vTecHours = vProfList.Find(item => item.Name == vProf.Name).TECHours;

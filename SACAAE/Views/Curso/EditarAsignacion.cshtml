@@ -60,10 +60,6 @@
         @Html.Label("Numero de Grupo")
         <div id="numeroGrupo"></div>
 
-    
-
-
-
         @Html.Label("Sede")
         <div id="sede"></div>
 
@@ -94,13 +90,14 @@
         @Html.Label("Horas Teoricas")
         <div id="horasTeoricas"></div>
 
-        @Html.Label("Horas Estimadas")
-        <div id="divHorasEstimadas"></div>
+        @Html.Label("Horas Estimadas", htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.EstimatedHour, new { htmlAttributes = new { @class = "form-control", id = "divHorasEstimadas" } })
+        @Html.ValidationMessageFor(model => model.EstimatedHour, "", new { @class = "text-danger" })
     
     </div>
     <div id="columna_inferior">
             <input type="submit" value="Editar" class="btn" id="Editar_Asignacion" /> |
-             <a href="@ViewBag.returnUrl">Cancelar</a>
+            <a href="@ViewBag.returnUrl">Cancelar</a>
     </div>
 }
 

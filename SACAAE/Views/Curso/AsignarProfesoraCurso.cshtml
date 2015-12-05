@@ -21,7 +21,6 @@
                 items += "<option value='" + sede.ID + "'>" + sede.Name + "</option>";
             });
 
-
             if (items != "") {
                 $("#Sedes").html(items);
                 $("#Sedes").prepend("<option value='' selected='selected'>-- Seleccionar Sede --</option>");
@@ -32,12 +31,7 @@
 
             }
         });
-
-       
     };
-
-    
-
 
 </script>
 
@@ -66,7 +60,6 @@
         }  
         <h2 >Asignar Profesor a Curso</h2>
         <hr />
-    
     </div>
     
     <div id="columna_1">
@@ -75,12 +68,10 @@
         @Html.HiddenFor(model => model.ID)
 
         <div class="editor-label">
-
             @Html.Label("Curso")
         </div>
         <div class="editor-field">
             @Html.DisplayFor(model => model.Name)
-
         </div>
 
         <br />
@@ -99,7 +90,6 @@
 
         <br />
 
-
         <div class="editor-label">
             @Html.Label("Sede")
         </div>
@@ -114,10 +104,8 @@
         </div>
         <div class="editor-field">
             <select id="Modalidades" name="Modalidades" class="form-control" disabled="disabled"></select>
-
         </div>
                    
-
         <br />
 
         <div class="editor-label">
@@ -146,12 +134,9 @@
         <div class="editor-field">
             <select id="Grupos_Disponibles" name="Grupos_Disponibles" class="form-control" disabled="disabled"></select>
         </div>
-
-        <br />
-
+        <br/>
 
         <div class="editor-label">
-
             @Html.Label("Horario")
         </div>
         <div id="table_schedule_group" class="editor-field">
@@ -179,8 +164,6 @@
             </table>
         </div>
 
-
-
         <div class="editor-label">
             @Html.Label("Horas del Curso")
         </div>
@@ -195,7 +178,7 @@
             @Html.Label("Horas Estimadas")
         </div>
         <div class="editor-field">
-            <input type="text" name="txtHorasEstimadas" id="txtHorasEstimadas" disabled="disabled" class="form-control">
+            <input type="text" name="txtHorasEstimadas" id="txtHorasEstimadas" class="form-control">
         </div>
         <br />
         <div class="editor-label">
@@ -203,7 +186,6 @@
         </div>
         <div class="editor-field">
             <select id="HourCharge" name="HourCharge" class="form-control" disabled="disabled">
-
                 <option selected="selected" value="1">Si</option>
                 <option value="0">No</option>
             </select>
@@ -227,6 +209,3 @@
         </p>
     </div>
 }
-          
-
-  

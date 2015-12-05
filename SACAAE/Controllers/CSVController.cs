@@ -73,7 +73,6 @@ namespace SACAAE.Controllers
 
                     int vValidateProfessorSchedule = getProfessorValidationSchedule(vPeriod, vIdProfessor, vIdSchedule);
                     int vValidateClassroomSchedule = getClassroomValidationSchedule(vPeriod, vIdClassroom, vIdSchedule);
-                    int vValidateBlockSchedule = getBlockValidationSchedule(vIdBlock, vIdSchedule, vPeriod);
 
                     // If there some error in validation, writes on vDetails a little about the error ocurred.
                     if (vIDGroup == 0) { vDetails = " - Informacion de Grupo incorrecta";}
@@ -188,65 +187,6 @@ namespace SACAAE.Controllers
         }
 
         /// <summary>
-        /// This function validates the schedule conflict between the schedule of all groups of the same block
-        /// </summary>
-        /// <author> Cristian Araya Fuentes </author> 
-        /// <param name="pIdBlock"></param>
-        /// <param name="pIdSchedule"></param>
-        /// <param name="pIdPeriodo"></param>
-        /// <returns> Integer value, 1 is correct validation, 0 incorrect validation </returns>
-        public int getBlockValidationSchedule(int pIdBlock, int pIdSchedule, int pIdPeriodo)
-        {
-            List<Schedule> ScheduleList;
-            String vDay = "";
-            int vStartHour = 0, vEndHour = 0;
-
-            // Gets the information of the schedule
-            var vConsultSchedule =
-                (from Schedule S in gvDatabase.Schedules
-                 where S.ID == pIdSchedule
-                 select S).FirstOrDefault();
-
-            if (vConsultSchedule != null)
-            {
-                vDay = vConsultSchedule.Day;
-                vStartHour = getIntHour(vConsultSchedule.StartHour);
-                vEndHour = getIntHour(vConsultSchedule.EndHour);
-            }
-
-            // Gets all the Schedule of the classroom on a given day
-            var vConsult =
-                (from Group G in gvDatabase.Groups
-                 join BlockXPlanXCourse BPC in gvDatabase.BlocksXPlansXCourses on G.BlockXPlanXCourseID equals BPC.ID
-                 join AcademicBlockXStudyPlan BP in gvDatabase.AcademicBlocksXStudyPlans on BPC.BlockXPlanID equals BP.ID
-                 join GroupClassroom GC in gvDatabase.GroupClassrooms on G.ID equals GC.GroupID
-                 join Schedule Sc in gvDatabase.Schedules on GC.ScheduleID equals Sc.ID
-                 where G.PeriodID == pIdPeriodo
-                 where BP.ID == pIdBlock
-                 where Sc.Day == vDay
-                 select Sc);
-
-            // If there are schedule of the classroom in that given day, make a list of them.
-            // In other case return correct validation (1)
-            if (vConsult != null) ScheduleList = vConsult.ToList<Schedule>();
-            else return 1;
-
-            // Checks if there schedules conflicts.
-            foreach (Schedule group in ScheduleList)
-            {
-                int vStart = getIntHour(group.StartHour);
-                int vEnd = getIntHour(group.EndHour);
-
-                IEnumerable<int> vHoursSequence = Enumerable.Range(vStart + 1, vEnd - vStart);
-                if (vHoursSequence.Contains(vStartHour)) return 0;
-                if (vHoursSequence.Contains(vEndHour)) return 0;
-            }
-
-            // If the schedule doesn't conflict with other, accepts it
-            return 1;
-        }
-
-        /// <summary>
         /// This function validates schedule conflict between the schedule to be assigned to group 
         /// and the schedule of the classroom.
         /// </summary>
@@ -259,7 +199,7 @@ namespace SACAAE.Controllers
         {
             List<Schedule> ScheduleList;
             String vDay = "";
-            int vStartHour = 0, vEndHour = 0;
+            String vStartHour = "0", vEndHour = "0";
 
             // Gets the information of the schedule
             var vConsultSchedule =
@@ -270,8 +210,8 @@ namespace SACAAE.Controllers
             if (vConsultSchedule != null)
             {
                 vDay = vConsultSchedule.Day;
-                vStartHour = getIntHour(vConsultSchedule.StartHour);
-                vEndHour = getIntHour(vConsultSchedule.EndHour);
+                vStartHour = vConsultSchedule.StartHour + "";
+                vEndHour = vConsultSchedule.EndHour + "";
             }
 
             // Gets all the Schedule of the classroom on a given day
@@ -293,12 +233,14 @@ namespace SACAAE.Controllers
             // Checks if there schedules conflicts
             foreach (Schedule group in ScheduleList)
             {
-                int vStart = getIntHour(group.StartHour);
-                int vEnd = getIntHour(group.EndHour);
+                TimeSpan vStart = TimeSpan.Parse(DateTime.Parse(group.StartHour).ToShortTimeString());
+                TimeSpan vEnd = TimeSpan.Parse(DateTime.Parse(group.EndHour).ToShortTimeString());
 
-                IEnumerable<int> vHoursSequence = Enumerable.Range(vStart + 1, vEnd - vStart);
-                if (vHoursSequence.Contains(vStartHour)) return 0;
-                if (vHoursSequence.Contains(vEndHour)) return 0;
+                if (TimeSpan.Parse(DateTime.Parse(vStartHour).ToShortTimeString()) <= vStart &&
+                    TimeSpan.Parse(DateTime.Parse(vEndHour).ToShortTimeString()) >= vEnd)
+                {
+                    return 0;
+                }
             }
 
             // If the schedule doesn't conflict with other, accepts it
@@ -318,7 +260,7 @@ namespace SACAAE.Controllers
         {
             List<Schedule> ScheduleList;
             String vDay = ""; 
-            int vStartHour = 0, vEndHour = 0; 
+            String vStartHour = "0", vEndHour = "0"; 
 
             // Gets the information of the schedule
             var vConsultSchedule =
@@ -329,8 +271,8 @@ namespace SACAAE.Controllers
             if (vConsultSchedule != null)
             {
                 vDay = vConsultSchedule.Day;
-                vStartHour = getIntHour(vConsultSchedule.StartHour);
-                vEndHour = getIntHour(vConsultSchedule.EndHour);
+                vStartHour = vConsultSchedule.StartHour +"";
+                vEndHour = vConsultSchedule.EndHour+ "";
             }
 
             // Gets all the Schedule of the professor on a given day
@@ -352,14 +294,15 @@ namespace SACAAE.Controllers
             // Checks if there are schedules conflicts
             foreach (Schedule group in ScheduleList)
             {
-                int vStart = getIntHour(group.StartHour);
-                int vEnd = getIntHour(group.EndHour);
+                TimeSpan vStart = TimeSpan.Parse(DateTime.Parse(group.StartHour).ToShortTimeString());
+                TimeSpan vEnd = TimeSpan.Parse(DateTime.Parse(group.EndHour).ToShortTimeString());
 
-                IEnumerable<int> vHoursSequence = Enumerable.Range(vStart + 1, vEnd - vStart);
-                if (vHoursSequence.Contains(vStartHour)) return 0;
-                if (vHoursSequence.Contains(vEndHour)) return 0;
+                if (TimeSpan.Parse(DateTime.Parse(vStartHour).ToShortTimeString()) <= vStart &&
+                    TimeSpan.Parse(DateTime.Parse(vEndHour).ToShortTimeString()) >= vEnd)
+                {
+                    return 0;
+                }
             }
-
             // If the schedule doesn't conflict with other, accepts it
             return 1;
         }
@@ -585,43 +528,6 @@ namespace SACAAE.Controllers
                 };
 
             return vGroupesCSV;
-        }
-
-        private int getIntHour(string pHour)
-        {
-            switch (pHour)
-                {
-                    case "07:30 am": return 730;
-                    case "08:30 am": return 830;
-                    case "09:30 am": return 930;
-                    case "10:30 am": return 1030;
-                    case "11:30 am": return 1130;
-                    case "12:30 pm": return 1230;
-                    case "01:00 pm": return 1300;
-                    case "02:00 pm": return 1400;
-                    case "03:00 pm": return 1500;
-                    case "04:00 pm": return 1600;
-                    case "05:00 pm": return 1700;
-                    case "06:00 pm": return 1800;
-                    case "07:00 pm": return 1900;
-                    case "08:00 pm": return 2000;
-                    case "09:00 pm": return 2100;
-                    case "08:20 am": return 820;
-                    case "09:20 am": return 920;
-                    case "10:20 am": return 1020;
-                    case "11:20 am": return 1120;
-                    case "12:20 pm": return 1220;
-                    case "01:50 pm": return 1350;
-                    case "02:50 pm": return 1450;
-                    case "03:50 pm": return 1550;
-                    case "04:50 pm": return 1650;
-                    case "05:50 pm": return 1750;
-                    case "06:50 pm": return 1850;
-                    case "07:50 pm": return 1950;
-                    case "08:50 pm": return 2050; 
-                    case "09:50 pm": return 2150;
-                }
-            return 0;
         }
 
         #region Helpers

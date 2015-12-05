@@ -34,15 +34,16 @@ namespace SACAAE.Helpers
             
             foreach (Group vGroup in vGroups)
             {
+                var vCargaEstimada = 0;
                 var vDetail = db.GroupClassrooms.Where(p => p.GroupID == vGroup.ID).ToList();
-                var vCargaEstimada = (int)Math.Floor(10.0 / vDetail.Count);
+                if (vGroup.EstimatedHour != 0) vCargaEstimada = (vGroup.EstimatedHour / vDetail.Count);
                 String vTypeHour = "";
                 if (vGroup.HourAllocatedTypeID != null) vTypeHour = vGroup.HourAllocatedType.Name; 
                 foreach (var vSchedule in vDetail)
                 {
                     string HoraInicio = vSchedule.Schedule.StartHour;
                     string HoraFin = vSchedule.Schedule.EndHour;
-                    int Carga = vCargaEstimada;
+                    double Carga = vCargaEstimada;
                     var vCourseInfo = db.BlocksXPlansXCourses.Single(p => p.ID == vGroup.BlockXPlanXCourseID).Course;
 
                     entidad_temp = vGroup.BlockXPlanXCourse.AcademicBlockXStudyPlan.StudyPlan.EntityType.Name;
@@ -360,14 +361,14 @@ namespace SACAAE.Helpers
         {
             public ReporteInfo()
             {
-                profesores_carga_tec = new Dictionary<string, int>();
-                profesores_carga_fundatec = new Dictionary<string, int>();
+                profesores_carga_tec = new Dictionary<string, double>();
+                profesores_carga_fundatec = new Dictionary<string, double>();
                 profesores_cursos_asociados = new Dictionary<string, List<string>>();
                 todo_profesores = new List<Profesor>();
             }
 
-            public Dictionary<string, int> profesores_carga_tec { get; set; }
-            public Dictionary<string, int> profesores_carga_fundatec { get; set; }
+            public Dictionary<string, double> profesores_carga_tec { get; set; }
+            public Dictionary<string, double> profesores_carga_fundatec { get; set; }
             public Dictionary<string, List<string>> profesores_cursos_asociados { get; set; }
             public List<Profesor> todo_profesores { get; set; }
         }

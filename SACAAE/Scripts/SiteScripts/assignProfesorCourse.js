@@ -17,7 +17,6 @@ window.onload = function ()
     $.getJSON(route, function (data) {
         var items = "";
 
-
         $.each(data, function (i, sede) {
             if (sede.ID == 1)
                 items += "<option selected='selected' value='" + sede.ID + "'>" + sede.Name + "</option>";
@@ -28,7 +27,6 @@ window.onload = function ()
 
         if (items != "") {
             $("#sedes").html(items);
-
         }
         else {
             $("#table_information_group").html("<p>No hay sedes relacionadas al grupo.</p>")
@@ -222,16 +220,15 @@ $("#Grupos_Disponibles").change(function () {
     $.getJSON(route1, function (data) {
         cupo = data.Capacity;
         horas = data.TheoreticalHours;
-
+        estimatedHours = data.estimatedHours;
 
         if (cupo != "" || aula != "" || id != "") {
             $("#txtHoras").val(horas)
-            $('#txtHorasEstimadas').val("0")
+            $('#txtHorasEstimadas').val(estimatedHours)
             $('#HourCharge').prop("disabled", false);
         }
         else {
             $("#txtCupo").val("No Disponible")
-
         }
 
         /* Obtener información del horario */
@@ -254,8 +251,6 @@ $("#Grupos_Disponibles").change(function () {
                     "<td>" + data[i].EndHour + "</td>" +
                     "<td>" + data[i].Code + "</td>" +
                     "</tr>";
-
-
                 }
 
                 tabla = tabla + "</tbody> </table>";
@@ -290,9 +285,7 @@ $("#Grupos_Disponibles").change(function () {
         "</div>";
             }
         });
-    });
-
-    
+    });    
 });
 
 $("#HourCharge").change(function () {
@@ -304,20 +297,14 @@ $("#HourCharge").change(function () {
     else
     {
         var horas_teoricas = document.getElementById("txtHoras").value;
-
         var horas_estimadas = 10 - horas_teoricas;
-
         $("#txtHorasEstimadas").val(horas_estimadas);
-        
-    }
-    
+    }    
 });
 /*********************************************************************************************************************************************/
 
     /*********************************************************************************************************************************************/
-
     function get_id(number) {
         var url = window.location.pathname.split('/');
         return url[number];
     }
-
