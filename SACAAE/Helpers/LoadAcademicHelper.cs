@@ -36,7 +36,7 @@ namespace SACAAE.Helpers
             {
                 var vCargaEstimada = 0;
                 var vDetail = db.GroupClassrooms.Where(p => p.GroupID == vGroup.ID).ToList();
-                if (vGroup.EstimatedHour != 0) vCargaEstimada = (vGroup.EstimatedHour / vDetail.Count);
+                if (vGroup.EstimatedHour != 0 && vDetail.Count != 0) vCargaEstimada = (vGroup.EstimatedHour / vDetail.Count);
                 String vTypeHour = "";
                 if (vGroup.HourAllocatedTypeID != null) vTypeHour = vGroup.HourAllocatedType.Name; 
                 foreach (var vSchedule in vDetail)
