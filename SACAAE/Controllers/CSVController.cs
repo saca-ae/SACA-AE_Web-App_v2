@@ -53,7 +53,7 @@ namespace SACAAE.Controllers
             {
                 var vReader = new CsvReader(vCsvReader);
                 vReader.Configuration.Encoding = Encoding.UTF8;
-                vGroups = vReader.GetRecords<DataCSV>();
+                vGroups = vReader.GetRecords<DataCSV>().ToList();
                 int vGroupNumber = 0;
 
                 foreach (DataCSV group in vGroups)
