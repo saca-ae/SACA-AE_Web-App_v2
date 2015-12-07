@@ -75,7 +75,7 @@ namespace SACAAE.Controllers
                     new ProfesorViewModel()
                     {
                         ID = 0,
-                        Name = profe.Profesor_Nombre,
+                        Name = profe_actual,
                         Link = "",
                         Tel1 = "",
                         Tel2 = "",
