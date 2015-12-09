@@ -17,7 +17,6 @@ namespace SACAAE.Controllers
         private LoadAcademicHelper LAHelper = new LoadAcademicHelper();
         SACAAE.Helpers.LoadAcademicHelper.ReporteInfo vReportInfo = new SACAAE.Helpers.LoadAcademicHelper.ReporteInfo();
 
-        /// <author>Adonis Mora Angulo</author>
         /// <summary>
         /// Download the general report on a csv file
         /// </summary>
@@ -45,17 +44,8 @@ namespace SACAAE.Controllers
                 vReportInfo = LAHelper.setProjects(vReportInfo, vPeriodID);
                 vReportInfo = LAHelper.setCommissions(vReportInfo, vPeriodID);
 
-                SACAAE.Helpers.LoadAcademicHelper.Profesor[] array_profesores = vReportInfo.todo_profesores.ToArray();
-                Array.Sort(array_profesores)
-                    
-                    /*
-                    , delegate(SACAAE.Helpers.LoadAcademicHelper.Profesor user1, 
-                                                      SACAAE.Helpers.LoadAcademicHelper.Profesor user2)
-                {
-                    return user1.Profesor_Nombre.CompareTo(user2.Profesor_Nombre);
-                })*/
-                     ;
-
+                SACAAE.Helpers.LoadAcademicHelper.Profesor[] array_profesores = 
+                    vReportInfo.todo_profesores.OrderBy(c => c.Profesor_Nombre).ToArray();
 
                 string profe_actual = "";
                 double vCargaTec = 0, vCargaReconocimiento = 0, vCargaRecargo = 0;
@@ -72,50 +62,46 @@ namespace SACAAE.Controllers
                         if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual)) 
                         {
                             vCargaTec = vReportInfo.profesores_carga_tec[profe_actual];
-                            sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vCargaTec);
+                            sw.WriteLine("Subtotal Horas TEC;;;" + profe_actual + ";;;;;;;;" + vCargaTec + ";" + vCargaTec * 100 / 40 + " %");
                         }
                             
                         if (vReportInfo.profesores_carga_reconocimiento.ContainsKey(profe_actual)) 
                         {
                             vCargaReconocimiento = vReportInfo.profesores_carga_reconocimiento[profe_actual];
-                            sw.WriteLine("SUBTOTAL CARGA Reconocimiento;;;" + profe_actual + ";;;;;;;;" + vCargaReconocimiento);
+                            sw.WriteLine("Subtotal Horas Reconocimiento;;;" + profe_actual + ";;;;;;;;" + vCargaReconocimiento);
                         }
 
                         if (vReportInfo.profesores_carga_recargo.ContainsKey(profe_actual))
                         {
                             vCargaRecargo = vReportInfo.profesores_carga_recargo[profe_actual];
-                            sw.WriteLine("SUBTOTAL CARGA Recargo;;;" + profe_actual + ";;;;;;;;" + vCargaRecargo);
+                            sw.WriteLine("Subtotal Horas Recargo;;;" + profe_actual + ";;;;;;;;" + vCargaRecargo);
                         }
-                        sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + (vCargaRecargo + vCargaReconocimiento + vCargaTec));
+                        sw.WriteLine("Total Horas;;;" + profe_actual + ";;;;;;;;" + (vCargaRecargo + vCargaReconocimiento + vCargaTec));
                         sw.WriteLine();
 
                         profe_actual = profe.Profesor_Nombre;
                         sw.WriteLine(profe.toStr());
-                    }
-
-                        
-                    
+                    }         
                 }
 
-                // last professor at loop's end
                 if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual))
                 {
                     vCargaTec = vReportInfo.profesores_carga_tec[profe_actual];
-                    sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vCargaTec);
+                    sw.WriteLine("Subtotal Horas TEC;;;" + profe_actual + ";;;;;;;;" + vCargaTec + ";" + vCargaTec * 100 / 40 + " %");
                 }
 
                 if (vReportInfo.profesores_carga_reconocimiento.ContainsKey(profe_actual))
                 {
                     vCargaReconocimiento = vReportInfo.profesores_carga_reconocimiento[profe_actual];
-                    sw.WriteLine("SUBTOTAL CARGA Reconocimiento;;;" + profe_actual + ";;;;;;;;" + vCargaReconocimiento);
+                    sw.WriteLine("Subtotal Horas Reconocimiento;;;" + profe_actual + ";;;;;;;;" + vCargaReconocimiento);
                 }
 
                 if (vReportInfo.profesores_carga_recargo.ContainsKey(profe_actual))
                 {
                     vCargaRecargo = vReportInfo.profesores_carga_recargo[profe_actual];
-                    sw.WriteLine("SUBTOTAL CARGA Recargo;;;" + profe_actual + ";;;;;;;;" + vCargaRecargo);
+                    sw.WriteLine("Subtotal Horas Recargo;;;" + profe_actual + ";;;;;;;;" + vCargaRecargo);
                 }
-                sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + (vCargaRecargo + vCargaReconocimiento + vCargaTec));
+                sw.WriteLine("Total Horas;;;" + profe_actual + ";;;;;;;;" + (vCargaRecargo + vCargaReconocimiento + vCargaTec));
                 sw.WriteLine();
 
                 sw.Flush();
