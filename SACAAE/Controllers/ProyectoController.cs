@@ -391,14 +391,7 @@ namespace SACAAE.Controllers
                 if (validate.Equals("true"))
                 {
                     vProjectXProfessor.ProfessorID = vProfessorID;
-                    if (vHourChange == 1)
-                    {
-                        vProjectXProfessor.HourAllocatedTypeID = 1;
-                    }
-                    else
-                    {
-                        vProjectXProfessor.HourAllocatedTypeID = null;
-                    }
+                    vProjectXProfessor.HourAllocatedTypeID = Convert.ToInt32(vHourChange);
                     var totalHourAssign = 0;
                     vProjectXProfessor.Schedule.Clear();
 

@@ -339,14 +339,7 @@ namespace SACAAE.Controllers
                 {
                     Group grupo = db.Groups.Find(idGrupo);
                     grupo.ProfessorID = Profesores;
-                    if (vHourChange == 1)
-                    {
-                        grupo.HourAllocatedTypeID = 1;
-                    }
-                    else
-                    {
-                        grupo.HourAllocatedTypeID = null;
-                    }
+                    grupo.HourAllocatedTypeID = vHourChange;
                     grupo.EstimatedHour = vEstimatedHour;
                     db.SaveChanges();
 

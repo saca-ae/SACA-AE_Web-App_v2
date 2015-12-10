@@ -41,13 +41,14 @@ window.onload = function () {
 
 
 }
+
 function changeHourCharge() {
     var HourSelection = document.getElementById("editHourCharge").value;
 
-    if (HourSelection == '1') {
+    if (HourSelection == '1' || HourSelection == '2') {
         document.getElementById("divHorasEstimadas").innerHTML = "<p>0</p>"
     }
-    else if (HourSelection != '1') {
+    else if (HourSelection == '3') {
         var horas_estimadas = 10 - TheoricalHour;
 
         document.getElementById("divHorasEstimadas").innerHTML = "<p>" + horas_estimadas + "</p>"

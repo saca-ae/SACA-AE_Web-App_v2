@@ -15,7 +15,8 @@ namespace SACAAE.Models.ViewModels
         public String Tel2 { get; set; }
         public String Email { get; set; }
         public double TECHours { get; set; }
-        public int FundaTECHours { get; set; }
+        public double ReconocimientoHours { get; set; }
+        public double RecargoHours { get; set; }
         public double TotalHours { get; set; }
     }
 }

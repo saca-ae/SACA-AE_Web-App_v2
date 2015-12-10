@@ -48,7 +48,7 @@ namespace SACAAE.Controllers
             foreach (SACAAE.Helpers.LoadAcademicHelper.Profesor profe in array_profesores)
             {
                 double vCargaTEC = 0;
-                double vCargaFundaTEC = 0;
+                double vCargaFundaTEC = 0, vReconocimientoHours = 0, vRecargoHours = 0;
 
                 if (profe_actual.Equals(""))
                 {
@@ -82,7 +82,9 @@ namespace SACAAE.Controllers
                         StateID = 1 ,
                         Email = "" , 
                         TECHours = vCargaTEC,
-                        FundaTECHours = 0
+                        ReconocimientoHours = vReconocimientoHours,
+                        RecargoHours = vRecargoHours,
+                        TotalHours = vCargaTEC + vReconocimientoHours + vRecargoHours
                     });
                     profe_actual = profe.Profesor_Nombre;
                 }
@@ -91,16 +93,14 @@ namespace SACAAE.Controllers
             for (int vCont = 0; vCont < Professors.Count(); vCont++) 
             {
                 Professor vProf = Professors.ElementAt(vCont);
-                int vFundaTECHours = 0;
-                double vTecHours = 0;
+                double vTecHours = 0, vReconocimientoHoursAux = 0, vRecargoHoursAux = 0;
                 if ((vProfList.Find(item => item.Name == vProf.Name)) != null)
                 {
                     vTecHours = vProfList.Find(item => item.Name == vProf.Name).TECHours;
+                    vReconocimientoHoursAux = vProfList.Find(item => item.Name == vProf.Name).ReconocimientoHours;
+                    vRecargoHoursAux = vProfList.Find(item => item.Name == vProf.Name).RecargoHours;
                 }
-                if ((vProfList.Find(item => item.Name == vProf.Name)) != null)
-                {
-                    vFundaTECHours = vProfList.Find(item => item.Name == vProf.Name).FundaTECHours;
-                }
+
                 viewModel.Add(
                     new ProfesorViewModel()
                     {
@@ -112,8 +112,9 @@ namespace SACAAE.Controllers
                         StateID = vProf.StateID.GetValueOrDefault(),
                         Email = vProf.Email,
                         TECHours = vTecHours,
-                        FundaTECHours = vFundaTECHours,
-                        TotalHours = vFundaTECHours + vTecHours
+                        ReconocimientoHours = vReconocimientoHoursAux,
+                        RecargoHours = vRecargoHoursAux,
+                        TotalHours = vReconocimientoHoursAux + vTecHours + vRecargoHoursAux
                     });
             } 
               

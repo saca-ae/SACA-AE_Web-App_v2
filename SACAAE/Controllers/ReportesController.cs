@@ -46,75 +46,77 @@ namespace SACAAE.Controllers
                 vReportInfo = LAHelper.setCommissions(vReportInfo, vPeriodID);
 
                 SACAAE.Helpers.LoadAcademicHelper.Profesor[] array_profesores = vReportInfo.todo_profesores.ToArray();
-                Array.Sort(array_profesores, delegate(SACAAE.Helpers.LoadAcademicHelper.Profesor user1, 
+                Array.Sort(array_profesores)
+                    
+                    /*
+                    , delegate(SACAAE.Helpers.LoadAcademicHelper.Profesor user1, 
                                                       SACAAE.Helpers.LoadAcademicHelper.Profesor user2)
                 {
                     return user1.Profesor_Nombre.CompareTo(user2.Profesor_Nombre);
-                });
+                })*/
+                     ;
+
+
                 string profe_actual = "";
-                
+                double vCargaTec = 0, vCargaReconocimiento = 0, vCargaRecargo = 0;
+
                 foreach (SACAAE.Helpers.LoadAcademicHelper.Profesor profe in array_profesores)
                 {
-                    if (profe_actual.Equals(""))
-                    {
-                        profe_actual = profe.Profesor_Nombre;
-                    }
+                    vCargaTec = 0; vCargaReconocimiento = 0; vCargaRecargo = 0;
+                    if (profe_actual.Equals("")) profe_actual = profe.Profesor_Nombre;
 
-                    if (profe_actual.Equals(profe.Profesor_Nombre))
-                    {
-                        sw.WriteLine(profe.toStr());
-                    }
+                    if (profe_actual.Equals(profe.Profesor_Nombre)) sw.WriteLine(profe.toStr());
+
                     else
                     {
-                        if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
+                        if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual)) 
                         {
-                            //sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-                            //sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-                            sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + (vReportInfo.profesores_carga_tec[profe_actual] + vReportInfo.profesores_carga_fundatec[profe_actual]));
-                            sw.WriteLine();
+                            vCargaTec = vReportInfo.profesores_carga_tec[profe_actual];
+                            sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vCargaTec);
                         }
-                        else if (!vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
+                            
+                        if (vReportInfo.profesores_carga_reconocimiento.ContainsKey(profe_actual)) 
                         {
-                            //sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + "0");
-                            //sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-                            sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-                            sw.WriteLine();
+                            vCargaReconocimiento = vReportInfo.profesores_carga_reconocimiento[profe_actual];
+                            sw.WriteLine("SUBTOTAL CARGA Reconocimiento;;;" + profe_actual + ";;;;;;;;" + vCargaReconocimiento);
                         }
-                        else if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && !vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
+
+                        if (vReportInfo.profesores_carga_recargo.ContainsKey(profe_actual))
                         {
-                            //sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-                            //sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + 0);
-                            sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-                            sw.WriteLine();
+                            vCargaRecargo = vReportInfo.profesores_carga_recargo[profe_actual];
+                            sw.WriteLine("SUBTOTAL CARGA Recargo;;;" + profe_actual + ";;;;;;;;" + vCargaRecargo);
                         }
+                        sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + (vCargaRecargo + vCargaReconocimiento + vCargaTec));
+                        sw.WriteLine();
+
                         profe_actual = profe.Profesor_Nombre;
                         sw.WriteLine(profe.toStr());
                     }
+
+                        
+                    
                 }
+
                 // last professor at loop's end
-                if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
+                if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual))
                 {
-                    //sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-                    //sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-                    sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + (vReportInfo.profesores_carga_tec[profe_actual] + vReportInfo.profesores_carga_fundatec[profe_actual]));
-                    sw.WriteLine();
+                    vCargaTec = vReportInfo.profesores_carga_tec[profe_actual];
+                    sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vCargaTec);
                 }
 
-                else if (!vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
+                if (vReportInfo.profesores_carga_reconocimiento.ContainsKey(profe_actual))
                 {
-                    //sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + "0");
-                    //sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-                    sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_fundatec[profe_actual]);
-                    sw.WriteLine();
+                    vCargaReconocimiento = vReportInfo.profesores_carga_reconocimiento[profe_actual];
+                    sw.WriteLine("SUBTOTAL CARGA Reconocimiento;;;" + profe_actual + ";;;;;;;;" + vCargaReconocimiento);
                 }
 
-                else if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && !vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
+                if (vReportInfo.profesores_carga_recargo.ContainsKey(profe_actual))
                 {
-                    //sw.WriteLine("SUBTOTAL CARGA TEC;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-                    //sw.WriteLine("SUBTOTAL CARGA FUNDATEC;;;" + profe_actual + ";;;;;;;;" + 0);
-                    sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + vReportInfo.profesores_carga_tec[profe_actual]);
-                    sw.WriteLine();
+                    vCargaRecargo = vReportInfo.profesores_carga_recargo[profe_actual];
+                    sw.WriteLine("SUBTOTAL CARGA Recargo;;;" + profe_actual + ";;;;;;;;" + vCargaRecargo);
                 }
+                sw.WriteLine("TOTAL CARGA;;;" + profe_actual + ";;;;;;;;" + (vCargaRecargo + vCargaReconocimiento + vCargaTec));
+                sw.WriteLine();
 
                 sw.Flush();
                 fs.Flush();
