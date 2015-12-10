@@ -35,20 +35,15 @@ namespace SACAAE.Controllers
             vReportInfo = LAHelper.setProjects(vReportInfo, vPeriod);
             vReportInfo = LAHelper.setCommissions(vReportInfo, vPeriod);
 
-            SACAAE.Helpers.LoadAcademicHelper.Profesor[] array_profesores = vReportInfo.todo_profesores.ToArray();
-
-            Array.Sort(array_profesores, delegate(SACAAE.Helpers.LoadAcademicHelper.Profesor user1,
-                                                  SACAAE.Helpers.LoadAcademicHelper.Profesor user2)
-            {
-                return user1.Profesor_Nombre.CompareTo(user2.Profesor_Nombre);
-            });
+            SACAAE.Helpers.LoadAcademicHelper.Profesor[] array_profesores = 
+                vReportInfo.todo_profesores.OrderBy(c => c.Profesor_Nombre).ToArray();
+            
             string profe_actual = "";
 
             List<ProfesorViewModel> vProfList = new List<ProfesorViewModel>();
             foreach (SACAAE.Helpers.LoadAcademicHelper.Profesor profe in array_profesores)
             {
-                double vCargaTEC = 0;
-                double vCargaFundaTEC = 0, vReconocimientoHours = 0, vRecargoHours = 0;
+                double vCargaTEC = 0, vReconocimientoHours = 0, vRecargoHours = 0;
 
                 if (profe_actual.Equals(""))
                 {
@@ -57,19 +52,14 @@ namespace SACAAE.Controllers
 
                 if (!profe_actual.Equals(profe.Profesor_Nombre))
                 {
-                    if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
-                    {
+                    if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual))                 
                         vCargaTEC = vReportInfo.profesores_carga_tec[profe_actual];
-                        vCargaFundaTEC = vReportInfo.profesores_carga_fundatec[profe_actual];
-                    }
-                    else if (!vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
-                    {
-                        vCargaFundaTEC =  vReportInfo.profesores_carga_fundatec[profe_actual];
-                    }
-                    else if (vReportInfo.profesores_carga_tec.ContainsKey(profe_actual) && !vReportInfo.profesores_carga_fundatec.ContainsKey(profe_actual))
-                    {
-                        vCargaTEC = vReportInfo.profesores_carga_tec[profe_actual];
-                    }
+
+                    if (vReportInfo.profesores_carga_reconocimiento.ContainsKey(profe_actual))
+                        vReconocimientoHours = vReportInfo.profesores_carga_reconocimiento[profe_actual];
+
+                    if (vReportInfo.profesores_carga_recargo.ContainsKey(profe_actual))
+                        vRecargoHours = vReportInfo.profesores_carga_recargo[profe_actual];
 
                     vProfList.Add(
                     new ProfesorViewModel()
@@ -80,7 +70,8 @@ namespace SACAAE.Controllers
                         Tel1 = "",
                         Tel2 = "",
                         StateID = 1 ,
-                        Email = "" , 
+                        Email = "" ,
+                        LoadAcademic = vCargaTEC * 100 / 40,
                         TECHours = vCargaTEC,
                         ReconocimientoHours = vReconocimientoHours,
                         RecargoHours = vRecargoHours,
@@ -93,12 +84,13 @@ namespace SACAAE.Controllers
             for (int vCont = 0; vCont < Professors.Count(); vCont++) 
             {
                 Professor vProf = Professors.ElementAt(vCont);
-                double vTecHours = 0, vReconocimientoHoursAux = 0, vRecargoHoursAux = 0;
+                double vTecHours = 0, vReconocimientoHoursAux = 0, vRecargoHoursAux = 0, vAcademicLoad = 0;
                 if ((vProfList.Find(item => item.Name == vProf.Name)) != null)
                 {
                     vTecHours = vProfList.Find(item => item.Name == vProf.Name).TECHours;
                     vReconocimientoHoursAux = vProfList.Find(item => item.Name == vProf.Name).ReconocimientoHours;
                     vRecargoHoursAux = vProfList.Find(item => item.Name == vProf.Name).RecargoHours;
+                    vAcademicLoad = vProfList.Find(item => item.Name == vProf.Name).LoadAcademic;
                 }
 
                 viewModel.Add(
@@ -111,6 +103,7 @@ namespace SACAAE.Controllers
                         Tel2 = vProf.Tel2,
                         StateID = vProf.StateID.GetValueOrDefault(),
                         Email = vProf.Email,
+                        LoadAcademic = vAcademicLoad,
                         TECHours = vTecHours,
                         ReconocimientoHours = vReconocimientoHoursAux,
                         RecargoHours = vRecargoHoursAux,

@@ -45,7 +45,11 @@
         <thead>
             <tr>
                 <th class="text-center"> Nombre </th>
-                <th class="text-center"> Horas TEC </th>
+                <th class="text-center"> Carga </th>
+                <th class="text-center"> Carga TEC </th>
+                <th class="text-center"> Horas Recargo </th>
+                <th class="text-center"> Horas Reconocimiento </th>
+                <th class="text-center"> Total Horas </th>
                 <th class="text-center"> Asignar a </th>
                 <th class="text-center"> Acciones </th>
             </tr>
@@ -57,7 +61,12 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.LoadAcademic)% </td>
                     <td class="text-center">@Html.DisplayFor(modelItem => item.TECHours) </td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.RecargoHours) </td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.ReconocimientoHours) </td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.TotalHours) </td>
+
                     <td class="text-center">
                         @Html.ActionLink("Comisión", "Asignar", "ComisionProfesor", new { Profesor = item.ID},null) |
                         @Html.ActionLink("Proyecto", "Asignar", "ProyectoProfesor", new { Profesor = item.ID }, null) |
