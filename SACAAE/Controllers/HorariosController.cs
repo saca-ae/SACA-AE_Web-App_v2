@@ -10,6 +10,7 @@ using SACAAE.Models;
 using SACAAE.Data_Access;
 using Newtonsoft.Json;
 using SACAAE.Models.ViewModels;
+using SACAAE.Helpers;
 
 namespace SACAAE.Controllers
 {
@@ -27,15 +28,6 @@ namespace SACAAE.Controllers
             return View();
         }
 
-        // POST /Horario/
-        /*[HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Index()
-        {
-            return RedirectToAction("Horarios");
-        }*/
-
-        
         public ActionResult Horarios()
         {
             String PlanDeEstudio;
@@ -112,6 +104,7 @@ namespace SACAAE.Controllers
             return View();
         }
 
+
         // POST: Horario/Horarios
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -121,25 +114,25 @@ namespace SACAAE.Controllers
             //******************************* Se obtienen los datos del formulario ********************************
             //*****************************************************************************************************
             int vGroupID = Convert.ToInt32(pNewSchedule.Group);
-            
+
             // 1 Find the group in the database
             Group vGroup = db.Groups.Find(vGroupID);
 
-            // 2.1 Remove GroupClassroom fields asociate with the Group
-            removeGroupclassroomByGroupID(vGroupID);
+            // 2.1 Remove GroupClassroom fields asociated with the Group
+            removeGroupClassroomByGroupID(vGroupID);
 
             // 2.2 new GroupClassrooms asociated with Group
-                //Get the list of schedules and classrooms from the View
+            //Get the list of schedules and classrooms from the View
             List<NewSchedule> vNewSchedule = pNewSchedule.NewSchedule;
 
-            bool vIsValidateClassroom=true;// = isInternScheduleValid(vNewSchedule);
+            bool vIsValidateClassroom = true;// = isInternScheduleValid(vNewSchedule);
 
             foreach (NewSchedule tempSchedule in vNewSchedule)
             {
                 Schedule vTempSchedule = existSchedule(tempSchedule.Day, tempSchedule.StartHour, tempSchedule.EndHour);
-                string vClassroomID = tempSchedule.Classroom;
+                int vClassroomID = Convert.ToInt32(tempSchedule.Classroom);
 
-                if (isValidScheduleClassroom(vTempSchedule, vClassroomID))
+                if (isValidScheduleClassroom(vTempSchedule, vClassroomID, vGroupID))
                 {
                     GroupClassroom vNewGroupClassroom = new GroupClassroom();
 
@@ -156,16 +149,52 @@ namespace SACAAE.Controllers
                 {
                     vIsValidateClassroom = false;
                 }
-
-
-
             }
             if (vIsValidateClassroom)
             {
-                db.SaveChanges();
 
-                TempData[TempDataMessageKeySuccess] = "Cambios guardados satisfactoriamente";
-                return RedirectToAction("Index");
+                if (vGroup.ProfessorID != null)
+                {
+                    var vProfessorID = (int)vGroup.ProfessorID;
+                    var vPeriod = Request.Cookies["Periodo"].Value;
+                    var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
+                    ScheduleHelper dbHelper = new ScheduleHelper();
+
+                    string validate = dbHelper.validationsEditGroup(vProfessorID, vGroupID, vPeriodID);
+
+                    if (validate.Equals("true"))
+                    {
+                        db.SaveChanges();
+
+                        TempData[TempDataMessageKeySuccess] = "Cambios guardados satisfactoriamente";
+                        return RedirectToAction("Index");
+                    }
+                    // Exist problems in profesor schedule, so the assign is cancelled and the user recive the information of the problem
+                    else if (validate.Equals("falseIsGroupShock"))
+                    {
+                        TempData[TempDataMessageKeyError] = "Existe choque de horario con el profesor asignado al grupo, no se realizaron los cambios";
+                        return RedirectToAction("Index");
+                    }
+                    else if (validate.Equals("falseIsProjectShock"))
+                    {
+                        TempData[TempDataMessageKeyError] = "Existe choque de horario con el profesor asignado al grupo, no se realizaron los cambios";
+                        return RedirectToAction("Index");
+                    }
+
+                    else if (validate.Equals("falseIsCommissionShock"))
+                    {
+                        TempData[TempDataMessageKeyError] = "Existe choque de horario con el profesor asignado al grupo, no se realizaron los cambios";
+                        return RedirectToAction("Index");
+                    }
+                }
+                else
+                {
+                    db.SaveChanges();
+
+                    TempData[TempDataMessageKeySuccess] = "Cambios guardados satisfactoriamente";
+                    return RedirectToAction("Index");
+                }
+
 
             }
             else
@@ -173,31 +202,10 @@ namespace SACAAE.Controllers
                 TempData[TempDataMessageKeyError] = "Existe choque de horario con la asignacion del aula";
                 return RedirectToAction("Index");
             }
-            /*}
-            else
-            {
-                TempData["Message"] = "Error: Choque de horario interno";
-                return RedirectToAction("Index");
-            }*/
-           
+
+            return RedirectToAction("Index");
+
         }
-            
-        /*public ActionResult ObtenerHorarios(int plan, int periodo)
-        {
-            int idSede = Int16.Parse(Request.Cookies["SelSede"].Value);
-            int idPlanXSede = repoPlanes.IdPlanDeEstudioXSede(idSede, plan);
-            IQueryable listaHorarios = Horario.obtenerInfo(idPlanXSede, periodo);
-                var json = JsonConvert.SerializeObject(listaHorarios);
-
-                return Content(json);
-        }*/
-
-       /* public ActionResult ExisteHorario(string dia,int HoraInicio, int HoraFin, string aula, int grupo, int periodo)
-        {
-            int res = ExisteHorarioHelper(dia, HoraInicio, HoraFin, aula, grupo, periodo);
-            return Json(res, JsonRequestBehavior.AllowGet);
-        }*/
-        
 
         public ActionResult Resultado()
         {
@@ -209,10 +217,10 @@ namespace SACAAE.Controllers
         [Route("Horarios/Plan/{pPlanID:int}/Bloques")]
         public ActionResult ListarBloquesXPlan(int pPlanID)
         {
-            var ListaBloquexPlan =  from Bloques in db.AcademicBlocks
-                   join BloquesXPlan in db.AcademicBlocksXStudyPlans on Bloques.ID equals BloquesXPlan.BlockID
-                   where BloquesXPlan.PlanID == pPlanID
-                   select new{Bloques.ID, Bloques.Description};
+            var ListaBloquexPlan = from Bloques in db.AcademicBlocks
+                                   join BloquesXPlan in db.AcademicBlocksXStudyPlans on Bloques.ID equals BloquesXPlan.BlockID
+                                   where BloquesXPlan.PlanID == pPlanID
+                                   select new { Bloques.ID, Bloques.Description };
             var json = JsonConvert.SerializeObject(ListaBloquexPlan);
             return Content(json);
         }
@@ -227,19 +235,34 @@ namespace SACAAE.Controllers
             var json = JsonConvert.SerializeObject(ListaAulasXSede);
             return Content(json);
         }
+
+        [Route("Horarios/Grupo/{pGroupID:int}")]
+        public ActionResult getScheduleGroup(int pGroupID)
+        {
+            var vScheduleGroup = (from gc in db.GroupClassrooms
+                                  join s in db.Schedules on gc.ScheduleID equals s.ID
+                                  join c in db.Classrooms on gc.ClassroomID equals c.ID
+                                  where gc.GroupID == pGroupID
+                                  select new { gc.ID, s.Day, s.StartHour, s.EndHour, ClassroomID = c.ID, c.Code }).ToList();
+
+            var json = JsonConvert.SerializeObject(vScheduleGroup);
+            return Content(json);
+
+
+        }
         #endregion
         #region Helpers
 
-        public bool removeGroupclassroomByGroupID(int pGroupID)
+        public bool removeGroupClassroomByGroupID(int pGroupID)
         {
             var list = (from gc in db.GroupClassrooms
-                    where gc.GroupID == pGroupID
-                    select gc).ToList();
+                        where gc.GroupID == pGroupID
+                        select gc).ToList();
 
             foreach (var element in list)
             {
                 db.GroupClassrooms.Remove(element);
-                
+
             }
             return true;
         }
@@ -249,49 +272,7 @@ namespace SACAAE.Controllers
                     where planXSede.SedeID == sede && planXSede.StudyPlanID == plan
                     select planXSede).FirstOrDefault().ID;
         }
-       /* public int ExisteHorarioHelper(string dia, int HoraInicio, int HoraFin, string aula, int grupo, int periodo)
-        {
-            var vDetalleGrupo = from Horario in db.Schedules
-                                join Grupos in db.Groups on DetalleGrupo.Grupo equals Grupos.ID
-                                where Dia.Dia1 == dia && (Dia.Hora_Inicio <= HoraInicio && Dia.Hora_Fin >= HoraFin) && Grupos.Periodo == periodo && DetalleGrupo.Aula == aula || DetalleGrupo.Grupo == grupo
-                                select DetalleGrupo;
-            if (vDetalleGrupo.Any())
-                return 1;
-            else
-                return 0;
-        }*/
-        public int IdCursos(string CursoBuscado, int PlanDeEstudioCurso)
-        {
 
-            IQueryable<Course> Resultado =
-                from Curso in db.Courses
-                join BloqueXPlanXCursos in db.BlocksXPlansXCourses on Curso.ID equals BloqueXPlanXCursos.CourseID
-                join BloquesXPlan in db.AcademicBlocksXStudyPlans on BloqueXPlanXCursos.BlockXPlanID equals BloquesXPlan.ID
-                where (Curso.Name == CursoBuscado && BloquesXPlan.PlanID == PlanDeEstudioCurso)
-                select Curso;
-
-            try
-            {
-                return Resultado.FirstOrDefault().ID;
-            }
-            catch (Exception e)
-            {
-                return -1;
-            }
-        }
-
-        public int IdHorarioCurso(int grupo)
-        {
-            IQueryable<GroupClassroom> Resultado =
-                from Detalle_Grupos in db.Groups
-                 join Grupo_Classroom in db.GroupClassrooms on Detalle_Grupos.ID equals Grupo_Classroom.GroupID
-                where Grupo_Classroom.GroupID == grupo
-                select Grupo_Classroom;
-            GroupClassroom res = Resultado.FirstOrDefault();
-            if (res == null)
-                return 0;
-            return res.Schedule.ID;
-        }
 
         private Schedule existSchedule(string pDay, string pStartHour, string pEndHour)
         {
@@ -311,59 +292,31 @@ namespace SACAAE.Controllers
                 vNewSchedule.GroupsClassroom = new List<GroupClassroom>();
 
                 db.Schedules.Add(vNewSchedule);
-                //db.SaveChanges();
 
-                //vSchedule = db.Schedules.Where(p => p.Day == pDay && p.StartHour == pStartHour && p.EndHour == pEndHour).FirstOrDefault();
-
-                //db.SaveChanges();
                 return vNewSchedule;
             }
-            //select * from Schedule where Day='Domingo' AND StartHour = '07:30 am' AND EndHour = '09:20 am'
         }
 
-        public int NuevoHorario(string pDay, string pStartHour, string pEndHour)
-        {
-            //Create schedule and get id
-            Schedule vNewSchedule = new Schedule();
-            vNewSchedule.Day = pDay;
-            vNewSchedule.StartHour = pStartHour;
-            vNewSchedule.EndHour = pEndHour;
-
-            db.Schedules.Add(vNewSchedule);
-            db.SaveChanges();
-
-            return 1;
-        }
-
-        
-        public int idAula(string pCodigoAula)
-        {
-            return (from Aulas in db.Classrooms
-                    where Aulas.Code == pCodigoAula
-                    select Aulas).FirstOrDefault().ID;
-        }
-
-        public bool isValidScheduleClassroom(Schedule pNewSchedule, string pClassroomID)
+        public bool isValidScheduleClassroom(Schedule pNewSchedule, int pClassroomID, int pGroupID)
         {
             var vPeriod = Request.Cookies["Periodo"].Value;
             var vPeriodID = db.Periods.Find(int.Parse(vPeriod)).ID;
 
-            int vClassroomID = Convert.ToInt32(pClassroomID);
+            var vSchedule = (from schedule in db.Schedules
+                             join groupclass in db.GroupClassrooms on schedule.ID equals groupclass.ScheduleID
+                             join g in db.Groups on groupclass.GroupID equals g.ID
+                             where (groupclass.GroupID != pGroupID && groupclass.ClassroomID == pClassroomID &&
+                                 schedule.Day == pNewSchedule.Day && g.PeriodID == vPeriodID)
+                             select schedule).ToList();
 
-            var scehdules = (from schedule in db.Schedules
-            join groupclass in db.GroupClassrooms on  schedule.ID equals groupclass.ScheduleID
-            join g in db.Groups on groupclass.GroupID equals g.ID
-            where (groupclass.ClassroomID == vClassroomID && schedule.Day == pNewSchedule.Day && g.PeriodID == vPeriodID)
-            select schedule).ToList();
-
-            foreach (Schedule tempSchedule in scehdules)
+            foreach (Schedule tempSchedule in vSchedule)
             {
-                DateTime vTempScheduleStartHour =  DateTime.Parse(tempSchedule.StartHour);
+                DateTime vTempScheduleStartHour = DateTime.Parse(tempSchedule.StartHour);
                 DateTime vTempScheduleEndHour = DateTime.Parse(tempSchedule.EndHour);
                 DateTime vNewScheduleStartHour = DateTime.Parse(pNewSchedule.StartHour);
                 DateTime vNewScheduleEndHour = DateTime.Parse(pNewSchedule.EndHour);
 
-                if((vTempScheduleStartHour <= vNewScheduleStartHour && vNewScheduleStartHour <= vTempScheduleEndHour) ||
+                if ((vTempScheduleStartHour <= vNewScheduleStartHour && vNewScheduleStartHour <= vTempScheduleEndHour) ||
                     (vTempScheduleStartHour <= vNewScheduleEndHour && vNewScheduleEndHour <= vTempScheduleEndHour) ||
                     (vNewScheduleStartHour <= vTempScheduleStartHour && vTempScheduleStartHour <= vNewScheduleEndHour) ||
                     (vNewScheduleStartHour <= vTempScheduleEndHour && vTempScheduleEndHour <= vNewScheduleEndHour))
@@ -374,44 +327,10 @@ namespace SACAAE.Controllers
 
             return true;
         }
-         
-        public bool isInternScheduleValid( List<NewSchedule> pNewSchedule)
-        {
-            foreach (NewSchedule vTempSchedule in pNewSchedule)
-            {
-                //pNewSchedule.Remove(vTempSchedule);
-                foreach (NewSchedule vNTempSchedule in pNewSchedule)
-                {
-                    if (vTempSchedule.Day.Equals(vNTempSchedule.Day))
-                    {
-                        if (DateTime.Parse(vTempSchedule.StartHour) <= DateTime.Parse(vNTempSchedule.StartHour) &&
-                            DateTime.Parse(vNTempSchedule.StartHour) <= DateTime.Parse(vTempSchedule.EndHour))
-                        {
-                            return false;
-                        }
-                        else if (DateTime.Parse(vTempSchedule.StartHour) <= DateTime.Parse(vNTempSchedule.EndHour) &&
-                            DateTime.Parse(vNTempSchedule.EndHour) <= DateTime.Parse(vTempSchedule.StartHour))
-                        {
-                            return false;
-                        }
-                        else if (DateTime.Parse(vNTempSchedule.StartHour) <= DateTime.Parse(vTempSchedule.StartHour) &&
-                            DateTime.Parse(vTempSchedule.StartHour) <= DateTime.Parse(vNTempSchedule.EndHour))
-                        {
-                            return false;
-                        }
-                        else if (DateTime.Parse(vNTempSchedule.StartHour) <= DateTime.Parse(vTempSchedule.EndHour) &&
-                                DateTime.Parse(vTempSchedule.EndHour) <= DateTime.Parse(vNTempSchedule.EndHour))
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
+
         #endregion
     }
 
-    
+
 
 }
