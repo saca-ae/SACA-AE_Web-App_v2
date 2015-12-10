@@ -118,10 +118,10 @@ namespace SACAAE.Controllers
             // 1 Find the group in the database
             Group vGroup = db.Groups.Find(vGroupID);
 
-            // 2.1 Remove GroupClassroom fields asociated with the Group
+            // 2 Remove GroupClassroom fields asociated with the Group
             removeGroupClassroomByGroupID(vGroupID);
 
-            // 2.2 new GroupClassrooms asociated with Group
+            // 3 new GroupClassrooms asociated with Group
             //Get the list of schedules and classrooms from the View
             List<NewSchedule> vNewSchedule = pNewSchedule.NewSchedule;
 
