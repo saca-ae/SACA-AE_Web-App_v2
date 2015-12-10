@@ -314,7 +314,11 @@ namespace SACAAE.Controllers
             }
            
             /* Se obtiene la lista de profesores */
-            ViewBag.Profesores = new SelectList(db.Professors, "ID", "Name");
+            List<SelectListItem> vSelectList = new SelectList(db.Professors.OrderBy(p => p.Name), "ID", "Name").ToList();
+            SelectListItem selListItem = new SelectListItem() { Value = "0", Text = "Sin asignar" };
+            vSelectList.Add(selListItem);
+
+            ViewBag.Profesores = vSelectList;
             return View(grupo);
         }
 
@@ -338,7 +342,8 @@ namespace SACAAE.Controllers
                 if (validate.Equals("true"))
                 {
                     Group grupo = db.Groups.Find(idGrupo);
-                    grupo.ProfessorID = Profesores;
+                    if (Profesores == 0) grupo.ProfessorID = null;
+                    else grupo.ProfessorID = Profesores;
                     grupo.HourAllocatedTypeID = vHourChange;
                     grupo.EstimatedHour = vEstimatedHour;
                     db.SaveChanges();
